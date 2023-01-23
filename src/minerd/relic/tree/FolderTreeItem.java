@@ -2,7 +2,10 @@ package minerd.relic.tree;
 
 import java.awt.Component;
 
-public class FolderTreeItem extends DataTreeItem {
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
+public class FolderTreeItem extends DataTreeItem implements ChangeListener<Boolean>{
 	private String info;
 	protected boolean loaded;
 
@@ -17,16 +20,17 @@ public class FolderTreeItem extends DataTreeItem {
 		if(off>=0) {
 			loaded = false;
 			//Force the tree to show this node as a folder, but don't actually load anything until it's needed.
-			//this.add(new DataLeafNode(""));
+			getChildren().add(new DataTreeItem(""));
 		}
+		expandedProperty().addListener(this);
 	}
 	
 	public Component select() {
 		//TODO: In the final version, this will build a full panel upon construction and return it here. 
 		return null;//new Label(info);
 	}
-	
-	public void expand() {
-		
+
+	@Override
+	public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
 	}
 }

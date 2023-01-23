@@ -4,7 +4,7 @@ import java.awt.Component;
 
 import javafx.scene.control.TreeItem;
 
-public class DataTreeItem extends TreeItem{
+public class DataTreeItem extends TreeItem<String>{
 	private String name;
 	protected int offset;
 	
