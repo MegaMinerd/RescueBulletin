@@ -48,7 +48,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.mainController">
+<VBox prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.mainController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -67,18 +67,14 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.2505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.25" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-            <ScrollPane fx:id="treePane">
+            <ScrollPane fx:id="treePane" minWidth="200.0">
                <content>
                   <TreeView fx:id="dataTree" prefHeight="${treePane.height}" prefWidth="${treePane.width}" />
                </content>
             </ScrollPane>
-        <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
-          <content>
-            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" />
-          </content>
-        </ScrollPane>
+            <AnchorPane fx:id="editorPane" prefHeight="200.0" prefWidth="200.0" />
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">

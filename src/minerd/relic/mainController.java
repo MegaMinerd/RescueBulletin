@@ -7,19 +7,22 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import minerd.relic.item.ItemFolderTreeItem;
 import minerd.relic.tree.BackgroundFolderTreeItem;
 import minerd.relic.tree.DataTreeItem;
 import minerd.relic.tree.DungeonFolderTreeItem;
 import minerd.relic.tree.FixedRoomFolderTreeItem;
 import minerd.relic.tree.FolderTreeItem;
 import minerd.relic.tree.GraphicFolderTreeItem;
-import minerd.relic.tree.ItemFolderTreeItem;
 import minerd.relic.tree.MapFolderTreeItem;
 import minerd.relic.tree.PokemonFolderTreeItem;
 import minerd.relic.tree.SceneFolderTreeItem;
@@ -30,6 +33,7 @@ public class mainController implements Initializable{
 	FileChooser fc;
 	
 	public ScrollPane treePane;
+	public AnchorPane editorPane;
 	public TreeView<String> dataTree;
 	TreeItem<String> root;
 
@@ -86,6 +90,11 @@ public class mainController implements Initializable{
 	}
 	
 	public void selectTreeItem(DataTreeItem item){
-		//TODO: change right content
+		ObservableList<Node> children = editorPane.getChildren();
+		while(children.size()>0)
+			children.remove(0);
+		Node itemData = item.select();
+		if(itemData!=null)
+			children.add(itemData);
 	}
 }

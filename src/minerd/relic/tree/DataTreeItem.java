@@ -1,7 +1,6 @@
 package minerd.relic.tree;
 
-import java.awt.Component;
-
+import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 
 public class DataTreeItem extends TreeItem<String>{
@@ -26,7 +25,7 @@ public class DataTreeItem extends TreeItem<String>{
 		return "";//this.isRoot() ? "root" : (((DataTreeItem)parent).getPath() + "/" + name);
 	}
 	
-	public Component select() {
+	public Node select() {
 		return null;
 	}
 }

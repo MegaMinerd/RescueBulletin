@@ -1,10 +1,11 @@
-package minerd.relic.tree;
+package minerd.relic.item;
 
 import java.io.IOException;
 
 import javafx.beans.value.ObservableValue;
 import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
+import minerd.relic.tree.FolderTreeItem;
 
 public class ItemFolderTreeItem extends FolderTreeItem {
 

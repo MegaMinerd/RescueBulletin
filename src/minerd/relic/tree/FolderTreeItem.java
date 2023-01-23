@@ -1,9 +1,8 @@
 package minerd.relic.tree;
 
-import java.awt.Component;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
 
 public class FolderTreeItem extends DataTreeItem implements ChangeListener<Boolean>{
 	private String info;
@@ -25,7 +24,7 @@ public class FolderTreeItem extends DataTreeItem implements ChangeListener<Boole
 		expandedProperty().addListener(this);
 	}
 	
-	public Component select() {
+	public Node select() {
 		//TODO: In the final version, this will build a full panel upon construction and return it here. 
 		return null;//new Label(info);
 	}
