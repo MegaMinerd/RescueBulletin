@@ -74,12 +74,14 @@
                   <TreeView fx:id="dataTree" prefHeight="${treePane.height}" prefWidth="${treePane.width}" />
                </content>
             </ScrollPane>
-            <AnchorPane fx:id="editorPane" prefHeight="200.0" prefWidth="200.0" />
+            <ScrollPane fx:id="editorScroll" minWidth="200.0">
+           	   <AnchorPane fx:id="editorPane" prefHeight="${editorScroll.height}" prefWidth="${editorScroll.width}"/>
+            </ScrollPane>
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
-        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
+        <Label maxHeight="1.8" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
           <font>
             <Font size="11.0" fx:id="x3" />
           </font>

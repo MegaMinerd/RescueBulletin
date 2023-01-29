@@ -27,7 +27,6 @@ public class ItemFolderTreeItem extends FolderTreeItem {
 					String itemName = RomManipulator.readString(RomManipulator.parsePointer());
 					getChildren().add(new ItemDataTreeItem(itemName, itemStart));
 				}
-				//RescueRelicWindow.updateTree();
 				loaded = true;
 			} catch (IOException | InvalidPointerException e) {
 				// TODO Auto-generated catch block
