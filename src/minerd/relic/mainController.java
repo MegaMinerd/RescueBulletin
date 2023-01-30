@@ -17,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import minerd.relic.item.ItemFolderTreeItem;
+import minerd.relic.pokemon.PokemonFolderTreeItem;
 import minerd.relic.tree.BackgroundFolderTreeItem;
 import minerd.relic.tree.DataTreeItem;
 import minerd.relic.tree.DungeonFolderTreeItem;
@@ -24,7 +25,6 @@ import minerd.relic.tree.FixedRoomFolderTreeItem;
 import minerd.relic.tree.FolderTreeItem;
 import minerd.relic.tree.GraphicFolderTreeItem;
 import minerd.relic.tree.MapFolderTreeItem;
-import minerd.relic.tree.PokemonFolderTreeItem;
 import minerd.relic.tree.SceneFolderTreeItem;
 import minerd.relic.tree.SpriteFolderTreeItem;
 import minerd.relic.tree.TilesetFolderTreeItem;
@@ -67,7 +67,7 @@ public class mainController implements Initializable{
 		dataTree.setRoot(root);
 		//TODO: load these offsets from a config for various builds
 		root.getChildren().add(new SceneFolderTreeItem(0));
-		root.getChildren().add(new PokemonFolderTreeItem(0));
+		root.getChildren().add(new PokemonFolderTreeItem(0x00357B88));
 		root.getChildren().add(new ItemFolderTreeItem(0x00306570));
 		root.getChildren().add(new MapFolderTreeItem(0));
 		root.getChildren().add(new SpriteFolderTreeItem(0));
