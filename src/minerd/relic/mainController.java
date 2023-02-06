@@ -17,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import minerd.relic.item.ItemFolderTreeItem;
+import minerd.relic.move.MoveFolderTreeItem;
 import minerd.relic.pokemon.PokemonFolderTreeItem;
 import minerd.relic.tree.BackgroundFolderTreeItem;
 import minerd.relic.tree.DataTreeItem;
@@ -69,6 +70,7 @@ public class mainController implements Initializable{
 		root.getChildren().add(new SceneFolderTreeItem(0));
 		root.getChildren().add(new PokemonFolderTreeItem(0x00357B88));
 		root.getChildren().add(new ItemFolderTreeItem(0x00306570));
+		root.getChildren().add(new MoveFolderTreeItem(0x0360BF4));
 		root.getChildren().add(new MapFolderTreeItem(0));
 		root.getChildren().add(new SpriteFolderTreeItem(0));
 		root.getChildren().add(new BackgroundFolderTreeItem(0));
