@@ -94,7 +94,7 @@
       </AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
-            <TabPane>
+            <TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <tabs>
                   <Tab closable="false" text=" Settings ">
                      <content>
@@ -104,10 +104,10 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <GridPane prefHeight="95.0" prefWidth="332.0">
+                                          <GridPane prefWidth="360.0">
                                             <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="102.0" minWidth="10.0" prefWidth="68.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.0" minWidth="10.0" prefWidth="249.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="102.0" minWidth="10.0" prefWidth="65.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="290.0" />
                                             </columnConstraints>
                                             <rowConstraints>
                                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -131,8 +131,14 @@
                                                       <Insets right="5.0" />
                                                    </padding>
                                                 </Label>
-                                                <TextField fx:id="pokemonNameField" text="Pokemon" GridPane.columnIndex="1" />
-                                                <TextField fx:id="category" prefWidth="244.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <TextField fx:id="pokemonNameField" text="Pokemon" GridPane.columnIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets right="5.0" />
+                                                   </GridPane.margin></TextField>
+                                                <TextField fx:id="category" prefWidth="244.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets right="5.0" />
+                                                   </GridPane.margin></TextField>
                                              </children>
                                           </GridPane>
                                        </children>
@@ -143,10 +149,10 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="309.0">
                                        <children>
-                                          <GridPane prefHeight="209.0" prefWidth="300.0">
+                                          <GridPane prefWidth="360.0">
                                             <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="102.0" minWidth="10.0" prefWidth="92.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.0" minWidth="10.0" prefWidth="201.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="107.0" minWidth="10.0" prefWidth="94.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.0" minWidth="10.0" prefWidth="213.0" />
                                             </columnConstraints>
                                             <rowConstraints>
                                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -209,7 +215,7 @@
                                                       <Insets right="5.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <ChoiceBox fx:id="movement" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                                                <ChoiceBox fx:id="movement" prefHeight="25.0" prefWidth="256.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets right="5.0" />
                                                    </GridPane.margin>
@@ -227,7 +233,7 @@
                                                       <Insets right="5.0" />
                                                    </GridPane.margin>
                                                 </HBox>
-                                                <ChoiceBox prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
+                                                <ChoiceBox prefHeight="25.0" prefWidth="267.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
                                                    <GridPane.margin>
                                                       <Insets right="5.0" />
                                                    </GridPane.margin>
@@ -252,7 +258,7 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <GridPane prefHeight="237.0" prefWidth="217.0">
+                                          <GridPane prefWidth="217.0">
                                             <columnConstraints>
                                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -329,7 +335,7 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <GridPane prefHeight="125.0" prefWidth="404.0">
+                                          <GridPane prefWidth="404.0">
                                             <columnConstraints>
                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.0" minWidth="10.0" prefWidth="137.0" />
                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="222.0" minWidth="10.0" prefWidth="140.0" />
@@ -388,7 +394,7 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <GridPane prefHeight="196.0" prefWidth="279.0">
+                                          <GridPane prefWidth="280.0">
                                             <columnConstraints>
                                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
