@@ -8,13 +8,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
 
 public class ItemController implements Initializable {
 	public Label itemNameLabel;
-	public TextField spriteID, paletteID, itemID, buyPrice, sellPrice, itemNameField, description, moveId, minAmnt, maxAmnt;
+	public TextField spriteID, paletteID, itemID, buyPrice, sellPrice, itemNameField, moveId, minAmnt, maxAmnt;
+	public TextArea description;
 	public ChoiceBox<String> itemType, actionType;
 	public CheckBox ai1, ai2, ai3;
 
@@ -32,7 +34,7 @@ public class ItemController implements Initializable {
 			itemType.getSelectionModel().select(RomManipulator.readUnsignedByte());
 			spriteID.setText(RomManipulator.readUnsignedByte() + "");
 			RomManipulator.skip(2);
-			description.setText(RomManipulator.readStringAndReturn(RomManipulator.parsePointer()));
+			description.setText(RomManipulator.readStringAndReturn(RomManipulator.parsePointer()).replace("#n", "\n"));
 			ai1.setSelected(RomManipulator.readByte() != 0);
 			ai2.setSelected(RomManipulator.readByte() != 0);
 			ai3.setSelected(RomManipulator.readByte() != 0);
