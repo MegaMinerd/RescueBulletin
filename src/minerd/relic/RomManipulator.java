@@ -24,6 +24,10 @@ public class RomManipulator {
 		return instance.filename;
 	}
 	
+	public static int getFilePointer() throws IOException {
+		return (int)instance.file.getFilePointer();
+	}
+	
 	public static void skip(int offset) throws IOException {
 		instance.file.skipBytes(offset);
 	}
@@ -33,17 +37,13 @@ public class RomManipulator {
 	}
 	
 	/**
-	 * Reads the next byte and returns the file pointer. Used by CodeConverter to check if the next command is a label.
+	 * Reads the next byte and returns the file pointer.
 	 * @return The next byte in the file 
 	 */
 	public static int peek() throws IOException {
 		int data = instance.file.readUnsignedByte();
 		seek(getFilePointer()-1);
 		return data;
-	}
-	
-	public static int getFilePointer() throws IOException {
-		return (int)instance.file.getFilePointer();
 	}
 	
 	/**
@@ -55,20 +55,40 @@ public class RomManipulator {
 	}
 	
 	/**
+	 * Reads a little-endian number of specified length
+	 * @param length The length of the number in bytes
+	 * @throws IOException 
+	 */
+	public static long read(int length) throws IOException {
+		long value = 0;
+		for(int i=0; i<length; i++)
+			value = (value << 8) | instance.file.readUnsignedByte();
+		return value;
+	}
+	
+	public static int[] readMask(int totalLen, int ... partLens) throws IOException{
+		long mask = read(totalLen);
+		int[] parts = new int[partLens.length];
+		int runningTotal = 0;
+		for(int i=0; i<partLens.length; i++){
+ 			int submask = (1<<partLens[i]) - 1;
+			submask <<= runningTotal;
+			parts[i] = (int) ((mask & submask) >> runningTotal);
+			runningTotal += partLens[i];
+		}
+		return parts;
+	}
+	
+	/**
 	 * Reads a pointer from the ROM
 	 * @return The integer offset represented by the pointer
 	 * @throws InvalidPointerException If the bytes read are not a valid pointer
 	 */
 	public static int parsePointer() throws IOException, InvalidPointerException{
-		int output = 0;
-		output += instance.file.readUnsignedByte();
-		output += (instance.file.readUnsignedByte() << 8);
-		output += (instance.file.readUnsignedByte() << 16);
-		int magicByte = instance.file.readUnsignedByte();
-		if(magicByte!=0x08 && magicByte!=0x09)
+		int[] output = readMask(4, 25, 7);
+		if(output[1]!=4)
 			throw new InvalidPointerException((int)instance.file.getFilePointer() - 4);
-		output += ((magicByte&0x01) << 24);
-		return output;
+		return output[0];
 	}
 	
 	public static int parsePointer(int offset) throws IOException, InvalidPointerException{
@@ -103,18 +123,11 @@ public class RomManipulator {
 					break;
 				else
 					output += (char)current;
-			}catch(EOFException eof) {
-				break;
 			}catch(IOException io) {
 				break;
 			}
 		}
 		return output;
-	}
-	
-	public static byte readByte(int offset) throws IOException{
-		seek(offset);
-		return readByte();
 	}
 	
 	public static byte readByte() throws IOException{
@@ -125,30 +138,25 @@ public class RomManipulator {
 		return instance.file.readUnsignedByte();
 	}
 	
-	public static short readShort(int offset) throws IOException{
-		seek(offset);
-		return readShort();
+	public static short readShort() throws IOException{
+		return (short)read(2);
 	}
 	
-	public static short readShort() throws IOException{
-		short output = 0;
-		output += instance.file.readUnsignedByte();
-		output += (instance.file.readUnsignedByte() << 8);
-		return output;
+	public static int readUnsignedShort() throws IOException{
+		return (int)(read(2)&0xFFFF);
 	}
 	
 	public static int readInt(int offset) throws IOException{
 		seek(offset);
-		return readInt();
+		return (int)read(4);
 	}
 	
 	public static int readInt() throws IOException{
-		int output = 0;
-		output += instance.file.readUnsignedByte();
-		output += (instance.file.readUnsignedByte() << 8);
-		output += (instance.file.readUnsignedByte() << 16);
-		output += (instance.file.readUnsignedByte() << 24);
-		return output;
+		return (int)read(4);
+	}
+	
+	public static long readUnsignedInt() throws IOException{
+		return read(4)&0xFFFFFFFF;
 	}
 	
 	/**
@@ -188,10 +196,27 @@ public class RomManipulator {
 		return -1;
 	}
 	
+	/**
+	 * Writes a little-endian number of specified length
+	 * @param length The length of the number in bytes
+	 * @param in The data to be written
+	 * @throws IOException 
+	 */
+	public static void write(int length, long in) throws IOException {
+		for(int i=0; i<length; i++) {
+			instance.file.writeByte((byte)in&0xFF);
+			in >>= 8;
+		}
+	}
+	
+	public static void writeMask(int length, int ... data) throws IOException {
+		// TODO
+	}
+	
 	public static void writeStringAndReturn(String in, int offset) throws IOException {
 		int link = getFilePointer();
 		seek(offset);
-		writeString(in);
+		writeString(in);	
 		seek(link);
 	}
 	
@@ -206,39 +231,16 @@ public class RomManipulator {
 			instance.file.writeByte(0);
 	}
 	
-	public static void writeByte(byte in, long offset) throws IOException{
-		instance.file.seek(offset);
-		instance.file.writeByte(in);
-	}
-	
 	public static void writeByte(byte in) throws IOException{
 		instance.file.writeByte(in);
 	}
 	
-	public static void writeShort(short in, long offset) throws IOException{
-		instance.file.seek(offset);
-		writeShort(in);
-	}
-	
 	public static void writeShort(short in) throws IOException{
-		instance.file.writeByte(in & 0xFF);
-		instance.file.writeByte((in & 0xFF00) >> 8);
-	}
-	
-	public static void writeInt(int in, long offset) throws IOException{
-		instance.file.seek(offset);
-		writeInt(in);
+		write(2, in);
 	}
 	
 	public static void writeInt(int in) throws IOException{
-		instance.file.writeByte(in & 0xFF);
-		instance.file.writeByte((in & 0xFF00) >> 8);
-		instance.file.writeByte((in & 0xFF0000) >> 16);
-		instance.file.writeByte((in & 0xFF000000) >> 24);
-	}
-	
-	public static void writePointer(int pointer, int offset) throws IOException{
-		writeInt(pointer+0x08000000, offset);
+		write(4, in);
 	}
 	
 	public static void writePointer(int pointer) throws IOException{
