@@ -62,7 +62,7 @@ public class RomManipulator {
 	public static long read(int length) throws IOException {
 		long value = 0;
 		for(int i=0; i<length; i++)
-			value = (value << 8) | instance.file.readUnsignedByte();
+			value |= instance.file.readUnsignedByte() << (8*i);
 		return value;
 	}
 	
