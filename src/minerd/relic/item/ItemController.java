@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
+import minerd.relic.graphics.ImageProcessor;
 
 public class ItemController implements Initializable {
 	public Label itemNameLabel;
@@ -19,6 +22,7 @@ public class ItemController implements Initializable {
 	public TextArea description;
 	public ChoiceBox<String> itemType, actionType;
 	public CheckBox ai1, ai2, ai3;
+	public ImageView sprite;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -49,6 +53,15 @@ public class ItemController implements Initializable {
 					"Eat (Food)", "Ingest (Healing Items)", "Peel (Chestnut)", "Use (Money/Wish Stone)", "Use (Misc.)",
 					"Use (TMs)", "Use (Link Box)", "Equip (Specs)", "Equip (Scarfs)", "Use (Orbs)");
 			actionType.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			sprite.setImage(
+					SwingFXUtils.toFXImage(
+							ImageProcessor.getItemSprite(
+									Integer.parseInt(spriteID.getText()), 
+									Integer.parseInt(paletteID.getText())
+									), 
+							null
+							)
+					);
 			//buffer.skip(0x1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

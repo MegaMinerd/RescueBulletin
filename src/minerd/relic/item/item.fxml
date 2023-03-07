@@ -22,7 +22,7 @@
          <children>
             <HBox layoutX="-6.0" layoutY="5.0" prefWidth="175.0">
                <children>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="sprite" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <HBox.margin>
                         <Insets bottom="5.0" left="18.0" right="18.0" top="5.0" />
                      </HBox.margin>

@@ -1,13 +1,17 @@
 package minerd.relic.item;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javafx.beans.value.ObservableValue;
 import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
+import minerd.relic.graphics.Palette;
+import minerd.relic.graphics.Tile;
 import minerd.relic.tree.FolderTreeItem;
 
 public class ItemFolderTreeItem extends FolderTreeItem {
+	private int spriteOffset, paletteOffset;
 
 	public ItemFolderTreeItem(int offset) {
 		super("Items", "This section lets you edit data for items in the game.", offset);

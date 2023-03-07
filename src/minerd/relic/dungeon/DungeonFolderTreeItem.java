@@ -3,7 +3,6 @@ package minerd.relic.dungeon;
 import java.io.IOException;
 
 import javafx.beans.value.ObservableValue;
-import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
 import minerd.relic.tree.FolderTreeItem;
 
