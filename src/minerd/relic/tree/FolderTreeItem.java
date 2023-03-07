@@ -1,11 +1,16 @@
 package minerd.relic.tree;
 
+import java.io.IOException;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
+import minerd.relic.RomManipulator;
 
 public class FolderTreeItem extends DataTreeItem implements ChangeListener<Boolean>{
-	private String info;
+	private String name, info;
 	protected boolean loaded;
 
 	public FolderTreeItem(String text, String infoIn) {
@@ -15,6 +20,7 @@ public class FolderTreeItem extends DataTreeItem implements ChangeListener<Boole
 	public FolderTreeItem(String text, String infoIn, int off) {
 		super(text, off);
 		this.info = infoIn;
+		this.name = text;
 		loaded = true;
 		if(off>=0) {
 			loaded = false;
@@ -25,8 +31,16 @@ public class FolderTreeItem extends DataTreeItem implements ChangeListener<Boole
 	}
 	
 	public Node select() {
-		//TODO: In the final version, this will build a full panel upon construction and return it here. 
-		return null;//new Label(info);
+		AnchorPane folderPane = null;
+		//try {
+			//folderPane = (AnchorPane)FXMLLoader.load(getClass().getResource("folder.fxml"));
+			//Todo: figure out what to actually do here
+			//folderPane.getController().populate(name, info);
+		//} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		//}
+		return folderPane;
 	}
 
 	@Override

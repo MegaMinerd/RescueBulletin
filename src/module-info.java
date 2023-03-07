@@ -6,6 +6,7 @@ module RescueRelic {
 	requires javafx.swing;
 	opens application to javafx.graphics, javafx.fxml;
     exports minerd.relic;
+    exports minerd.relic.tree;
     exports minerd.relic.item;
     exports minerd.relic.move;
     exports minerd.relic.pokemon;

@@ -18,6 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import minerd.relic.dungeon.DungeonFolderTreeItem;
 import minerd.relic.item.ItemFolderTreeItem;
+import minerd.relic.lists.ListsFolderTreeItem;
 import minerd.relic.move.MoveFolderTreeItem;
 import minerd.relic.pokemon.PokemonFolderTreeItem;
 import minerd.relic.tree.BackgroundFolderTreeItem;
@@ -67,6 +68,7 @@ public class mainController implements Initializable{
 		root = new FolderTreeItem(RomManipulator.getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
 		//TODO: load these offsets from a config for various builds
+		root.getChildren().add(new ListsFolderTreeItem(0));
 		root.getChildren().add(new SceneFolderTreeItem(0));
 		root.getChildren().add(new PokemonFolderTreeItem(0x00357B88));
 		root.getChildren().add(new ItemFolderTreeItem(0x00306570));

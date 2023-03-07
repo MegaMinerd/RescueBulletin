@@ -7,6 +7,8 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -471,7 +473,15 @@
                             <Tab closable="false" text=" Stats " />
                               <Tab closable="false" text=" Level Up Moves ">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <TableView fx:id="levelupTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                            <columns>
+                                              <TableColumn fx:id="levelCol" prefWidth="40.0" sortable="false" text="Level" />
+                                              <TableColumn fx:id="moveCol" prefWidth="250.0" sortable="false" text="Move" />
+                                            </columns>
+                                          </TableView>
+                                       </children></AnchorPane>
                                 </content>
                               </Tab>
                               <Tab closable="false" text=" HM/TM Moves ">

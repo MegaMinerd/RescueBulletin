@@ -8,6 +8,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import minerd.relic.InvalidPointerException;
 import minerd.relic.Lists;
@@ -16,6 +18,7 @@ import minerd.relic.RomManipulator;
 public class PokemonController implements Initializable {
 	public Label pokemonNameLabel;
 	public TextField dexID, entityID, alphaID, parentID;
+	
 	//Name tab
 	public TextField pokemonNameField, category;
 	//General tab
@@ -30,6 +33,10 @@ public class PokemonController implements Initializable {
 	//Other tab
 	public TextField regen, sleepiness, unk30, unk31, unk32;
 	public CheckBox canWalk, toolbox;
+	
+	//Level up moves tab
+	public TableView levelupTable;
+	public TableColumn levelCol, moveCol;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -53,6 +60,7 @@ public class PokemonController implements Initializable {
 			type2.getSelectionModel().select(RomManipulator.readUnsignedByte());
 			movement.getItems().addAll("Normal", "Magma, Water", "Magma, Water, Sky", "Magma, Water, Sky, Wall", "Magma", "Water");
 			movement.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			// TODO enumerate the options for below
 			//area.setText(RomManipulator.readUnsignedByte();
 			//ability1.setText(RomManipulator.readUnsignedByte();
 			//ability2.setText(RomManipulator.readUnsignedByte();
@@ -88,6 +96,8 @@ public class PokemonController implements Initializable {
 			recruit.setText(RomManipulator.readShort()+"");
 			alphaID.setText(RomManipulator.readShort()+"");
 			parentID.setText(RomManipulator.readShort()+"");
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -95,5 +105,13 @@ public class PokemonController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	int readMoveId() throws IOException{
+		int[] highByte = RomManipulator.readMask(1, 7, 1);
+		int moveId = highByte[1]==1 ?
+			(highByte[0]<<7) | RomManipulator.readUnsignedByte()
+			: highByte[0];
+		return moveId;
 	}
 }
