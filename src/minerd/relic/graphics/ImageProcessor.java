@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.scene.image.WritableImage;
 import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
 import minerd.relic.util.FileSystem;
@@ -23,13 +24,19 @@ public class ImageProcessor{
 	private static boolean hasAnim, hasExtras;
 	
 	//Cache for common and shared sprites
-	private static Tile[][] itemTiles;
+	private static Chunk[] itemSprites;
 	private static Palette[] itemPalettes;
 	
-	
-	public static BufferedImage getItemSprite(int sprite, int palette) throws IOException, InvalidPointerException {
-		if(itemTiles == null) {
-			//Load sprites
+	static {
+		//Load palettes
+		try {
+			RomManipulator.seek(0x016BD42C);
+			itemPalettes = new Palette[13];
+			for(int i=0; i<13; i++)
+				itemPalettes[i] = new Palette(false);
+		
+			//Todo: make this go through readSpriteSiro
+			//Goto SIRO file
 			RomManipulator.seek(0x01E76170);
 			//Navigate SIRO footer
 			RomManipulator.skip(4);
@@ -37,28 +44,71 @@ public class ImageProcessor{
 			RomManipulator.skip(12);
 			RomManipulator.seek(RomManipulator.parsePointer());
 			int itemPointer = RomManipulator.getFilePointer();
-			itemTiles = new Tile[24][4];
+			//Load sprites
+			itemSprites = new Chunk[24];
 			for(int i=0; i<24; i++) {
 				RomManipulator.seek(itemPointer+4*i);
 				RomManipulator.seek(RomManipulator.parsePointer());
-				RomManipulator.seek(RomManipulator.parsePointer());
-				for(int j=0; j<4; j++)
-					itemTiles[i][j] = new Tile(8, 8);
+				itemSprites[i] = buildSprite(2, 2);
 			}
-			RomManipulator.seek(0x016BD42C);
-			itemPalettes = new Palette[13];
-			for(int i=0; i<13; i++)
-				itemPalettes[i] = new Palette(false);
+		} catch (IOException | InvalidPointerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		BufferedImage itemSprite = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
-		Graphics g = itemSprite.getGraphics();
-		g.drawImage(itemTiles[sprite][0].render(itemPalettes[palette], false, false), 0, 0, null);
-		g.drawImage(itemTiles[sprite][1].render(itemPalettes[palette], false, false), 8, 0, null);
-		g.drawImage(itemTiles[sprite][2].render(itemPalettes[palette], false, false), 0, 8, null);
-		g.drawImage(itemTiles[sprite][3].render(itemPalettes[palette], false, false), 8, 8, null);
-		
-		return itemSprite;
+	}
+	
+	
+	public static WritableImage getItemSprite(int sprite, int palette) throws IOException, InvalidPointerException {
+		return itemSprites[sprite].renderGraphics(itemPalettes[palette]);
+	}
+	
+	//Todo: figure out suitable return type
+	public static void readSpriteSiro(int offset) throws IOException, InvalidPointerException {
+		RomManipulator.seek(offset);
+		RomManipulator.skip(4); //Ignore magic bytes
+		RomManipulator.seek(RomManipulator.parsePointer()); //Go to footer
+		int animationPointers = RomManipulator.parsePointer();
+		int directionPointers = RomManipulator.parsePointer();
+		int displacePointers = RomManipulator.parsePointer();
+		int spritePointers = RomManipulator.parsePointer();
+			
+		//Load sprites
+		//Todo: generalize
+		Chunk[] sprites = new Chunk[24];
+		for(int i=0; i<24; i++) {
+			RomManipulator.seek(spritePointers+4*i);
+			RomManipulator.seek(RomManipulator.parsePointer());
+			RomManipulator.seek(RomManipulator.parsePointer());
+			Tile[] spriteTiles = new Tile[4];
+			for(int j=0; j<4; j++)
+				spriteTiles[j] = new Tile(8, 8);
+			itemSprites[i] = new Chunk(2, 2, spriteTiles);
+		}
+	}
+	
+	public static Chunk buildSprite(int rows, int cols) throws IOException, InvalidPointerException{
+		int totalSize = 0;
+		int endSize = rows*cols;
+		Chunk sprite = new Chunk(rows, cols);
+		while(totalSize<endSize){
+			int pointer = RomManipulator.parsePointer();
+			int displace = 0;
+			if(pointer == 0){
+				displace = RomManipulator.readInt()/32;
+				totalSize += displace;
+				pointer = RomManipulator.parsePointer();
+			}
+			if(pointer == 0)
+				break;
+			int size = RomManipulator.readInt()/32;
+			totalSize += size;
+			Tile[] tiles = new Tile[size];
+			RomManipulator.seek(pointer);
+			for(int i=0; i<size; i++)
+				tiles[i] = new Tile(8, 8);
+			sprite.addTiles(displace, tiles);
+		}
+		return sprite;
 	}
 	
 	//Todo: untested port from precursor tool
@@ -86,7 +136,7 @@ public class ImageProcessor{
 			chunkWidth = RomManipulator.readUnsignedShort();
 			chunkHeight = RomManipulator.readUnsignedShort();
 			stillCount = RomManipulator.readUnsignedShort()-1;
-			RomManipulator.skip(8);        //Todo: The use of these bytes is unknown
+			RomManipulator.skip(8);		//Todo: The use of these bytes is unknown
 			chunkCount = RomManipulator.readUnsignedShort()-1;
 			
 			//Build still tiles
@@ -95,7 +145,7 @@ public class ImageProcessor{
 			chunkDefPointer = RomManipulator.getFilePointer();
 			
 			//Build animated tiles, if any
-			if(hasAnim) 
+			if(hasAnim)
 				buildAnims();
 			
 			//Build chunks
@@ -153,23 +203,11 @@ public class ImageProcessor{
 		}
 	}
 	
-	private static Tile buildTile() throws IOException{
-		int[][] tileData = new int[8][8];
-		for(int row=0; row<8; row++) {
-			for(int col=0; col<8; col+=2) {
-				int[] pair = RomManipulator.readMask(1, 4, 4);
-				tileData[row][col] = pair[0];
-				tileData[row][col+1] = pair[1];
-			}
-		}
-		return new Tile(tileData);
-	}
-	
 	private static void buildStills() throws IOException{
 		stills = new Tile[stillCount];
 		
 		for(int tile=0; tile<(stillCount); tile++)
-			stills[tile] = buildTile();
+		stills[tile] = new Tile(8, 8);
 	}
 	
 	private static void buildAnims() throws IOException{
@@ -178,8 +216,8 @@ public class ImageProcessor{
 		RomManipulator.skip((RomManipulator.readUnsignedShort())*4);
 		//Todo: Find the correct frame count
 		for(int frame=0; frame<frameCount; frame++)
-			for(int tile=0; tile<animCount; tile++)
-				anims[frame][tile] = buildTile();
+		for(int tile=0; tile<animCount; tile++)
+		anims[frame][tile] = new Tile(8, 8);
 	}
 	
 	private static void buildChunks() throws IOException{
@@ -200,7 +238,7 @@ public class ImageProcessor{
 						chunk[0].addGraphics(stills[id].render(palettes[pal], hor, ver), row, col);
 					} else {
 						for(int frame=0; frame<frameCount; frame++)
-							chunk[frame].addGraphics(anims[frame][id-stillCount].render(palettes[pal], hor, ver), row, col);
+						chunk[frame].addGraphics(anims[frame][id-stillCount].render(palettes[pal], hor, ver), row, col);
 						usesAnim = true;
 					}
 				}
@@ -209,7 +247,7 @@ public class ImageProcessor{
 			if(usesAnim)
 				animChunks[i] = chunks;
 			else
-				chunks[i] = chunk[0];
+			chunks[i] = chunk[0];
 		}
 	}
 	
@@ -224,7 +262,7 @@ public class ImageProcessor{
 			if(control < 0x80) {
 				len=(control+1)*2;
 				for(int i=0; i<len; i++)
-					data.add(0);
+				data.add(0);
 			}
 			//Repeating run
 			else if(control < 0xC0) {
@@ -249,7 +287,7 @@ public class ImageProcessor{
 		//XOR with previous row for Reasons
 		Integer[] out = data.toArray(new Integer[cols]);
 		for(int i=0; i<out.length; i++)
-			out[i] = lastIds[i]^out[i];
+		out[i] = lastIds[i]^out[i];
 		return out;
 	}
 	
@@ -257,7 +295,7 @@ public class ImageProcessor{
 	private static void buildImage() throws IOException{
 		Graphics[] g = new Graphics[frameCount];
 		for(int i=0; i<frameCount; i++)
-			layers[i] = new BufferedImage(cols*chunkWidth*8, rows*chunkHeight*8, BufferedImage.TYPE_INT_RGB);
+		layers[i] = new BufferedImage(cols*chunkWidth*8, rows*chunkHeight*8, BufferedImage.TYPE_INT_RGB);
 		
 		//Build first row
 		Integer[] blank = new Integer[(int)(Math.ceil(cols/2.0)*2)];
@@ -266,12 +304,12 @@ public class ImageProcessor{
 		Integer[] ids = buildRow(blank);
 		for(int i=0; i<cols; i++) {
 			try {
-				g[0].drawImage(chunks[ids[i]-1].getGraphics(), i*chunkWidth*8, chunkHeight*8*rows, null);
+				//g[0].drawImage(chunks[ids[i]-1].renderGraphics(), i*chunkWidth*8, chunkHeight*8*rows, null);
 			}
 			//In theory, this will occur iff there was an animated tile in the chunk
 			catch(NullPointerException | ArrayIndexOutOfBoundsException e) {
-				for(int frame=0; frame<frameCount; frame++)
-					g[frame].drawImage(animChunks[frame][ids[i]-1].getGraphics(), i*chunkWidth*8, chunkHeight*8*rows, null);
+				//for(int frame=0; frame<frameCount; frame++)
+				//g[frame].drawImage(animChunks[frame][ids[i]-1].renderGraphics(), i*chunkWidth*8, chunkHeight*8*rows, null);
 			}
 		}
 		
@@ -280,12 +318,12 @@ public class ImageProcessor{
 			ids = buildRow(ids);
 			for(int j=0; j<cols; j++){
 				try {
-					g[0].drawImage(chunks[ids[i]-1].getGraphics(), i*chunkWidth*8, chunkHeight*8*rows, null);
+					//g[0].drawImage(chunks[ids[i]-1].renderGraphics(), i*chunkWidth*8, chunkHeight*8*rows, null);
 				}
 				//In theory, this will occur iff there was an animated tile in the chunk
 				catch(NullPointerException | ArrayIndexOutOfBoundsException e) {
-					for(int frame=0; frame<frameCount; frame++)
-						g[frame].drawImage(animChunks[frame][ids[i]-1].getGraphics(), i*chunkWidth*8, chunkHeight*8*rows, null);
+					//for(int frame=0; frame<frameCount; frame++)
+					//g[frame].drawImage(animChunks[frame][ids[i]-1].renderGraphics(), i*chunkWidth*8, chunkHeight*8*rows, null);
 				}
 			}
 		}

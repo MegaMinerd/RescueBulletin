@@ -53,15 +53,7 @@ public class ItemController implements Initializable {
 					"Eat (Food)", "Ingest (Healing Items)", "Peel (Chestnut)", "Use (Money/Wish Stone)", "Use (Misc.)",
 					"Use (TMs)", "Use (Link Box)", "Equip (Specs)", "Equip (Scarfs)", "Use (Orbs)");
 			actionType.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			sprite.setImage(
-					SwingFXUtils.toFXImage(
-							ImageProcessor.getItemSprite(
-									Integer.parseInt(spriteID.getText()), 
-									Integer.parseInt(paletteID.getText())
-									), 
-							null
-							)
-					);
+			sprite.setImage(ImageProcessor.getItemSprite(Integer.parseInt(spriteID.getText()), Integer.parseInt(paletteID.getText())));
 			//buffer.skip(0x1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

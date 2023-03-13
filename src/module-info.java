@@ -1,9 +1,9 @@
 module RescueRelic {
     requires javafx.fxml;
-	requires javafx.controls;
+	requires transitive javafx.controls;
 	requires javafx.base;
 	requires java.desktop;
-	requires javafx.swing;
+	requires transitive javafx.swing;
 	opens application to javafx.graphics, javafx.fxml;
     exports minerd.relic;
     exports minerd.relic.tree;
