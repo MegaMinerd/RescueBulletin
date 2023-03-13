@@ -3,14 +3,17 @@ package minerd.relic.dungeon;
 import java.io.IOException;
 
 import javafx.beans.value.ObservableValue;
+import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
 import minerd.relic.tree.FolderTreeItem;
 
 public class DungeonFolderTreeItem extends FolderTreeItem {
+	protected int names, floors;
 	
-	public DungeonFolderTreeItem(int offset) {
-		super("Dungeons", "This section lets you edit dungeons in the game.", offset);
-		// TODO Auto-generated constructor stub
+	public DungeonFolderTreeItem(int mainOff, int nameOff, int floorCountOff) {
+		super("Dungeons", "This section lets you edit dungeons in the game.", mainOff);
+		this.names = nameOff;
+		this.floors = floorCountOff;
 	}
 	
 	@Override
@@ -18,15 +21,15 @@ public class DungeonFolderTreeItem extends FolderTreeItem {
 		if(!loaded) {
 			getChildren().remove(0);
 			try {
-				RomManipulator.seek(offset);
+				RomManipulator.seek(names);
 				for(int i=0; i<98; i++) {
 					int dunStart = offset + 0x10 * i;
-					RomManipulator.seek(dunStart);
-					String dunName = "Dungeon " + i;
-					getChildren().add(new DungeonDataTreeItem(dunName, dunStart));
+					String dunName = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+					RomManipulator.skip(4);
+					getChildren().add(new DungeonDataTreeItem(dunName, i, dunStart, floors));
 				}
 				loaded = true;
-			} catch (IOException e) {
+			} catch (IOException | InvalidPointerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

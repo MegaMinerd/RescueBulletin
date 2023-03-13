@@ -1,54 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<SplitPane dividerPositions="0.3" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.item.ItemController">
+<SplitPane dividerPositions="0.3277310924369748" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.dungeon.FloorController">
   <items>
-    <AnchorPane maxWidth="175.0" minWidth="175.0" prefHeight="160.0" prefWidth="180.0">
+    <AnchorPane minWidth="-Infinity" prefHeight="400.0">
          <children>
-            <HBox layoutX="-6.0" layoutY="5.0" prefWidth="175.0">
-               <children>
-                  <ImageView fx:id="sprite" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="18.0" right="18.0" top="5.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <Label fx:id="floorNumLabel" text="Floor">
-                     <padding>
-                        <Insets top="12.0" />
-                     </padding>
-                  </Label>
-               </children>
-            </HBox>
-            <GridPane layoutY="47.0" prefWidth="175.0">
+            <GridPane prefWidth="175.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="63.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="114.0" minWidth="10.0" prefWidth="112.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Sprite ID:" GridPane.halignment="RIGHT">
+                  <Label text="Tileset:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                      <padding>
                         <Insets right="5.0" />
                      </padding>
@@ -56,143 +43,335 @@
                         <Insets />
                      </GridPane.margin>
                   </Label>
-                  <Label text="Palette ID:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                     <padding>
-                        <Insets right="5.0" />
-                     </padding>
-                  </Label>
-                  <Label text="Item ID:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                     <padding>
-                        <Insets right="5.0" />
-                     </padding>
-                  </Label>
-                  <Label text="Item Type:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-                     <padding>
-                        <Insets right="5.0" />
-                     </padding>
-                  </Label>
-                  <TextField fx:id="spriteID" GridPane.columnIndex="1">
+                  <ChoiceBox fx:id="tileset" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
-                        <Insets right="5.0" />
-                     </GridPane.margin>
-                  </TextField>
-                  <TextField fx:id="paletteID" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <GridPane.margin>
-                        <Insets right="5.0" />
-                     </GridPane.margin>
-                  </TextField>
-                  <TextField fx:id="itemID" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <GridPane.margin>
-                        <Insets right="5.0" />
-                     </GridPane.margin>
-                  </TextField>
-                  <ChoiceBox fx:id="itemType" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                     <GridPane.margin>
-                        <Insets right="5.0" />
+                        <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
                   </ChoiceBox>
+                  <Button mnemonicParsing="false" prefWidth="150.0" text="Go to" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" right="5.0" top="2.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Label text="Music:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </Label>
+                  <ChoiceBox fx:id="music" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" right="5.0" top="2.0" />
+                     </GridPane.margin>
+                  </ChoiceBox>
+                  <Button mnemonicParsing="false" prefWidth="150.0" text="Go to" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" right="5.0" top="2.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Label prefHeight="17.0" text="Fixed Room:" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </Label>
+                  <ChoiceBox fx:id="fixedRoom" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" right="5.0" top="2.0" />
+                     </GridPane.margin>
+                  </ChoiceBox>
+                  <Button mnemonicParsing="false" prefWidth="150.0" text="Go to" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" right="5.0" top="2.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Label fx:id="floorNum" text="Floor" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <padding>
+                        <Insets bottom="20.0" top="2.0" />
+                     </padding>
+                  </Label>
+                  <Label text="Dungeon" GridPane.columnIndex="1">
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </Label>
                </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
             </GridPane>
-         </children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+         </children>
+      </AnchorPane>
+    <AnchorPane prefHeight="160.0">
          <children>
-            <TabPane prefHeight="400.0" prefWidth="417.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane prefHeight="400.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <tabs>
-                <Tab text=" Text ">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <GridPane prefWidth="375.0">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="102.0" minWidth="10.0" prefWidth="72.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="298.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <padding>
-                                    <Insets left="5.0" top="5.0" />
-                                 </padding>
-                                 <children>
-                                    <Label text="Name:" GridPane.halignment="RIGHT">
-                                       <GridPane.margin>
-                                          <Insets />
-                                       </GridPane.margin>
-                                       <padding>
-                                          <Insets right="5.0" />
-                                       </padding>
-                                    </Label>
-                                    <Label text="Description:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                                       <padding>
-                                          <Insets right="5.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="itemNameField" text="Item" GridPane.columnIndex="1" />
-                                    <TextArea fx:id="description" prefHeight="200.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="4" />
-                                 </children>
-                              </GridPane>
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-                <Tab text=" Pokemon Spawns ">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="309.0">
-                           <children>
-                              <TableView AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
-                                <columns>
-                                  <TableColumn prefWidth="120.0" sortable="false" text="Pokemon" />
-                                  <TableColumn prefWidth="40.0" sortable="false" text="Level" />
-                                    <TableColumn prefWidth="50.0" sortable="false" text="Weight" />
-                                    <TableColumn editable="false" prefWidth="61.0" sortable="false" text="Chance" />
-                                </columns>
-                              </TableView>
-                           </children></AnchorPane>
-                  </content>
-                </Tab>
-                  <Tab text=" AI Flags ">
+                  <Tab text=" Layout ">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="309.0">
-                           <children>
-                              <GridPane>
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="127.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="73.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <padding>
-                                    <Insets left="5.0" top="5.0" />
-                                 </padding>
-                                 <children>
-                                    <CheckBox fx:id="ai1" mnemonicParsing="false" GridPane.columnIndex="1" />
-                                    <CheckBox fx:id="ai2" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <CheckBox fx:id="ai3" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <Label text="Usable on self:" GridPane.halignment="RIGHT">
-                                       <GridPane.margin>
-                                          <Insets right="5.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label text="Throwable at allies:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets right="5.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label text="Throwable at enemies:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets right="5.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                 </children>
-                              </GridPane>
-                           </children></AnchorPane>
+                        <TabPane prefHeight="200.0" tabClosingPolicy="UNAVAILABLE">
+                           <tabs>
+                              <Tab closable="false" text=" Structure ">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <GridPane prefHeight="155.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <padding>
+                                                <Insets left="5.0" top="5.0" />
+                                             </padding>
+                                             <children>
+                                                <Label text="Structure type:" GridPane.halignment="RIGHT">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Floor connectivity:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Extra hallway density:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Room density:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Dead ends:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <ChoiceBox fx:id="layoutType" prefWidth="150.0" GridPane.columnIndex="1" />
+                                                <CheckBox fx:id="hasDeadEnds" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                <TextField fx:id="connectivity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <TextField fx:id="hallDensity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text=" Terrain Settings ">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <GridPane prefHeight="185.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <padding>
+                                                <Insets left="5.0" top="5.0" />
+                                             </padding>
+                                             <children>
+                                                <Label text="Secondary Terrain:" GridPane.halignment="RIGHT">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Secondary T. rooms:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Secondary T. density:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Imperfect rooms:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Visibility:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Weather:" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <CheckBox fx:id="hasPonds" mnemonicParsing="false" GridPane.columnIndex="1" />
+                                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <TextField fx:id="waterDensity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <CheckBox fx:id="hasExtraTiles" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <ChoiceBox fx:id="weather" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                <ChoiceBox fx:id="visibility" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text=" Items, Traps &amp; Enemies">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <GridPane prefHeight="155.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <padding>
+                                                <Insets left="5.0" top="5.0" />
+                                             </padding>
+                                             <children>
+                                                <Label text="Floor item density:" GridPane.halignment="RIGHT">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Buried item density:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Trap density:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Max coin amount:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Initial enemy density:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <TextField fx:id="itemDensity" GridPane.columnIndex="1" />
+                                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <TextField fx:id="trapDensity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <TextField fx:id="maxCoinAmnt" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <TextField fx:id="pokemonDensity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text=" Chances ">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <GridPane>
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <padding>
+                                                <Insets left="5.0" top="5.0" />
+                                             </padding>
+                                             <children>
+                                                <Label text="Kecleon shop:" GridPane.halignment="RIGHT">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Monster house:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Maze room:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Sticky items:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Slider fx:id="shopChance" blockIncrement="1.0" GridPane.columnIndex="1" />
+                                                <Slider fx:id="houseChance" blockIncrement="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Slider fx:id="mazeChance" blockIncrement="1.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <Slider fx:id="stickyChance" blockIncrement="1.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                           </tabs>
+                        </TabPane>
+                     </content>
+                  </Tab>
+                  <Tab text=" Pokemon Spawns ">
+                     <content>
+                        <AnchorPane prefHeight="180.0" />
+                     </content>
+                  </Tab>
+                  <Tab text=" Traps ">
+                     <content>
+                        <AnchorPane prefHeight="180.0" />
+                     </content>
+                  </Tab>
+                  <Tab text=" Items ">
+                     <content>
+                        <TabPane prefHeight="200.0" tabClosingPolicy="UNAVAILABLE">
+                           <tabs>
+                              <Tab closable="false" text=" Floor ">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text=" Shop ">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text=" Monster House ">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text=" Buried ">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                           </tabs>
+                        </TabPane>
                      </content>
                   </Tab>
               </tabs>
