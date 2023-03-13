@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<SplitPane dividerPositions="0.3277310924369748" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.dungeon.FloorController">
+<SplitPane dividerPositions="0.3696682464454976" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.dungeon.FloorController">
   <items>
     <AnchorPane minWidth="-Infinity" prefHeight="400.0">
          <children>
@@ -157,7 +157,7 @@
                                                 <CheckBox fx:id="hasDeadEnds" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                                 <TextField fx:id="connectivity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <TextField fx:id="hallDensity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <TextField fx:id="roomDensity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                              </children>
                                           </GridPane>
                                        </children>
@@ -216,7 +216,7 @@
                                                    </padding>
                                                 </Label>
                                                 <CheckBox fx:id="hasPonds" mnemonicParsing="false" GridPane.columnIndex="1" />
-                                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <TextField fx:id="terrainRooms" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <TextField fx:id="waterDensity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                 <CheckBox fx:id="hasExtraTiles" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                 <ChoiceBox fx:id="weather" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
@@ -273,7 +273,7 @@
                                                    </padding>
                                                 </Label>
                                                 <TextField fx:id="itemDensity" GridPane.columnIndex="1" />
-                                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <TextField fx:id="buriedDensity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <TextField fx:id="trapDensity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                 <TextField fx:id="maxCoinAmnt" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                 <TextField fx:id="pokemonDensity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
