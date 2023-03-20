@@ -71,7 +71,7 @@ public class mainController implements Initializable{
 		//TODO: load these offsets from a config for various builds
 		root.getChildren().add(new ListsFolderTreeItem(0));
 		root.getChildren().add(new SceneFolderTreeItem(0));
-		root.getChildren().add(new PokemonFolderTreeItem(0x00357B88));
+		root.getChildren().add(new PokemonFolderTreeItem(0x00357B88, 0x00510018));
 		root.getChildren().add(new ItemFolderTreeItem(0x00306570));
 		root.getChildren().add(new MoveFolderTreeItem(0x0360BF4));
 		root.getChildren().add(new MapFolderTreeItem(0));

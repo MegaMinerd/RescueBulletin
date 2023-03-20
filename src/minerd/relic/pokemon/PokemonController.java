@@ -1,21 +1,19 @@
 package minerd.relic.pokemon;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import minerd.relic.InvalidPointerException;
+import javafx.scene.image.ImageView;
 import minerd.relic.Lists;
 import minerd.relic.RomManipulator;
+import minerd.relic.graphics.ImageProcessor;
 
-public class PokemonController implements Initializable {
+public class PokemonController{
+	public Pokemon pokemon;
+	
 	public Label pokemonNameLabel;
 	public TextField dexID, entityID, alphaID, parentID;
 	
@@ -35,76 +33,61 @@ public class PokemonController implements Initializable {
 	public CheckBox canWalk, toolbox;
 	
 	//Level up moves tab
-	public TableView levelupTable;
-	public TableColumn levelCol, moveCol;
+	//public TableView levelupTable;
+	//public TableColumn levelCol, moveCol;
 	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		try {
-			//int dataPointer = RomManipulator.getFilePointer();
-			String name = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
-			pokemonNameLabel.setText(name);
-			pokemonNameField.setText(name);
-			category.setText(RomManipulator.readStringAndReturn(RomManipulator.parsePointer()));
-			//Palette ID. Not used until image support is added.
-			RomManipulator.skip(1);
-			bodySize.setText(RomManipulator.readByte()+"");
-			RomManipulator.skip(2);
-			speed.setText(RomManipulator.readInt()+"");
-			//Face bitfield. Not used until image support is added.
-			RomManipulator.skip(2);
-			RomManipulator.skip(1);
-			type1.getItems().addAll(Lists.types);
-			type1.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			type2.getItems().addAll(Lists.types);
-			type2.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			movement.getItems().addAll("Normal", "Magma, Water", "Magma, Water, Sky", "Magma, Water, Sky, Wall", "Magma", "Water");
-			movement.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			// TODO enumerate the options for below
-			//area.setText(RomManipulator.readUnsignedByte();
-			//ability1.setText(RomManipulator.readUnsignedByte();
-			//ability2.setText(RomManipulator.readUnsignedByte();
-			RomManipulator.skip(3);//temp
-			shadow.setText(RomManipulator.readUnsignedByte()+"");
-			RomManipulator.skip(1);
-			regen.setText(RomManipulator.readUnsignedByte()+"");
-			canWalk.setSelected(RomManipulator.readUnsignedByte()!=0);
-			sleepiness.setText(RomManipulator.readUnsignedByte()+"");
-			baseHp.setText(RomManipulator.readShort()+"");
-			exp.setText(RomManipulator.readInt()+"");
-			baseAtk.setText(RomManipulator.readShort()+"");
-			baseSpa.setText(RomManipulator.readShort()+"");
-			baseDef.setText(RomManipulator.readShort()+"");
-			baseSpd.setText(RomManipulator.readShort()+"");
-			weight.setText(RomManipulator.readShort()+"");
-			size.setText(RomManipulator.readShort()+"");
-			unk30.setText(RomManipulator.readUnsignedByte()+"");
-			unk31.setText(RomManipulator.readUnsignedByte()+"");
-			unk32.setText(RomManipulator.readUnsignedByte()+"");
-			toolbox.setSelected(RomManipulator.readUnsignedByte()!=0);
-			short preId = RomManipulator.readShort();
-			evolveFrom.setText(preId+"");
-			evolveFromName.setText(Lists.pokemon.get(preId));
-			evolveType.getItems().addAll("Unevolved", "Level", "IQ", "Item");
-			evolveType.getSelectionModel().select(RomManipulator.readShort());
-			evolveParam.setText(RomManipulator.readShort()+"");
-			evolveAddition.getItems().addAll("Unevolved", "Level", "IQ", "Item", "Link Cable", "Attack > Defense", "Attack < Defense", "Attack + Defense", 
-					"Sun Ribbon", "Lunar Ribbon", "Beauty Scarf", "50% Option 1", "50% Option 2");
-			evolveAddition.getSelectionModel().select(RomManipulator.readShort());
-			dexID.setText(RomManipulator.readShort()+"");
-			entityID.setText(RomManipulator.readShort()+"");
-			recruit.setText(RomManipulator.readShort()+"");
-			alphaID.setText(RomManipulator.readShort()+"");
-			parentID.setText(RomManipulator.readShort()+"");
-			
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	//Sprites tab
+	public ImageView sprite;
+	public TextField spriteIdField;
+	public int spriteId, spriteCount;
+	
+	public void load(Pokemon pokemonIn) {
+		pokemon = pokemonIn;
+		pokemonNameLabel.setText(pokemon.name);
+		pokemonNameField.setText(pokemon.name);
+		category.setText(pokemon.category);
+		bodySize.setText(pokemon.bodySize+"");
+		speed.setText(pokemon.speed+"");
+		type1.getItems().addAll(Lists.types);
+		type1.getSelectionModel().select(pokemon.type1);
+		type2.getItems().addAll(Lists.types);
+		type2.getSelectionModel().select(pokemon.type2);
+		movement.getItems().addAll("Normal", "Magma, Water", "Magma, Water, Sky", "Magma, Water, Sky, Wall", "Magma", "Water");
+		movement.getSelectionModel().select(pokemon.movement);
+		shadow.setText(pokemon.shadow+"");
+		regen.setText(pokemon.regen+"");
+		canWalk.setSelected(pokemon.canWalk);
+		sleepiness.setText(pokemon.sleepiness+"");
+		baseHp.setText(pokemon.baseHp+"");
+		exp.setText(pokemon.exp+"");
+		baseAtk.setText(pokemon.baseAtk+"");
+		baseSpa.setText(pokemon.baseSpa+"");
+		baseDef.setText(pokemon.baseDef+"");
+		baseSpd.setText(pokemon.baseSpd+"");
+		weight.setText(pokemon.weight+"");
+		size.setText(pokemon.size+"");
+		unk30.setText(pokemon.unk30+"");
+		unk31.setText(pokemon.unk31+"");
+		unk32.setText(pokemon.unk32+"");
+		toolbox.setSelected(pokemon.toolbox);
+		evolveFrom.setText(pokemon.evolveFrom+"");
+		evolveFromName.setText(Lists.pokemon.get(pokemon.evolveFrom));
+		evolveType.getItems().addAll("Unevolved", "Level", "IQ", "Item");
+		evolveType.getSelectionModel().select(pokemon.evolveType);
+		evolveParam.setText(pokemon.evolveParam+"");
+		evolveAddition.getItems().addAll("Unevolved", "Level", "IQ", "Item", "Link Cable", "Attack > Defense", "Attack < Defense", "Attack + Defense", 
+				"Sun Ribbon", "Lunar Ribbon", "Beauty Scarf", "50% Option 1", "50% Option 2");
+		evolveAddition.getSelectionModel().select(pokemon.evolveAddition);
+		dexID.setText(pokemon.dexID+"");
+		entityID.setText(pokemon.entityID+"");
+		recruit.setText(pokemon.recruit+"");
+		alphaID.setText(pokemon.alphaID+"");
+		parentID.setText(pokemon.parentID+"");
+		
+		spriteId = 0;
+		spriteCount = pokemon.sprites.length;
+		spriteIdField.setText("0");
+		updateSprite();
 	}
 	
 	int readMoveId() throws IOException{
@@ -113,5 +96,27 @@ public class PokemonController implements Initializable {
 			(highByte[0]<<7) | RomManipulator.readUnsignedByte()
 			: highByte[0];
 		return moveId;
+	}
+	
+	public void lastSprite() {
+		spriteId = Math.max(spriteId-1, 0);
+		spriteIdField.setText(spriteId + "");
+		updateSprite();
+	}
+	
+	public void nextSprite() {
+		spriteId = Math.min(spriteId+1, spriteCount-1);
+		spriteIdField.setText(spriteId + "");
+		updateSprite();
+	}
+	
+	public void goToSprite() {
+		spriteId = Math.min(Math.max(Integer.parseInt(spriteIdField.getText()), 0), spriteCount-1);
+		spriteIdField.setText(spriteId + "");
+		updateSprite();	
+	}
+	
+	public void updateSprite() {
+		sprite.setImage(pokemon.sprites[spriteId].renderGraphics(ImageProcessor.getCommonPalette(pokemon.palette)));
 	}
 }

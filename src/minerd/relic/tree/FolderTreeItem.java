@@ -1,13 +1,9 @@
 package minerd.relic.tree;
 
-import java.io.IOException;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import minerd.relic.RomManipulator;
 
 public class FolderTreeItem extends DataTreeItem implements ChangeListener<Boolean>{
 	private String name, info;

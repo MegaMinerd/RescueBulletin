@@ -9,9 +9,11 @@ import minerd.relic.RomManipulator;
 import minerd.relic.tree.FolderTreeItem;
 
 public class PokemonFolderTreeItem extends FolderTreeItem {
+	int spritesPointer;
 
-	public PokemonFolderTreeItem(int offset) {
+	public PokemonFolderTreeItem(int offset, int sprites) {
 		super("Pokemon", "This section lets you edit data for Pokemon in the game.", offset);
+		spritesPointer = sprites;
 	}
 	
 	@Override
@@ -24,9 +26,10 @@ public class PokemonFolderTreeItem extends FolderTreeItem {
 				int dataStart = RomManipulator.parsePointer();
 				for(int i=0; i<424; i++) {
 					int pokemonStart = dataStart + 0x48 * i;
+					int spriteStart = spritesPointer + 0x8 * (i-1);
 					RomManipulator.seek(pokemonStart);
 					String pokemonName = RomManipulator.readString(RomManipulator.parsePointer());
-					getChildren().add(new PokemonDataTreeItem(pokemonName, pokemonStart));
+					getChildren().add(new PokemonDataTreeItem(pokemonName, pokemonStart, spriteStart));
 					Lists.pokemon.add(pokemonName);
 				}
 				loaded = true;

@@ -25,15 +25,15 @@ public class ImageProcessor{
 	
 	//Cache for common and shared sprites
 	private static Chunk[] itemSprites;
-	private static Palette[] itemPalettes;
+	private static Palette[] commonPalettes;
 	
 	static {
 		//Load palettes
 		try {
 			RomManipulator.seek(0x016BD42C);
-			itemPalettes = new Palette[13];
+			commonPalettes = new Palette[13];
 			for(int i=0; i<13; i++)
-				itemPalettes[i] = new Palette(false);
+				commonPalettes[i] = new Palette(false);
 		
 			//Todo: make this go through readSpriteSiro
 			//Goto SIRO file
@@ -59,56 +59,68 @@ public class ImageProcessor{
 	
 	
 	public static WritableImage getItemSprite(int sprite, int palette) throws IOException, InvalidPointerException {
-		return itemSprites[sprite].renderGraphics(itemPalettes[palette]);
+		return itemSprites[sprite].renderGraphics(commonPalettes[palette]);
+	}
+	
+	public static Palette getCommonPalette(int id) {
+		return commonPalettes[id];
 	}
 	
 	//Todo: figure out suitable return type
-	public static void readSpriteSiro(int offset) throws IOException, InvalidPointerException {
+	public static Chunk[] readSpriteSiro(int offset) throws IOException, InvalidPointerException {
 		RomManipulator.seek(offset);
 		RomManipulator.skip(4); //Ignore magic bytes
-		RomManipulator.seek(RomManipulator.parsePointer()); //Go to footer
+		int footerPointer = RomManipulator.parsePointer();
+		RomManipulator.seek(footerPointer); //Go to footer
 		int animationPointers = RomManipulator.parsePointer();
 		int directionPointers = RomManipulator.parsePointer();
+		//Unknown integer
+		RomManipulator.skip(4);
+		int spritesPointer = RomManipulator.parsePointer();
 		int displacePointers = RomManipulator.parsePointer();
-		int spritePointers = RomManipulator.parsePointer();
 			
 		//Load sprites
-		//Todo: generalize
-		Chunk[] sprites = new Chunk[24];
-		for(int i=0; i<24; i++) {
-			RomManipulator.seek(spritePointers+4*i);
+		//Todo: Find count number
+		int spriteCount = (footerPointer-spritesPointer)/4;
+		Chunk[] sprites = new Chunk[spriteCount];
+		System.out.print("\n");
+		for(int i=0; i<spriteCount; i++) {
+			RomManipulator.seek(spritesPointer+4*i);
 			RomManipulator.seek(RomManipulator.parsePointer());
-			RomManipulator.seek(RomManipulator.parsePointer());
-			Tile[] spriteTiles = new Tile[4];
-			for(int j=0; j<4; j++)
-				spriteTiles[j] = new Tile(8, 8);
-			itemSprites[i] = new Chunk(2, 2, spriteTiles);
+			System.out.print("\t"+Integer.toHexString(RomManipulator.getFilePointer()));
+			sprites[i] = buildSprite(4, 4);
 		}
+		return sprites;
 	}
 	
 	public static Chunk buildSprite(int rows, int cols) throws IOException, InvalidPointerException{
 		int totalSize = 0;
 		int endSize = rows*cols;
 		Chunk sprite = new Chunk(rows, cols);
+		ArrayList<Tile> tiles = new ArrayList<Tile>(0);
 		while(totalSize<endSize){
-			int pointer = RomManipulator.parsePointer();
-			int displace = 0;
-			if(pointer == 0){
-				displace = RomManipulator.readInt()/32;
-				totalSize += displace;
+			int pointer;
+			//TODO: temporary try block to account for different sprite sizes until more segments are implemented 
+			try {
 				pointer = RomManipulator.parsePointer();
-			}
-			if(pointer == 0)
+			} catch(InvalidPointerException e) {
 				break;
+			}
 			int size = RomManipulator.readInt()/32;
+			if(pointer==-1) {
+				for(int i=0; i<size; i++)
+					tiles.add(Tile.empty());
+			} else {
+				int here = RomManipulator.getFilePointer();
+				RomManipulator.seek(pointer);
+				for(int i=0; i<size; i++)
+					tiles.add(new Tile(8, 8));
+				RomManipulator.seek(here);
+			}
 			totalSize += size;
-			Tile[] tiles = new Tile[size];
-			RomManipulator.seek(pointer);
-			for(int i=0; i<size; i++)
-				tiles[i] = new Tile(8, 8);
-			sprite.addTiles(displace, tiles);
 		}
-		return sprite;
+		
+		return new Chunk(rows, cols, tiles.toArray(new Tile[tiles.size()]));
 	}
 	
 	//Todo: untested port from precursor tool

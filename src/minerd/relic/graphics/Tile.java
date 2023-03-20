@@ -24,6 +24,26 @@ public class Tile {
 		}
 	}
 	
+	public Tile(int[][] dataIn) {
+		this.height = dataIn.length;
+		this.width = dataIn[0].length;
+		this.data = dataIn;
+	}
+	
+	public static Tile empty() {
+		int[][] data = {
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0}
+		};
+		return new Tile(data);
+	}
+	
 	public WritableImage render(Palette pal) {
 		return render(pal, false, false);
 	}
