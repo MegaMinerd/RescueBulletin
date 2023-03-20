@@ -18,7 +18,7 @@ public class DataTreeItem extends TreeItem<String>{
 	}
 	
 	public String getName() {
-		return "";//this.isRoot() ? "root" : name;
+		return name;//this.isRoot() ? "root" : name;
 	}
 	
 	public String getPathName() {

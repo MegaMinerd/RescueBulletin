@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<SplitPane dividerPositions="0.3110773899848255" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" prefWidth="661.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.area.AreaController">
+  <items>
+    <AnchorPane minWidth="-Infinity" prefHeight="400.0">
+         <children>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Max population:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Condition:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </Label>
+                  <Label prefHeight="17.0" text="Price:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="areaName" text="Friend Area" GridPane.columnIndex="1">
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="population" prefHeight="25.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" right="5.0" top="2.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField fx:id="price" prefHeight="25.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" right="5.0" top="2.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <ChoiceBox fx:id="condition" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" right="5.0" top="2.0" />
+                     </GridPane.margin>
+                  </ChoiceBox>
+               </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </GridPane>
+         </children>
+      </AnchorPane>
+    <AnchorPane prefHeight="160.0">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+         </children></AnchorPane>
+  </items>
+</SplitPane>

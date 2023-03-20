@@ -9,6 +9,7 @@ module RescueRelic {
     exports minerd.relic.tree;
     exports minerd.relic.item;
     exports minerd.relic.move;
+    exports minerd.relic.area;
     exports minerd.relic.pokemon;
     exports minerd.relic.dungeon;
 }

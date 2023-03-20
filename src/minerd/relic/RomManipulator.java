@@ -86,6 +86,8 @@ public class RomManipulator {
 	 */
 	public static int parsePointer() throws IOException, InvalidPointerException{
 		int[] output = readMask(4, 25, 7);
+		if(output[1]==0 && output[0]==0)
+			return -1;
 		if(output[1]!=4)
 			throw new InvalidPointerException((int)instance.file.getFilePointer() - 4);
 		return output[0];

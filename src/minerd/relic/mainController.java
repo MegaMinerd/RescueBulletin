@@ -16,6 +16,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import minerd.relic.area.AreaFolderTreeItem;
 import minerd.relic.dungeon.DungeonFolderTreeItem;
 import minerd.relic.item.ItemFolderTreeItem;
 import minerd.relic.lists.ListsFolderTreeItem;
@@ -76,6 +77,7 @@ public class mainController implements Initializable{
 		root.getChildren().add(new MapFolderTreeItem(0));
 		root.getChildren().add(new SpriteFolderTreeItem(0));
 		root.getChildren().add(new BackgroundFolderTreeItem(0));
+		root.getChildren().add(new AreaFolderTreeItem(0x0010AA90, 0x001139D0));
 		root.getChildren().add(new DungeonFolderTreeItem(0x00109D30, 0x00111A28, 0x01077A8));
 		root.getChildren().add(new FixedRoomFolderTreeItem(0));
 		root.getChildren().add(new TilesetFolderTreeItem(0));
