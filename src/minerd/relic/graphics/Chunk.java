@@ -26,7 +26,7 @@ public class Chunk {
 	}
 	
 	public void addTiles(int displace, Tile[] tiles){
-		for(int i=0; i<tiles.length; i++){
+		for(int i=0; i<Math.min(rows*cols, tiles.length); i++){
 			int row = (i+displace)/cols; //Integer division, should give floor
 			int col = (i+displace)%cols;
 			this.tiles[row][col] = tiles[i];

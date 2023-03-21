@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
@@ -57,7 +59,6 @@ public class ImageProcessor{
 		}
 	}
 	
-	
 	public static WritableImage getItemSprite(int sprite, int palette) throws IOException, InvalidPointerException {
 		return itemSprites[sprite].renderGraphics(commonPalettes[palette]);
 	}
@@ -67,40 +68,159 @@ public class ImageProcessor{
 	}
 	
 	//Todo: figure out suitable return type
-	public static Chunk[] readSpriteSiro(int offset) throws IOException, InvalidPointerException {
+	public static Sprite buildSprite(int offset) throws IOException, InvalidPointerException {
 		RomManipulator.seek(offset);
 		RomManipulator.skip(4); //Ignore magic bytes
 		int footerPointer = RomManipulator.parsePointer();
 		RomManipulator.seek(footerPointer); //Go to footer
 		int animationPointers = RomManipulator.parsePointer();
 		int directionPointers = RomManipulator.parsePointer();
-		//Unknown integer
-		RomManipulator.skip(4);
+		int animCount = RomManipulator.readInt();
 		int spritesPointer = RomManipulator.parsePointer();
 		int displacePointers = RomManipulator.parsePointer();
-			
-		//Load sprites
-		//Todo: Find count number
-		int spriteCount = (footerPointer-spritesPointer)/4;
-		Chunk[] sprites = new Chunk[spriteCount];
-		System.out.print("\n");
-		for(int i=0; i<spriteCount; i++) {
-			RomManipulator.seek(spritesPointer+4*i);
-			RomManipulator.seek(RomManipulator.parsePointer());
-			System.out.print("\t"+Integer.toHexString(RomManipulator.getFilePointer()));
-			sprites[i] = buildSprite(4, 4);
+		
+		//Load animations
+		DirectionalAnimation[] dirAnims = new DirectionalAnimation[animCount];
+		for(int animId=0; animId<animCount; animId++) {
+			RomManipulator.seek(directionPointers + animId*4);
+			int animPointer = RomManipulator.parsePointer();
+			Animation[] anims = new Animation[8];
+			for(int dir=0; dir<8; dir++) {
+				RomManipulator.seek(animPointer + dir*4);
+				RomManipulator.seek(RomManipulator.parsePointer());
+				//System.out.println("Animation " + dir + " data: " + Integer.toHexString(RomManipulator.getFilePointer()));
+				anims[dir] = buildAnimation(animationPointers, spritesPointer);
+			}
+			dirAnims[animId] = new DirectionalAnimation(anims);
 		}
-		return sprites;
+		
+		return new Sprite(dirAnims);
+	}
+	
+	public static Animation buildAnimation(int animationPointers, int spritesPointer) throws IOException, InvalidPointerException {
+		ArrayList<WritableImage> frames = new ArrayList<WritableImage>(0);
+		ArrayList<Integer> durations = new ArrayList<Integer>(0);
+		int loopPointer;
+		do {
+			//Read timing data
+			int duration = RomManipulator.readUnsignedShort();
+			int animId = RomManipulator.readUnsignedShort();
+			short horDisp = RomManipulator.readShort();
+			short verDisp = RomManipulator.readShort();
+			//There's 2 more shorts afterward for shadow displacement, but those aren't important right now.
+			RomManipulator.skip(4);
+			//To come back later
+			loopPointer = RomManipulator.getFilePointer();
+			
+			//Detect a null entry terminator
+			if(duration==0)
+				break;
+			
+			//Create frame
+			RomManipulator.seek(animationPointers + animId*4);
+			RomManipulator.seek(RomManipulator.parsePointer());
+			//System.out.println("Frame " + animId + " data: " + Integer.toHexString(RomManipulator.getFilePointer()));
+			WritableImage frameImage = buildFrame(spritesPointer);
+			WritableImage shiftedImage = new WritableImage((int)frameImage.getWidth(), (int)frameImage.getHeight());
+			PixelWriter writer = shiftedImage.getPixelWriter();
+			PixelReader reader = frameImage.getPixelReader();
+			for(int y=0; y<frameImage.getHeight(); y++) {
+				for(int x=0; x<frameImage.getWidth(); x++) {
+					try{
+						writer.setArgb(x, y, reader.getArgb(x-horDisp, y-verDisp));
+					}catch(IndexOutOfBoundsException e){
+						writer.setColor(x, y, commonPalettes[0].getColor(0));
+					}
+				}
+			}
+			frames.add(shiftedImage);
+			durations.add(duration);
+			
+			RomManipulator.seek(loopPointer);
+		} while(true);
+
+		return new Animation(frames.toArray(new WritableImage[frames.size()]), durations.toArray(new Integer[durations.size()]));
+	}
+	
+	public static WritableImage buildFrame(int spritesPointer) throws IOException, InvalidPointerException{
+		//Read frame data		
+		int index = RomManipulator.readUnsignedShort();
+		int unkPalEff = RomManipulator.readUnsignedShort();
+		
+		//Attribute 0
+		int[] tileData = RomManipulator.readMask(2, 8, 1, 1, 2, 1, 1, 2);
+		byte yDisp = (byte)tileData[0];
+		boolean rotateScale = tileData[1]==1;				//Always off?
+		boolean doubled = rotateScale && tileData[2]==1;	//Always off?
+		boolean disabled = !rotateScale && tileData[2]==1;
+		int mode = tileData[3];								//Always the same?
+		boolean mosaic = tileData[4]==1;					//Always off?
+		boolean singlePal = tileData[5]==1;					//Always off?
+		int shape = tileData[6];
+		
+		//Attribute 1
+		int xDisp, rotateParam, size;
+		boolean horFlip, verFlip;
+		if(rotateScale){
+			tileData = RomManipulator.readMask(2, 9, 5, 2);
+			xDisp = (byte)tileData[0];
+			rotateParam = tileData[1];
+			size = tileData[2];
+		} else {
+			tileData = RomManipulator.readMask(2, 9, 3, 1, 1, 2);
+			xDisp = (byte)tileData[0];
+			horFlip = tileData[1]==0;
+			verFlip = tileData[2]==0;
+			size = tileData[3];
+		}
+		//System.out.println(xDisp + ", " + yDisp);
+		int[][] widthTable = {{8,  16, 8},
+							  {16, 32, 8},
+							  {32, 32, 16},
+							  {64, 64, 32}};
+		int width = widthTable[size][shape];
+		int[][] heightTable = {{8,  8,  16},
+							   {16, 8,  32},
+							   {32, 16, 32},
+							   {64, 32, 64}};
+		int height = heightTable[size][shape];
+		
+		//Attribute 2
+		tileData = RomManipulator.readMask(2, 10, 2, 4);
+		int tileNum = tileData[0];
+		int priority= tileData[1];
+		int pal = tileData[2];
+		
+		//Create frame for real this time
+		RomManipulator.seek(spritesPointer + index*4);
+		RomManipulator.seek(RomManipulator.parsePointer());
+		//System.out.println("Chunk " + index + " data: " + Integer.toHexString(RomManipulator.getFilePointer()));
+		Chunk frameChunk = buildSprite(height/8, width/8);
+		WritableImage frameImage = frameChunk.renderGraphics(commonPalettes[pal]);
+		WritableImage shiftedImage = new WritableImage(width, height);
+		xDisp += width/2;
+		yDisp += height/2;
+		//Might be a way to do this with setPixels(), but for now I want to see if this even works
+		PixelWriter writer = shiftedImage.getPixelWriter();
+		PixelReader reader = frameImage.getPixelReader();
+		for(int y=0; y<height; y++) {
+			for(int x=0; x<width; x++) {
+				try{
+					writer.setArgb(x, y, reader.getArgb(x-xDisp, y+yDisp));
+				}catch(IndexOutOfBoundsException e){
+					writer.setColor(x, y, commonPalettes[pal].getColor(0));
+				}
+			}
+		}
+		return shiftedImage;
 	}
 	
 	public static Chunk buildSprite(int rows, int cols) throws IOException, InvalidPointerException{
 		int totalSize = 0;
 		int endSize = rows*cols;
-		Chunk sprite = new Chunk(rows, cols);
 		ArrayList<Tile> tiles = new ArrayList<Tile>(0);
 		while(totalSize<endSize){
 			int pointer;
-			//TODO: temporary try block to account for different sprite sizes until more segments are implemented 
 			try {
 				pointer = RomManipulator.parsePointer();
 			} catch(InvalidPointerException e) {
@@ -118,6 +238,7 @@ public class ImageProcessor{
 				RomManipulator.seek(here);
 			}
 			totalSize += size;
+			//System.out.println("\t" + totalSize + " tiles processed at " + Integer.toHexString(RomManipulator.getFilePointer()));
 		}
 		
 		return new Chunk(rows, cols, tiles.toArray(new Tile[tiles.size()]));

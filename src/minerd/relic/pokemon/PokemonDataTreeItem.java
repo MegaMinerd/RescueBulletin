@@ -34,9 +34,9 @@ public class PokemonDataTreeItem extends DataTreeItem{
 			Pokemon pokemon = new Pokemon();
 			RomManipulator.seek(spritePointer+4);
 			int pointer = RomManipulator.parsePointer();
-			System.out.print("\n"+Integer.toHexString(spritePointer+4));
-			System.out.print("\t"+Integer.toHexString(pointer));
-			pokemon.setSprites(ImageProcessor.readSpriteSiro(pointer));
+			//System.out.print("\n"+Integer.toHexString(spritePointer+4));
+			//System.out.print("\t"+Integer.toHexString(pointer));
+			pokemon.setSprite(ImageProcessor.buildSprite(pointer));
 			
 			controller.load(pokemon);
 		} catch (IOException e) {

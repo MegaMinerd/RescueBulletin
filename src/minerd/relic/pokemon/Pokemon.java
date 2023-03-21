@@ -5,6 +5,7 @@ import java.io.IOException;
 import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
 import minerd.relic.graphics.Chunk;
+import minerd.relic.graphics.Sprite;
 
 public class Pokemon {
 	String name, category;
@@ -20,7 +21,7 @@ public class Pokemon {
 	int regen, sleepiness, unk30, unk31, unk32;
 	boolean canWalk, toolbox;
 	//Sprites tab
-	Chunk[] sprites;
+	Sprite sprite;
 	
 	public Pokemon() {
 		try {
@@ -74,7 +75,7 @@ public class Pokemon {
 		}
 	}
 
-	public void setSprites(Chunk[] sprites) {
-		this.sprites = sprites;
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
 	}
 }

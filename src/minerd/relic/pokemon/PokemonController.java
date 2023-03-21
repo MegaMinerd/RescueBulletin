@@ -85,7 +85,7 @@ public class PokemonController{
 		parentID.setText(pokemon.parentID+"");
 		
 		spriteId = 0;
-		spriteCount = pokemon.sprites.length;
+		spriteCount = pokemon.sprite.getAnimation(0).getDirection(0).getFrameCount();
 		spriteIdField.setText("0");
 		updateSprite();
 	}
@@ -117,6 +117,6 @@ public class PokemonController{
 	}
 	
 	public void updateSprite() {
-		sprite.setImage(pokemon.sprites[spriteId].renderGraphics(ImageProcessor.getCommonPalette(pokemon.palette)));
+		sprite.setImage(pokemon.sprite.getAnimation(0).getDirection(0).getFrame(spriteId));
 	}
 }
