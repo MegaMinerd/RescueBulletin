@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import minerd.relic.InvalidPointerException;
 import minerd.relic.RomManipulator;
 import minerd.relic.util.FileSystem;
@@ -26,17 +27,19 @@ public class ImageProcessor{
 	private static boolean hasAnim, hasExtras;
 	
 	//Cache for common and shared sprites
+	private static WritableImage blankSprite;
 	private static Chunk[] itemSprites;
 	private static Palette[] commonPalettes;
 	
 	static {
-		//Load palettes
 		try {
+			//Load palettes
 			RomManipulator.seek(0x016BD42C);
 			commonPalettes = new Palette[13];
 			for(int i=0; i<13; i++)
 				commonPalettes[i] = new Palette(false);
-		
+			
+			//Load item sprites
 			//Todo: make this go through readSpriteSiro
 			//Goto SIRO file
 			RomManipulator.seek(0x01E76170);
@@ -52,6 +55,16 @@ public class ImageProcessor{
 				RomManipulator.seek(itemPointer+4*i);
 				RomManipulator.seek(RomManipulator.parsePointer());
 				itemSprites[i] = buildSprite(2, 2);
+			}
+			
+			//Create a blank sprite used to fill in backgrounds
+			blankSprite = new WritableImage(64, 64);
+			PixelWriter writer = blankSprite.getPixelWriter();
+			Color bgColor = commonPalettes[0].getColor(0);
+			for(int i=0; i<64; i++) {
+				for(int j=0; j<64; j++) {
+					writer.setColor(i, j, bgColor);
+				}
 			}
 		} catch (IOException | InvalidPointerException e) {
 			// TODO Auto-generated catch block
@@ -121,18 +134,16 @@ public class ImageProcessor{
 			RomManipulator.seek(RomManipulator.parsePointer());
 			//System.out.println("Frame " + animId + " data: " + Integer.toHexString(RomManipulator.getFilePointer()));
 			WritableImage frameImage = buildFrame(spritesPointer);
+			int width = (int) frameImage.getWidth();
+			int height = (int) frameImage.getHeight();
 			WritableImage shiftedImage = new WritableImage((int)frameImage.getWidth(), (int)frameImage.getHeight());
 			PixelWriter writer = shiftedImage.getPixelWriter();
 			PixelReader reader = frameImage.getPixelReader();
-			for(int y=0; y<frameImage.getHeight(); y++) {
-				for(int x=0; x<frameImage.getWidth(); x++) {
-					try{
-						writer.setArgb(x, y, reader.getArgb(x-horDisp, y-verDisp));
-					}catch(IndexOutOfBoundsException e){
-						writer.setColor(x, y, commonPalettes[0].getColor(0));
-					}
-				}
-			}
+			writer.setPixels(0, 0, width, height, blankSprite.getPixelReader(), 0, 0);
+			writer.setPixels(Math.max(horDisp, 0),	  Math.max(verDisp, 0), 
+							 width-Math.abs(horDisp), height-Math.abs(verDisp), 
+							 reader, 
+							 Math.max(0-horDisp, 0),  Math.max(0-verDisp, 0));
 			frames.add(shiftedImage);
 			durations.add(duration);
 			
@@ -197,21 +208,24 @@ public class ImageProcessor{
 		//System.out.println("Chunk " + index + " data: " + Integer.toHexString(RomManipulator.getFilePointer()));
 		Chunk frameChunk = buildSprite(height/8, width/8);
 		WritableImage frameImage = frameChunk.renderGraphics(commonPalettes[pal]);
-		WritableImage shiftedImage = new WritableImage(width, height);
+		WritableImage shiftedImage = new WritableImage(width+16, height+16);
+		//System.out.println(String.format("%s, %d-%d, %d-%d", doubled, width, xDisp, height, yDisp));
 		xDisp += width/2;
 		yDisp += height/2;
-		//Might be a way to do this with setPixels(), but for now I want to see if this even works
 		PixelWriter writer = shiftedImage.getPixelWriter();
 		PixelReader reader = frameImage.getPixelReader();
-		for(int y=0; y<height; y++) {
-			for(int x=0; x<width; x++) {
-				try{
-					writer.setArgb(x, y, reader.getArgb(x-xDisp, y+yDisp));
-				}catch(IndexOutOfBoundsException e){
-					writer.setColor(x, y, commonPalettes[pal].getColor(0));
-				}
-			}
-		}
+		int x0 = Math.max(8+xDisp, 0);
+		int y0 = Math.max(8-yDisp, 0);
+		int w = width-Math.max(0, Math.abs(xDisp)-8);
+		int h = height-Math.max(0, Math.abs(yDisp)-8);
+		int xf = 0-Math.min(xDisp+8, 0);
+		int yf = Math.max(yDisp-8, 0);
+		writer.setPixels(0, 0, width+16, height+16, blankSprite.getPixelReader(), 0, 0);
+		writer.setPixels(x0, y0, w,  h, reader, xf, yf);
+		//TODO: There seems to be a bug that causes some sprites to render 8 pixels too low.
+		//For now, I made the canvas bigger (to test if this would make more of the sprite visible)
+		//Below is the code for shifting the image prior to this test
+		//writer.setPixels(Math.max(xDisp, 0), Math.max(0-yDisp, 0), width-Math.abs(xDisp), height-Math.abs(yDisp), reader, Math.max(0-xDisp, 0), Math.max(yDisp, 0));
 		return shiftedImage;
 	}
 	

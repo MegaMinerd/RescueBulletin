@@ -36,8 +36,9 @@ public class PokemonDataTreeItem extends DataTreeItem{
 			int pointer = RomManipulator.parsePointer();
 			//System.out.print("\n"+Integer.toHexString(spritePointer+4));
 			//System.out.print("\t"+Integer.toHexString(pointer));
+			long time = System.currentTimeMillis();
 			pokemon.setSprite(ImageProcessor.buildSprite(pointer));
-			
+			System.out.println("Time: " + (System.currentTimeMillis() - time));
 			controller.load(pokemon);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

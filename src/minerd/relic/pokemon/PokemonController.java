@@ -7,9 +7,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import minerd.relic.Lists;
 import minerd.relic.RomManipulator;
-import minerd.relic.graphics.ImageProcessor;
 
 public class PokemonController{
 	public Pokemon pokemon;
@@ -117,6 +117,9 @@ public class PokemonController{
 	}
 	
 	public void updateSprite() {
-		sprite.setImage(pokemon.sprite.getAnimation(0).getDirection(0).getFrame(spriteId));
+		WritableImage image = pokemon.sprite.getAnimation(0).getDirection(0).getFrame(spriteId);
+		sprite.setImage(image);
+		sprite.setFitWidth(image.getWidth()*2);
+		sprite.setFitHeight(image.getHeight()*2);
 	}
 }
