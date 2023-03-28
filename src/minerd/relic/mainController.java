@@ -70,18 +70,18 @@ public class mainController implements Initializable{
 		dataTree.setRoot(root);
 		//TODO: load these offsets from a config for various builds
 		root.getChildren().add(new ListsFolderTreeItem(0));
-		root.getChildren().add(new SceneFolderTreeItem(0));
+		root.getChildren().add(new SceneFolderTreeItem(-1));
 		root.getChildren().add(new PokemonFolderTreeItem(0x00357B88));
 		root.getChildren().add(new ItemFolderTreeItem(0x00306570));
 		root.getChildren().add(new MoveFolderTreeItem(0x0360BF4));
-		root.getChildren().add(new MapFolderTreeItem(0));
-		root.getChildren().add(new SpriteFolderTreeItem(0));
-		root.getChildren().add(new BackgroundFolderTreeItem(0));
+		root.getChildren().add(new MapFolderTreeItem(-1));
+		root.getChildren().add(new SpriteFolderTreeItem(-1));
+		root.getChildren().add(new BackgroundFolderTreeItem(-1));
 		root.getChildren().add(new AreaFolderTreeItem(0x0010AA90, 0x001139D0));
 		root.getChildren().add(new DungeonFolderTreeItem(0x00109D30, 0x00111A28, 0x01077A8));
-		root.getChildren().add(new FixedRoomFolderTreeItem(0));
-		root.getChildren().add(new TilesetFolderTreeItem(0));
-		root.getChildren().add(new GraphicFolderTreeItem(0));
+		root.getChildren().add(new FixedRoomFolderTreeItem(-1));
+		root.getChildren().add(new TilesetFolderTreeItem(-1));
+		root.getChildren().add(new GraphicFolderTreeItem(-1));
 	}
 	
 	public void openRom() {

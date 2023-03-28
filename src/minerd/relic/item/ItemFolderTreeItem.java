@@ -8,7 +8,6 @@ import minerd.relic.RomManipulator;
 import minerd.relic.tree.FolderTreeItem;
 
 public class ItemFolderTreeItem extends FolderTreeItem {
-	private int spriteOffset, paletteOffset;
 
 	public ItemFolderTreeItem(int offset) {
 		super("Items", "This section lets you edit data for items in the game.", offset);

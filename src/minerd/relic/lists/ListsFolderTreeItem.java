@@ -13,7 +13,7 @@ public class ListsFolderTreeItem extends FolderTreeItem {
 	public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
 		if(!loaded) {
 			getChildren().remove(0);
-			//Todo: Fill in the pages in this section
+			getChildren().add(new StartersDataTreeNode(0x00F278E, 0x000F4264));
 		}
 	}
 }

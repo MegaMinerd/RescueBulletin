@@ -11,4 +11,10 @@ public class Lists {
 			"Flying",	"Psychic",	"Bug",		"Rock",		"Ghost",
 			"Dragon",	"Dark",		"Steel"
 	};
+	
+	public static String[] natures = {
+	        "Hardy", 	"Docile", 	"Brave", 	"Jolly", 	"Impish", 
+	        "Naive", 	"Timid", 	"Hasty", 	"Sassy", 	"Calm", 
+	        "Relaxed", 	"Lonely", 	"Quirky"
+	};
 }
