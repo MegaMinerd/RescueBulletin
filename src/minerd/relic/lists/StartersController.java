@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import minerd.relic.Lists;
+import minerd.relic.data.Text;
 
 public class StartersController {
 	public TableView<PlayerOption> playerTable;
@@ -18,7 +18,7 @@ public class StartersController {
 	public void load(Starters starters) {
 		ObservableList<PlayerOption> playerList = FXCollections.observableArrayList();
 		for(int i=0; i<26; i++)
-			playerList.add(new PlayerOption(i, Lists.natures[i/2], i%2==0?"Male":"Female", starters.getPlayer(i)));
+			playerList.add(new PlayerOption(i, Text.getText("Natures", i/2), i%2==0?"Male":"Female", starters.getPlayer(i)));
 		
 		ObservableList<PartnerOption> partnerList = FXCollections.observableArrayList();
 		for(int i=0; i<10; i++)

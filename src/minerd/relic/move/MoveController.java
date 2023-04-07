@@ -11,8 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import minerd.relic.InvalidPointerException;
-import minerd.relic.Lists;
 import minerd.relic.RomManipulator;
+import minerd.relic.data.Text;
 
 public class MoveController implements Initializable {
 	public Label moveNameLabel;
@@ -35,7 +35,7 @@ public class MoveController implements Initializable {
 			moveNameLabel.setText(name);
 			moveNameField.setText(name);
 			power.setText(RomManipulator.readShort() + "");
-			type.getItems().addAll(Lists.types);
+			type.getItems().addAll(Text.getTextList("Types"));
 			type.getSelectionModel().select(RomManipulator.readUnsignedByte());
 			RomManipulator.skip(1);
 			String[] targets = {"Enemies", "Allies", "Everyone", "User", "Two-turn move",

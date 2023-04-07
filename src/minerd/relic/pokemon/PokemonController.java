@@ -12,8 +12,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import minerd.relic.InvalidPointerException;
-import minerd.relic.Lists;
 import minerd.relic.RomManipulator;
+import minerd.relic.data.Text;
 
 public class PokemonController implements Initializable {
 	public Label pokemonNameLabel;
@@ -23,7 +23,7 @@ public class PokemonController implements Initializable {
 	public TextField pokemonNameField, category;
 	//General tab
 	public TextField bodySize, shadow, exp, recruit;
-	public ChoiceBox<String> movement, type1, type2;
+	public ChoiceBox<String> movement, type1, type2, ability1, ability2, area;
 	//Base stats tab
 	public TextField baseHp, baseAtk, baseSpa, baseDef, baseSpd, weight, size, speed;
 	//Evolution tab
@@ -54,17 +54,18 @@ public class PokemonController implements Initializable {
 			//Face bitfield. Not used until image support is added.
 			RomManipulator.skip(2);
 			RomManipulator.skip(1);
-			type1.getItems().addAll(Lists.types);
+			type1.getItems().addAll(Text.getTextList("Types"));
 			type1.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			type2.getItems().addAll(Lists.types);
+			type2.getItems().addAll(Text.getTextList("Types"));
 			type2.getSelectionModel().select(RomManipulator.readUnsignedByte());
 			movement.getItems().addAll("Normal", "Magma, Water", "Magma, Water, Sky", "Magma, Water, Sky, Wall", "Magma", "Water");
 			movement.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			// TODO enumerate the options for below
-			//area.setText(RomManipulator.readUnsignedByte();
-			//ability1.setText(RomManipulator.readUnsignedByte();
-			//ability2.setText(RomManipulator.readUnsignedByte();
-			RomManipulator.skip(3);//temp
+			area.getItems().addAll(Text.getTextList("Friend Areas"));
+			area.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			ability1.getItems().addAll(Text.getTextList("Abilities"));
+			ability1.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			ability2.getItems().addAll(Text.getTextList("Abilities"));
+			ability2.getSelectionModel().select(RomManipulator.readUnsignedByte());
 			shadow.setText(RomManipulator.readUnsignedByte()+"");
 			RomManipulator.skip(1);
 			regen.setText(RomManipulator.readUnsignedByte()+"");
@@ -84,7 +85,7 @@ public class PokemonController implements Initializable {
 			toolbox.setSelected(RomManipulator.readUnsignedByte()!=0);
 			short preId = RomManipulator.readShort();
 			evolveFrom.setText(preId+"");
-			evolveFromName.setText(Lists.pokemon.get(preId));
+			evolveFromName.setText(Text.pokemon.get(preId));
 			evolveType.getItems().addAll("Unevolved", "Level", "IQ", "Item");
 			evolveType.getSelectionModel().select(RomManipulator.readShort());
 			evolveParam.setText(RomManipulator.readShort()+"");

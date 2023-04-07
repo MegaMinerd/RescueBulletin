@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import javafx.beans.value.ObservableValue;
 import minerd.relic.InvalidPointerException;
-import minerd.relic.Lists;
 import minerd.relic.RomManipulator;
+import minerd.relic.data.Text;
 import minerd.relic.tree.FolderTreeItem;
 
 public class PokemonFolderTreeItem extends FolderTreeItem {
@@ -27,7 +27,7 @@ public class PokemonFolderTreeItem extends FolderTreeItem {
 					RomManipulator.seek(pokemonStart);
 					String pokemonName = RomManipulator.readString(RomManipulator.parsePointer());
 					getChildren().add(new PokemonDataTreeItem(pokemonName, pokemonStart));
-					Lists.pokemon.add(pokemonName);
+					Text.pokemon.add(pokemonName);
 				}
 				loaded = true;
 			} catch (IOException | InvalidPointerException e) {
