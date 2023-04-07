@@ -21,7 +21,7 @@
   <items>
     <AnchorPane minWidth="-Infinity" prefHeight="400.0">
          <children>
-            <HBox layoutX="-6.0" layoutY="5.0" prefWidth="222.0">
+            <HBox layoutX="-6.0" layoutY="5.0">
                <children>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <HBox.margin>
@@ -29,46 +29,43 @@
                      </HBox.margin>
                   </ImageView>
                   <Label fx:id="pokemonNameLabel" text="Pokemon">
-                     <padding>
-                        <Insets top="12.0" />
-                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="6.0" left="5.0" right="5.0" top="12.0" />
+                     </HBox.margin>
                   </Label>
                </children>
             </HBox>
             <GridPane layoutY="47.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
-                  <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label text="Species ID:" GridPane.halignment="RIGHT">
-                     <padding>
-                        <Insets left="5.0" right="5.0" />
-                     </padding>
                      <GridPane.margin>
-                        <Insets />
+                        <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                      </GridPane.margin>
                   </Label>
                   <Label text="Entity ID:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                     <padding>
-                        <Insets left="5.0" right="5.0" />
-                     </padding>
+                     <GridPane.margin>
+                        <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                     </GridPane.margin>
                   </Label>
                   <Label text="Alpha ID:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                     <padding>
-                        <Insets left="5.0" right="5.0" />
-                     </padding>
+                     <GridPane.margin>
+                        <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                     </GridPane.margin>
                   </Label>
                   <Label text="Parent ID:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-                     <padding>
-                        <Insets left="5.0" right="5.0" />
-                     </padding>
+                     <GridPane.margin>
+                        <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                     </GridPane.margin>
                   </Label>
                   <TextField fx:id="dexID" prefWidth="120.0" GridPane.columnIndex="1">
                      <GridPane.margin>
@@ -106,14 +103,14 @@
                               <content>
                                 <AnchorPane prefHeight="180.0">
                                        <children>
-                                          <GridPane prefHeight="63.0">
+                                          <GridPane>
                                             <columnConstraints>
                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="102.0" minWidth="-Infinity" />
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
                                             </columnConstraints>
                                             <rowConstraints>
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <padding>
                                                 <Insets left="5.0" top="5.0" />
@@ -121,18 +118,12 @@
                                              <children>
                                                 <Label text="Name:" GridPane.halignment="RIGHT">
                                                    <GridPane.margin>
-                                                      <Insets />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
-                                                   <padding>
-                                                      <Insets left="5.0" right="5.0" />
-                                                   </padding>
                                                 </Label>
                                                 <Label text="Category:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets left="5.0" right="5.0" />
-                                                   </padding>
                                                    <GridPane.margin>
-                                                      <Insets />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <TextField fx:id="pokemonNameField" prefWidth="250.0" text="Pokemon" GridPane.columnIndex="1">
@@ -155,65 +146,57 @@
                                        <children>
                                           <GridPane>
                                             <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="10.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
                                             </columnConstraints>
                                             <rowConstraints>
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <padding>
                                                 <Insets left="5.0" top="5.0" />
                                              </padding>
                                              <children>
                                                 <Label text="Body Size:" GridPane.halignment="RIGHT">
-                                                   <padding>
-                                                      <Insets left="5.0" right="5.0" />
-                                                   </padding>
+                                                   <GridPane.margin>
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                                                   </GridPane.margin>
                                                 </Label>
                                                 <Label text="Shadow Size:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets left="5.0" right="5.0" />
-                                                   </padding>
+                                                   <GridPane.margin>
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                                                   </GridPane.margin>
                                                 </Label>
                                                 <Label text="Movement type" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                                                   <padding>
-                                                      <Insets left="5.0" right="5.0" />
-                                                   </padding>
+                                                   <GridPane.margin>
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                                                   </GridPane.margin>
                                                 </Label>
                                                 <Label text="Type:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                                                    <GridPane.margin>
-                                                      <Insets right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
                                                 </Label>
-                                                <Label text="Friend Area:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                                                <Label text="Friend Area:" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                                                    <GridPane.margin>
-                                                      <Insets right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
                                                 </Label>
-                                                <Label text="Exp yield:" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
-                                                   <padding>
-                                                      <Insets left="5.0" right="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label alignment="TOP_LEFT" text="Recruit Rate:" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+                                                <Label text="Exp yield:" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
                                                    <GridPane.margin>
-                                                      <Insets />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
-                                                   <padding>
-                                                      <Insets left="5.0" right="5.0" />
-                                                   </padding>
+                                                </Label>
+                                                <Label alignment="TOP_LEFT" text="Recruit Rate:" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                                                   </GridPane.margin>
                                                 </Label>
                                                 <TextField fx:id="bodySize" prefWidth="250.0" GridPane.columnIndex="1">
                                                    <GridPane.margin>
@@ -246,21 +229,40 @@
                                                       <Insets right="5.0" />
                                                    </GridPane.margin>
                                                 </HBox>
-                                                <ChoiceBox prefHeight="25.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
+                                                <ChoiceBox fx:id="area" prefHeight="25.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5">
                                                    <GridPane.margin>
                                                       <Insets bottom="2.0" right="5.0" top="2.0" />
                                                    </GridPane.margin>
                                                 </ChoiceBox>
-                                                <TextField fx:id="exp" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                <TextField fx:id="exp" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                                    <GridPane.margin>
                                                       <Insets bottom="2.0" right="5.0" top="2.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <TextField fx:id="recruit" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                <TextField fx:id="recruit" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                                    <GridPane.margin>
                                                       <Insets bottom="2.0" right="5.0" top="2.0" />
                                                    </GridPane.margin>
                                                 </TextField>
+                                                <Label text="Ability:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <HBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                   <children>
+                                                      <ChoiceBox fx:id="ability1" prefWidth="123.0">
+                                                         <HBox.margin>
+                                                            <Insets bottom="2.0" right="4.0" top="2.0" />
+                                                         </HBox.margin>
+                                                      </ChoiceBox>
+                                                      <ChoiceBox fx:id="ability2" prefWidth="123.0">
+                                                         <HBox.margin>
+                                                            <Insets bottom="2.0" top="2.0" />
+                                                         </HBox.margin>
+                                                      </ChoiceBox>
+                                                   </children>
+                                                </HBox>
                                              </children>
                                           </GridPane>
                                        </children>
@@ -273,73 +275,58 @@
                                        <children>
                                           <GridPane>
                                             <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
                                             </columnConstraints>
                                             <rowConstraints>
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <children>
                                                 <Label text="Base HP:" GridPane.halignment="RIGHT">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Base Attack:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets right="5.0" />
-                                                   </padding>
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Base Sp. Atk:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                                                   <padding>
-                                                      <Insets right="5.0" />
-                                                   </padding>
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Base Defense:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-                                                   <padding>
-                                                      <Insets right="5.0" />
-                                                   </padding>
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Base Sp. Def:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <Label prefHeight="0.0" prefWidth="41.0" text="Weight:" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+                                                <Label text="Weight:" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Size:" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
-                                                   <padding>
-                                                      <Insets right="5.0" />
-                                                   </padding>
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Movement Speed:" GridPane.rowIndex="7">
-                                                   <padding>
-                                                      <Insets right="5.0" />
-                                                   </padding>
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <TextField fx:id="baseHp" GridPane.columnIndex="1">
@@ -389,15 +376,15 @@
                                        <children>
                                           <GridPane>
                                             <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
                                             </columnConstraints>
                                             <rowConstraints>
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <padding>
                                                 <Insets left="5.0" top="5.0" />
@@ -405,22 +392,22 @@
                                              <children>
                                                 <Label text="Evolves From:" GridPane.halignment="RIGHT">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Main Requirement:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Parameter:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Additional Requirement:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <TextField fx:id="evolveFrom" GridPane.columnIndex="1">
@@ -440,9 +427,9 @@
                                                       <Insets bottom="2.0" top="2.0" />
                                                    </GridPane.margin></ChoiceBox>
                                                 <Label fx:id="evolveFromName" text="Nothing" GridPane.columnIndex="2">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
+                                                   <GridPane.margin>
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                                                   </GridPane.margin>
                                                 </Label>
                                                 <Label fx:id="itemName" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                                    <GridPane.margin>
@@ -460,17 +447,17 @@
                                        <children>
                                           <GridPane>
                                             <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
                                             </columnConstraints>
                                             <rowConstraints>
-                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <padding>
                                                 <Insets left="5.0" top="5.0" />
@@ -478,37 +465,37 @@
                                              <children>
                                                 <Label text="Can walk:" GridPane.halignment="RIGHT">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Regen Speed:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Chance to spawn asleep:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Unkown 30:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Unkown 31:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Unkown 32:" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <Label text="Toolbox enabled:" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
                                                    <GridPane.margin>
-                                                      <Insets left="5.0" right="5.0" />
+                                                      <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <CheckBox fx:id="canWalk" mnemonicParsing="false" GridPane.columnIndex="1">

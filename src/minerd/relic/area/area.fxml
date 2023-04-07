@@ -21,42 +21,39 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
               </columnConstraints>
               <rowConstraints>
-                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
-                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label text="Max population:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                     <padding>
-                        <Insets left="5.0" right="5.0" />
-                     </padding>
                      <GridPane.margin>
-                        <Insets />
+                        <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                      </GridPane.margin>
                   </Label>
                   <Label text="Condition:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                     <padding>
-                        <Insets right="5.0" />
-                     </padding>
+                     <GridPane.margin>
+                        <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                     </GridPane.margin>
                   </Label>
-                  <Label prefHeight="17.0" text="Price:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-                     <padding>
-                        <Insets left="5.0" right="5.0" />
-                     </padding>
+                  <Label text="Price:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                     </GridPane.margin>
                   </Label>
                   <Label fx:id="areaName" text="Friend Area" GridPane.columnIndex="1">
-                     <padding>
-                        <Insets bottom="2.0" top="2.0" />
-                     </padding>
+                     <GridPane.margin>
+                        <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
+                     </GridPane.margin>
                   </Label>
-                  <TextField fx:id="population" prefHeight="25.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <TextField fx:id="population" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="price" prefHeight="25.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <TextField fx:id="price" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
