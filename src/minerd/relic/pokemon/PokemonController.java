@@ -11,9 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import minerd.relic.InvalidPointerException;
-import minerd.relic.RomManipulator;
 import minerd.relic.data.Text;
+import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 
 public class PokemonController implements Initializable {
 	public Label pokemonNameLabel;
@@ -41,62 +42,63 @@ public class PokemonController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			//int dataPointer = RomManipulator.getFilePointer();
-			String name = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+			RomFile rom = Rom.getAll();
+			//int dataPointer = rom.getFilePointer();
+			String name = rom.readStringAndReturn(rom.parsePointer());
 			pokemonNameLabel.setText(name);
 			pokemonNameField.setText(name);
-			category.setText(RomManipulator.readStringAndReturn(RomManipulator.parsePointer()));
+			category.setText(rom.readStringAndReturn(rom.parsePointer()));
 			//Palette ID. Not used until image support is added.
-			RomManipulator.skip(1);
-			bodySize.setText(RomManipulator.readByte()+"");
-			RomManipulator.skip(2);
-			speed.setText(RomManipulator.readInt()+"");
+			rom.skip(1);
+			bodySize.setText(rom.readByte()+"");
+			rom.skip(2);
+			speed.setText(rom.readInt()+"");
 			//Face bitfield. Not used until image support is added.
-			RomManipulator.skip(2);
-			RomManipulator.skip(1);
+			rom.skip(2);
+			rom.skip(1);
 			type1.getItems().addAll(Text.getTextList("Types"));
-			type1.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			type1.getSelectionModel().select(rom.readUnsignedByte());
 			type2.getItems().addAll(Text.getTextList("Types"));
-			type2.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			type2.getSelectionModel().select(rom.readUnsignedByte());
 			movement.getItems().addAll("Normal", "Magma, Water", "Magma, Water, Sky", "Magma, Water, Sky, Wall", "Magma", "Water");
-			movement.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			movement.getSelectionModel().select(rom.readUnsignedByte());
 			area.getItems().addAll(Text.getTextList("Friend Areas"));
-			area.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			area.getSelectionModel().select(rom.readUnsignedByte());
 			ability1.getItems().addAll(Text.getTextList("Abilities"));
-			ability1.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			ability1.getSelectionModel().select(rom.readUnsignedByte());
 			ability2.getItems().addAll(Text.getTextList("Abilities"));
-			ability2.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			shadow.setText(RomManipulator.readUnsignedByte()+"");
-			RomManipulator.skip(1);
-			regen.setText(RomManipulator.readUnsignedByte()+"");
-			canWalk.setSelected(RomManipulator.readUnsignedByte()!=0);
-			sleepiness.setText(RomManipulator.readUnsignedByte()+"");
-			baseHp.setText(RomManipulator.readShort()+"");
-			exp.setText(RomManipulator.readInt()+"");
-			baseAtk.setText(RomManipulator.readShort()+"");
-			baseSpa.setText(RomManipulator.readShort()+"");
-			baseDef.setText(RomManipulator.readShort()+"");
-			baseSpd.setText(RomManipulator.readShort()+"");
-			weight.setText(RomManipulator.readShort()+"");
-			size.setText(RomManipulator.readShort()+"");
-			unk30.setText(RomManipulator.readUnsignedByte()+"");
-			unk31.setText(RomManipulator.readUnsignedByte()+"");
-			unk32.setText(RomManipulator.readUnsignedByte()+"");
-			toolbox.setSelected(RomManipulator.readUnsignedByte()!=0);
-			short preId = RomManipulator.readShort();
+			ability2.getSelectionModel().select(rom.readUnsignedByte());
+			shadow.setText(rom.readUnsignedByte()+"");
+			rom.skip(1);
+			regen.setText(rom.readUnsignedByte()+"");
+			canWalk.setSelected(rom.readUnsignedByte()!=0);
+			sleepiness.setText(rom.readUnsignedByte()+"");
+			baseHp.setText(rom.readShort()+"");
+			exp.setText(rom.readInt()+"");
+			baseAtk.setText(rom.readShort()+"");
+			baseSpa.setText(rom.readShort()+"");
+			baseDef.setText(rom.readShort()+"");
+			baseSpd.setText(rom.readShort()+"");
+			weight.setText(rom.readShort()+"");
+			size.setText(rom.readShort()+"");
+			unk30.setText(rom.readUnsignedByte()+"");
+			unk31.setText(rom.readUnsignedByte()+"");
+			unk32.setText(rom.readUnsignedByte()+"");
+			toolbox.setSelected(rom.readUnsignedByte()!=0);
+			short preId = rom.readShort();
 			evolveFrom.setText(preId+"");
 			evolveFromName.setText(Text.pokemon.get(preId));
 			evolveType.getItems().addAll("Unevolved", "Level", "IQ", "Item");
-			evolveType.getSelectionModel().select(RomManipulator.readShort());
-			evolveParam.setText(RomManipulator.readShort()+"");
+			evolveType.getSelectionModel().select(rom.readShort());
+			evolveParam.setText(rom.readShort()+"");
 			evolveAddition.getItems().addAll("Unevolved", "Level", "IQ", "Item", "Link Cable", "Attack > Defense", "Attack < Defense", "Attack + Defense", 
 					"Sun Ribbon", "Lunar Ribbon", "Beauty Scarf", "50% Option 1", "50% Option 2");
-			evolveAddition.getSelectionModel().select(RomManipulator.readShort());
-			dexID.setText(RomManipulator.readShort()+"");
-			entityID.setText(RomManipulator.readShort()+"");
-			recruit.setText(RomManipulator.readShort()+"");
-			alphaID.setText(RomManipulator.readShort()+"");
-			parentID.setText(RomManipulator.readShort()+"");
+			evolveAddition.getSelectionModel().select(rom.readShort());
+			dexID.setText(rom.readShort()+"");
+			entityID.setText(rom.readShort()+"");
+			recruit.setText(rom.readShort()+"");
+			alphaID.setText(rom.readShort()+"");
+			parentID.setText(rom.readShort()+"");
 			
 			
 		} catch (IOException e) {
@@ -109,9 +111,10 @@ public class PokemonController implements Initializable {
 	}
 	
 	int readMoveId() throws IOException{
-		int[] highByte = RomManipulator.readMask(1, 7, 1);
+		RomFile rom = Rom.getAll();
+		int[] highByte = rom.readMask(1, 7, 1);
 		int moveId = highByte[1]==1 ?
-			(highByte[0]<<7) | RomManipulator.readUnsignedByte()
+			(highByte[0]<<7) | rom.readUnsignedByte()
 			: highByte[0];
 		return moveId;
 	}

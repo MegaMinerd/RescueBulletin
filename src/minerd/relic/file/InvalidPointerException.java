@@ -1,4 +1,4 @@
-package minerd.relic;
+package minerd.relic.file;
 
 @SuppressWarnings("serial")
 public class InvalidPointerException extends Exception {

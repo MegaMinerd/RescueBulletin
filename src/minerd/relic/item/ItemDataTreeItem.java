@@ -5,7 +5,8 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
-import minerd.relic.RomManipulator;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.tree.DataTreeItem;
 
 public class ItemDataTreeItem extends DataTreeItem{
@@ -24,8 +25,9 @@ public class ItemDataTreeItem extends DataTreeItem{
 	public Node select(){
 		SplitPane itemDataPane = null;
 		try {
+			RomFile rom = Rom.getAll();
 			//Prepare the rom to be parsed by the controller 
-			RomManipulator.seek(dataPointer);
+			rom.seek(dataPointer);
 			itemDataPane = (SplitPane)FXMLLoader.load(getClass().getResource("item.fxml"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

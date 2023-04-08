@@ -5,7 +5,8 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import minerd.relic.RomManipulator;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.tree.DataTreeItem;
 
 public class StartersDataTreeNode extends DataTreeItem {
@@ -21,20 +22,21 @@ public class StartersDataTreeNode extends DataTreeItem {
 	public Node select(){
 		AnchorPane starterDataPane = null;
 		try {
+			RomFile rom = Rom.getAll();
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("starters.fxml"));
 			starterDataPane = loader.load();
 			StartersController controller = loader.getController();
 			
 
-			RomManipulator.seek(playerPointer);
+			rom.seek(playerPointer);
 			int[] players = new int[26];
 			for(int i=0; i<26; i++)
-				players[i] = RomManipulator.readUnsignedShort();
+				players[i] = rom.readUnsignedShort();
 			
-			RomManipulator.seek(partnerPointer);
+			rom.seek(partnerPointer);
 			int[] partners = new int[10];
 			for(int i=0; i<10; i++)
-				partners[i] = RomManipulator.readUnsignedShort();
+				partners[i] = rom.readUnsignedShort();
 			
 			Starters starters = new Starters(players, partners);
 			

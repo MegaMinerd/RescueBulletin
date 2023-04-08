@@ -2,22 +2,24 @@
 package minerd.relic.graphics;
 
 import java.io.IOException;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.PixelWriter;
 
-import minerd.relic.RomManipulator;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 
 public class Tile {
 	private final int[][] data;
 	private final int height, width;
 	
 	public Tile(int height, int width) throws IOException {
+		RomFile rom = Rom.getAll();
 		this.height = height;
 		this.width = width;
 		data = new int[height][width];
 		for(int row=0; row<height; row++) {
 			for(int col=0; col<width; col+=2){
-				int[] pair = RomManipulator.readMask(1, 4, 4);
+				int[] pair = rom.readMask(1, 4, 4);
 				data[row][col] = pair[0];
 				data[row][col+1] = pair[1];
 			}

@@ -6,8 +6,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import minerd.relic.InvalidPointerException;
-import minerd.relic.RomManipulator;
+import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.tree.FolderTreeItem;
 
 public class DungeonDataTreeItem extends FolderTreeItem{
@@ -28,8 +29,8 @@ public class DungeonDataTreeItem extends FolderTreeItem{
 	public Node select(){
 		AnchorPane dunDataPane = null;
 		try {
-			//Prepare the rom to be parsed by the controller 
-			RomManipulator.seek(dataPointer);
+			RomFile rom = Rom.getAll();
+			rom.seek(dataPointer);
 			dunDataPane = (AnchorPane)FXMLLoader.load(getClass().getResource("dungeon.fxml"));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -42,24 +43,26 @@ public class DungeonDataTreeItem extends FolderTreeItem{
 		if(!loaded) {
 			getChildren().remove(0);
 			try {
+				RomFile rom = Rom.getAll();
+				
 				//Get actual floor number from pointer
-				RomManipulator.seek(floorNum+offset);
-				floorNum = RomManipulator.readUnsignedByte();
+				rom.seek(floorNum+offset);
+				floorNum = rom.readUnsignedByte();
 				
 				//Get a bunch of pointers from the SIRO file
-				RomManipulator.seek(0x004A2BF4);
-				RomManipulator.skip(4);
-				RomManipulator.seek(RomManipulator.parsePointer());
-				int floorsPointer = RomManipulator.parsePointer();
+				rom.seek(0x004A2BF4);
+				rom.skip(4);
+				rom.seek(rom.parsePointer());
+				int floorsPointer = rom.parsePointer();
 				floorsPointer += 4*offset;
-				int layoutsPointer = RomManipulator.parsePointer();
-				int treasurePointer = RomManipulator.parsePointer();
-				int encountersPointer = RomManipulator.parsePointer();
-				int trapsPointer = RomManipulator.parsePointer();
+				int layoutsPointer = rom.parsePointer();
+				int treasurePointer = rom.parsePointer();
+				int encountersPointer = rom.parsePointer();
+				int trapsPointer = rom.parsePointer();
 				
 				//Populate floor list
-				RomManipulator.seek(floorsPointer);
-				int floorPointer = RomManipulator.parsePointer();
+				rom.seek(floorsPointer);
+				int floorPointer = rom.parsePointer();
 				//System.out.println(Integer.toHexString(RomManipulator.getFilePointer()));
 				for(int i=1; i<floorNum; i++) {
 					getChildren().add(new FloorDataTreeItem("Floor " + i, floorPointer+16*i, layoutsPointer, treasurePointer, encountersPointer, trapsPointer));

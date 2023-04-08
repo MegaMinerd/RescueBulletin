@@ -7,7 +7,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import minerd.relic.RomManipulator;
+import minerd.relic.data.Text;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 
 public class FloorController{
 	public Label floorNum;
@@ -31,34 +33,35 @@ public class FloorController{
 	
 	public void loadLayout() {
 		try {
+			RomFile rom = Rom.getAll();
 			//System.out.println(Integer.toHexString(RomManipulator.getFilePointer()));
-			layoutType.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			roomDensity.setText(RomManipulator.readUnsignedByte()+"");
-			tileset.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			music.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			weather.getItems().addAll("Clear", "Sunny", "Sandstorm", "Cloudy", "Rainy", "Hail", "Fog", "Snow", "Random");
-			weather.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			connectivity.setText(RomManipulator.readUnsignedByte()+"");
-			pokemonDensity.setText(RomManipulator.readUnsignedByte()+"");
-			shopChance.setValue(RomManipulator.readUnsignedByte()/100.0);
-			houseChance.setValue(RomManipulator.readUnsignedByte()/100.0);
-			mazeChance.setValue(RomManipulator.readUnsignedByte()/100.0);
-			stickyChance.setValue(RomManipulator.readUnsignedByte()/100.0);
-			hasDeadEnds.setSelected(RomManipulator.readUnsignedByte()!=0);
-			hasPonds.setSelected(RomManipulator.readUnsignedByte()!=0);
-			hasExtraTiles.setSelected(RomManipulator.readUnsignedByte()!=0);
-			RomManipulator.skip(1);
-			itemDensity.setText(RomManipulator.readUnsignedByte()+"");
-			trapDensity.setText(RomManipulator.readUnsignedByte()+"");
-			floorNum.setText("Floor " + RomManipulator.readUnsignedByte());
-			fixedRoom.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			hallDensity.setText(RomManipulator.readUnsignedByte()+"");
-			terrainRooms.setText(RomManipulator.readUnsignedByte()+"");
-			waterDensity.setText(RomManipulator.readUnsignedByte()+"");
+			layoutType.getSelectionModel().select(rom.readUnsignedByte());
+			roomDensity.setText(rom.readUnsignedByte()+"");
+			tileset.getSelectionModel().select(rom.readUnsignedByte());
+			music.getSelectionModel().select(rom.readUnsignedByte());
+			weather.getItems().addAll(Text.getTextList("Weather"));
+			weather.getSelectionModel().select(rom.readUnsignedByte());
+			connectivity.setText(rom.readUnsignedByte()+"");
+			pokemonDensity.setText(rom.readUnsignedByte()+"");
+			shopChance.setValue(rom.readUnsignedByte()/100.0);
+			houseChance.setValue(rom.readUnsignedByte()/100.0);
+			mazeChance.setValue(rom.readUnsignedByte()/100.0);
+			stickyChance.setValue(rom.readUnsignedByte()/100.0);
+			hasDeadEnds.setSelected(rom.readUnsignedByte()!=0);
+			hasPonds.setSelected(rom.readUnsignedByte()!=0);
+			hasExtraTiles.setSelected(rom.readUnsignedByte()!=0);
+			rom.skip(1);
+			itemDensity.setText(rom.readUnsignedByte()+"");
+			trapDensity.setText(rom.readUnsignedByte()+"");
+			floorNum.setText("Floor " + rom.readUnsignedByte());
+			fixedRoom.getSelectionModel().select(rom.readUnsignedByte());
+			hallDensity.setText(rom.readUnsignedByte()+"");
+			terrainRooms.setText(rom.readUnsignedByte()+"");
+			waterDensity.setText(rom.readUnsignedByte()+"");
 			visibility.getItems().addAll("Normal", "1 tile", "2 tiles");
-			visibility.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			maxCoinAmnt.setText(RomManipulator.readUnsignedByte()*5+"");
-			buriedDensity.setText(RomManipulator.readUnsignedByte()+"");
+			visibility.getSelectionModel().select(rom.readUnsignedByte());
+			maxCoinAmnt.setText(rom.readUnsignedByte()*5+"");
+			buriedDensity.setText(rom.readUnsignedByte()+"");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -18,6 +18,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import minerd.relic.area.AreaFolderTreeItem;
 import minerd.relic.dungeon.DungeonFolderTreeItem;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.item.ItemFolderTreeItem;
 import minerd.relic.lists.ListsFolderTreeItem;
 import minerd.relic.move.MoveFolderTreeItem;
@@ -39,8 +41,6 @@ public class mainController implements Initializable{
 	public AnchorPane editorPane;
 	public TreeView<String> dataTree;
 	TreeItem<String> root;
-
-	RomManipulator rom;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -59,14 +59,14 @@ public class mainController implements Initializable{
 	}
 	
 	public void reloadAll() throws IOException {
-		if(rom!=null) {
+		if(Rom.getAll()!=null) {
 			reloadTree();
-			//reload views and such`
+			//reload views and such
 		}
 	}
 	
 	public void reloadTree() throws IOException {
-		root = new FolderTreeItem(RomManipulator.getFilename(), "Select something to edit in the ROM from the tree on the left.");
+		root = new FolderTreeItem(Rom.getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
 		//TODO: load these offsets from a config for various builds
 		root.getChildren().add(new ListsFolderTreeItem(0));
@@ -88,7 +88,7 @@ public class mainController implements Initializable{
 		File file = fc.showOpenDialog(dataTree.getScene().getWindow());
 		if(file != null) {
 			try {
-				rom = new RomManipulator(file);
+				Rom.load(file);
 				reloadAll();
 			}catch (IOException fnfe) {
 			}

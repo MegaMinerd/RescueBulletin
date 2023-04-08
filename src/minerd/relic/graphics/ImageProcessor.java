@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.scene.image.WritableImage;
-import minerd.relic.InvalidPointerException;
-import minerd.relic.RomManipulator;
+import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.util.FileSystem;
 
 public class ImageProcessor{
+	private static RomFile rom;
+	
 	//Todo: make a class to wrap the variables and return that instead of BufferedImage
 	//And then handle layers and animation elsewhere in the way that's needed contextually
 	private static Palette[] palettes;
@@ -30,25 +33,26 @@ public class ImageProcessor{
 	static {
 		//Load palettes
 		try {
-			RomManipulator.seek(0x016BD42C);
+			RomFile rom = Rom.getAll();
+			rom.seek(0x016BD42C);
 			itemPalettes = new Palette[13];
 			for(int i=0; i<13; i++)
 				itemPalettes[i] = new Palette(false);
 		
 			//Todo: make this go through readSpriteSiro
 			//Goto SIRO file
-			RomManipulator.seek(0x01E76170);
+			rom.seek(0x01E76170);
 			//Navigate SIRO footer
-			RomManipulator.skip(4);
-			RomManipulator.seek(RomManipulator.parsePointer());
-			RomManipulator.skip(12);
-			RomManipulator.seek(RomManipulator.parsePointer());
-			int itemPointer = RomManipulator.getFilePointer();
+			rom.skip(4);
+			rom.seek(rom.parsePointer());
+			rom.skip(12);
+			rom.seek(rom.parsePointer());
+			int itemPointer = rom.getFilePointer();
 			//Load sprites
 			itemSprites = new Chunk[24];
 			for(int i=0; i<24; i++) {
-				RomManipulator.seek(itemPointer+4*i);
-				RomManipulator.seek(RomManipulator.parsePointer());
+				rom.seek(itemPointer+4*i);
+				rom.seek(rom.parsePointer());
 				itemSprites[i] = buildSprite(2, 2);
 			}
 		} catch (IOException | InvalidPointerException e) {
@@ -64,21 +68,21 @@ public class ImageProcessor{
 	
 	//Todo: figure out suitable return type
 	public static void readSpriteSiro(int offset) throws IOException, InvalidPointerException {
-		RomManipulator.seek(offset);
-		RomManipulator.skip(4); //Ignore magic bytes
-		RomManipulator.seek(RomManipulator.parsePointer()); //Go to footer
-		int animationPointers = RomManipulator.parsePointer();
-		int directionPointers = RomManipulator.parsePointer();
-		int displacePointers = RomManipulator.parsePointer();
-		int spritePointers = RomManipulator.parsePointer();
+		rom.seek(offset);
+		rom.skip(4); //Ignore magic bytes
+		rom.seek(rom.parsePointer()); //Go to footer
+		int animationPointers = rom.parsePointer();
+		int directionPointers = rom.parsePointer();
+		int displacePointers = rom.parsePointer();
+		int spritePointers = rom.parsePointer();
 			
 		//Load sprites
 		//Todo: generalize
 		Chunk[] sprites = new Chunk[24];
 		for(int i=0; i<24; i++) {
-			RomManipulator.seek(spritePointers+4*i);
-			RomManipulator.seek(RomManipulator.parsePointer());
-			RomManipulator.seek(RomManipulator.parsePointer());
+			rom.seek(spritePointers+4*i);
+			rom.seek(rom.parsePointer());
+			rom.seek(rom.parsePointer());
 			Tile[] spriteTiles = new Tile[4];
 			for(int j=0; j<4; j++)
 				spriteTiles[j] = new Tile(8, 8);
@@ -91,19 +95,19 @@ public class ImageProcessor{
 		int endSize = rows*cols;
 		Chunk sprite = new Chunk(rows, cols);
 		while(totalSize<endSize){
-			int pointer = RomManipulator.parsePointer();
+			int pointer = rom.parsePointer();
 			int displace = 0;
 			if(pointer == 0){
-				displace = RomManipulator.readInt()/32;
+				displace = rom.readInt()/32;
 				totalSize += displace;
-				pointer = RomManipulator.parsePointer();
+				pointer = rom.parsePointer();
 			}
 			if(pointer == 0)
 				break;
-			int size = RomManipulator.readInt()/32;
+			int size = rom.readInt()/32;
 			totalSize += size;
 			Tile[] tiles = new Tile[size];
-			RomManipulator.seek(pointer);
+			rom.seek(pointer);
 			for(int i=0; i<size; i++)
 				tiles[i] = new Tile(8, 8);
 			sprite.addTiles(displace, tiles);
@@ -123,40 +127,40 @@ public class ImageProcessor{
 			
 			//Parse animation metadata
 			if(hasAnim) {
-				RomManipulator.seek(animDefPointer);
-				int animWidth = RomManipulator.readUnsignedShort();
-				int animHeight = RomManipulator.readUnsignedShort();
+				rom.seek(animDefPointer);
+				int animWidth = rom.readUnsignedShort();
+				int animHeight = rom.readUnsignedShort();
 				animCount = animWidth*animHeight;
 			}else {
 				animCount = 0;
 			}
 			
 			//Parse tile/chunk metadata
-			RomManipulator.seek(tileDefPointer);
-			chunkWidth = RomManipulator.readUnsignedShort();
-			chunkHeight = RomManipulator.readUnsignedShort();
-			stillCount = RomManipulator.readUnsignedShort()-1;
-			RomManipulator.skip(8);		//Todo: The use of these bytes is unknown
-			chunkCount = RomManipulator.readUnsignedShort()-1;
+			rom.seek(tileDefPointer);
+			chunkWidth = rom.readUnsignedShort();
+			chunkHeight = rom.readUnsignedShort();
+			stillCount = rom.readUnsignedShort()-1;
+			rom.skip(8);		//Todo: The use of these bytes is unknown
+			chunkCount = rom.readUnsignedShort()-1;
 			
 			//Build still tiles
 			buildStills();
 			
-			chunkDefPointer = RomManipulator.getFilePointer();
+			chunkDefPointer = rom.getFilePointer();
 			
 			//Build animated tiles, if any
 			if(hasAnim)
 				buildAnims();
 			
 			//Build chunks
-			RomManipulator.seek(chunkDefPointer);
+			rom.seek(chunkDefPointer);
 			buildChunks();
 			
 			//Parse image metadata
-			RomManipulator.seek(imgDefPointer+4);
-			cols = RomManipulator.readUnsignedByte();
-			rows = RomManipulator.readUnsignedByte();
-			RomManipulator.skip(6);
+			rom.seek(imgDefPointer+4);
+			cols = rom.readUnsignedByte();
+			rows = rom.readUnsignedByte();
+			rom.skip(6);
 			
 			//buildImage
 			buildChunks();
@@ -170,23 +174,23 @@ public class ImageProcessor{
 	}
 	
 	private static void loadPointers(int offset) throws InvalidPointerException, IOException{
-		RomManipulator.seek(offset);
-		String name = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+		rom.seek(offset);
+		String name = rom.readStringAndReturn(rom.parsePointer());
 		palPointer = FileSystem.lookup(name);
-		name = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+		name = rom.readStringAndReturn(rom.parsePointer());
 		tileDefPointer = FileSystem.lookup(name);
-		name = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+		name = rom.readStringAndReturn(rom.parsePointer());
 		imgDefPointer = FileSystem.lookup(name);
 		try{
-			name = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+			name = rom.readStringAndReturn(rom.parsePointer());
 			animDefPointer = FileSystem.lookup(name);
 			hasAnim = true;
 		}catch(InvalidPointerException e){
 			hasAnim = false;
 		}
-		RomManipulator.skip(4);
+		rom.skip(4);
 		try{
-			name = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+			name = rom.readStringAndReturn(rom.parsePointer());
 			extrasDefPointer = FileSystem.lookup(name);
 			hasExtras = true;
 		}catch(InvalidPointerException e){
@@ -195,8 +199,8 @@ public class ImageProcessor{
 	}
 	
 	private static void buildPalettes(boolean color0IsAlpha) throws IOException{
-		RomManipulator.seek(palPointer);
-		short palCount = RomManipulator.readShort();
+		rom.seek(palPointer);
+		short palCount = rom.readShort();
 		palettes = new Palette[palCount];
 		for(int i=0; i<palCount; i++) {
 			palettes[i] = new Palette(color0IsAlpha);
@@ -212,8 +216,8 @@ public class ImageProcessor{
 	
 	private static void buildAnims() throws IOException{
 		//Todo: I forgot what im skipping with the next 2 lines
-		RomManipulator.seek(animDefPointer + 2);
-		RomManipulator.skip((RomManipulator.readUnsignedShort())*4);
+		rom.seek(animDefPointer + 2);
+		rom.skip((rom.readUnsignedShort())*4);
 		//Todo: Find the correct frame count
 		for(int frame=0; frame<frameCount; frame++)
 		for(int tile=0; tile<animCount; tile++)
@@ -222,13 +226,13 @@ public class ImageProcessor{
 	
 	private static void buildChunks() throws IOException{
 		chunks = new Chunk[chunkCount];
-		System.out.println("Offset: " + Integer.toHexString(RomManipulator.getFilePointer()));
+		System.out.println("Offset: " + Integer.toHexString(rom.getFilePointer()));
 		for(int i=0; i<chunkCount; i++) {
 			Chunk[] chunk = new Chunk[frameCount];
 			boolean usesAnim = false;
 			for(int row=0; row<chunkHeight; row++) {
 				for(int col=0; col<chunkWidth; col++){
-					int meta[] = RomManipulator.readMask(2, 10, 1, 1, 4);
+					int meta[] = rom.readMask(2, 10, 1, 1, 4);
 					int id = meta[0];
 					boolean hor = meta[1]==1;
 					boolean ver = meta[2]==1;
@@ -256,7 +260,7 @@ public class ImageProcessor{
 		
 		//Decode Pair-24 NRL
 		while(data.size()<cols) {
-			int control = RomManipulator.readUnsignedByte();
+			int control = rom.readUnsignedByte();
 			int len;
 			//Null run
 			if(control < 0x80) {
@@ -267,7 +271,7 @@ public class ImageProcessor{
 			//Repeating run
 			else if(control < 0xC0) {
 				len = control - 0x80 + 1;
-				int[] pair = RomManipulator.readMask(3, 12, 12);
+				int[] pair = rom.readMask(3, 12, 12);
 				for(int i=0; i<len; i++) {
 					data.add(pair[0]);
 					data.add(pair[1]);
@@ -276,7 +280,7 @@ public class ImageProcessor{
 			//Literal run
 			else {
 				len = control - 0xC0 + 1;
-				int[] pair = RomManipulator.readMask(3, 12, 12);
+				int[] pair = rom.readMask(3, 12, 12);
 				for(int i=0; i<len; i++) {
 					data.add(pair[0]);
 					data.add(pair[1]);
@@ -328,6 +332,6 @@ public class ImageProcessor{
 			}
 		}
 		
-		System.out.println("End: " + Integer.toHexString(RomManipulator.getFilePointer()));
+		System.out.println("End: " + Integer.toHexString(rom.getFilePointer()));
 	}
 }

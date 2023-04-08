@@ -3,8 +3,9 @@ package minerd.relic.dungeon;
 import java.io.IOException;
 
 import javafx.beans.value.ObservableValue;
-import minerd.relic.InvalidPointerException;
-import minerd.relic.RomManipulator;
+import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.tree.FolderTreeItem;
 
 public class DungeonFolderTreeItem extends FolderTreeItem {
@@ -21,11 +22,12 @@ public class DungeonFolderTreeItem extends FolderTreeItem {
 		if(!loaded) {
 			getChildren().remove(0);
 			try {
-				RomManipulator.seek(names);
+				RomFile rom = Rom.getAll();
+				rom.seek(names);
 				for(int i=0; i<98; i++) {
 					int dunStart = offset + 0x10 * i;
-					String dunName = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
-					RomManipulator.skip(4);
+					String dunName = rom.readStringAndReturn(rom.parsePointer());
+					rom.skip(4);
 					getChildren().add(new DungeonDataTreeItem(dunName, i, dunStart, floors));
 				}
 				loaded = true;

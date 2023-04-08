@@ -5,7 +5,8 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
-import minerd.relic.RomManipulator;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.tree.DataTreeItem;
 
 public class FloorDataTreeItem extends DataTreeItem{
@@ -32,14 +33,15 @@ public class FloorDataTreeItem extends DataTreeItem{
 			floorDataPane = loader.load();
 			FloorController controller = loader.getController();
 			
-			RomManipulator.seek(mainDataPointer);
+			RomFile rom = Rom.getAll();
+			rom.seek(mainDataPointer);
 			int[] ids = new int[7];
 			for(int i=0; i<7; i++) {
-				ids[i] = RomManipulator.readUnsignedShort();
+				ids[i] = rom.readUnsignedShort();
 			}
 			
 			//System.out.println(Integer.toHexString(mainDataPointer));
-			RomManipulator.seek(layoutPointer + 28*ids[0]);
+			rom.seek(layoutPointer + 28*ids[0]);
 			controller.loadLayout();
 		} catch (IOException e) {
 			e.printStackTrace();

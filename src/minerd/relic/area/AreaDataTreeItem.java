@@ -5,7 +5,8 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
-import minerd.relic.RomManipulator;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.tree.DataTreeItem;
 
 public class AreaDataTreeItem extends DataTreeItem{
@@ -24,7 +25,8 @@ public class AreaDataTreeItem extends DataTreeItem{
 			areaDataPane = loader.load();
 			AreaController controller = loader.getController();
 			
-			RomManipulator.seek(dataPointer);
+			RomFile rom = Rom.getAll();
+			rom.seek(dataPointer);
 			FriendArea area = new FriendArea(getName());
 			
 			controller.load(area);

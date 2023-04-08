@@ -11,8 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import minerd.relic.InvalidPointerException;
-import minerd.relic.RomManipulator;
+import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.graphics.ImageProcessor;
 
 public class ItemController implements Initializable {
@@ -26,32 +27,33 @@ public class ItemController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
+			RomFile rom = Rom.getAll();
 			//int dataPointer = RomManipulator.getFilePointer();
-			String name = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+			String name = rom.readStringAndReturn(rom.parsePointer());
 			itemNameLabel.setText(name);
 			itemNameField.setText(name);
-			buyPrice.setText(RomManipulator.readInt() + "");
-			sellPrice.setText(RomManipulator.readInt() + "");
+			buyPrice.setText(rom.readInt() + "");
+			sellPrice.setText(rom.readInt() + "");
 			itemType.getItems().addAll("Throwable", "Rock", "Berry/Seed", "Apple/Gummi", "Hold Item", "TM", "Money",
 					"Unused", "Misc.", "Orb", "Link Box", "Used TM");
-			itemType.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			spriteID.setText(RomManipulator.readUnsignedByte() + "");
-			RomManipulator.skip(2);
-			description.setText(RomManipulator.readStringAndReturn(RomManipulator.parsePointer()).replace("#n", "\n"));
-			ai1.setSelected(RomManipulator.readByte() != 0);
-			ai2.setSelected(RomManipulator.readByte() != 0);
-			ai3.setSelected(RomManipulator.readByte() != 0);
-			RomManipulator.skip(1);
-			moveId.setText(RomManipulator.readShort() + "");
+			itemType.getSelectionModel().select(rom.readUnsignedByte());
+			spriteID.setText(rom.readUnsignedByte() + "");
+			rom.skip(2);
+			description.setText(rom.readStringAndReturn(rom.parsePointer()).replace("#n", "\n"));
+			ai1.setSelected(rom.readByte() != 0);
+			ai2.setSelected(rom.readByte() != 0);
+			ai3.setSelected(rom.readByte() != 0);
+			rom.skip(1);
+			moveId.setText(rom.readShort() + "");
 			//Item order. Not shown here.
-			RomManipulator.skip(1);
-			minAmnt.setText(RomManipulator.readUnsignedByte() + "");
-			maxAmnt.setText(RomManipulator.readUnsignedByte() + "");
-			paletteID.setText(RomManipulator.readUnsignedByte() + "");
+			rom.skip(1);
+			minAmnt.setText(rom.readUnsignedByte() + "");
+			maxAmnt.setText(rom.readUnsignedByte() + "");
+			paletteID.setText(rom.readUnsignedByte() + "");
 			actionType.getItems().addAll("Use (Nothing)", "Hurl (Throwable)", "Throw (Rocks)", "Equip (Ribbons)",
 					"Eat (Food)", "Ingest (Healing Items)", "Peel (Chestnut)", "Use (Money/Wish Stone)", "Use (Misc.)",
 					"Use (TMs)", "Use (Link Box)", "Equip (Specs)", "Equip (Scarfs)", "Use (Orbs)");
-			actionType.getSelectionModel().select(RomManipulator.readUnsignedByte());
+			actionType.getSelectionModel().select(rom.readUnsignedByte());
 			sprite.setImage(ImageProcessor.getItemSprite(Integer.parseInt(spriteID.getText()), Integer.parseInt(paletteID.getText())));
 			//buffer.skip(0x1);
 		} catch (IOException e) {

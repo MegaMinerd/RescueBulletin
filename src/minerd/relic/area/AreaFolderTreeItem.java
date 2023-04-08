@@ -3,8 +3,9 @@ package minerd.relic.area;
 import java.io.IOException;
 
 import javafx.beans.value.ObservableValue;
-import minerd.relic.InvalidPointerException;
-import minerd.relic.RomManipulator;
+import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 import minerd.relic.tree.FolderTreeItem;
 
 public class AreaFolderTreeItem extends FolderTreeItem {
@@ -20,10 +21,11 @@ public class AreaFolderTreeItem extends FolderTreeItem {
 		if(!loaded) {
 			getChildren().remove(0);
 			try {
-				RomManipulator.seek(namesPointer);
+				RomFile rom = Rom.getAll();
+				rom.seek(namesPointer);
 				for(int i=0; i<58; i++) {
 					int areaStart = offset + 0x8 * i;
-					String areaName = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+					String areaName = rom.readStringAndReturn(rom.parsePointer());
 					getChildren().add(new AreaDataTreeItem(areaName, areaStart));
 				}
 				loaded = true;

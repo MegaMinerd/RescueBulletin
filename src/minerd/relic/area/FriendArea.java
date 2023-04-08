@@ -2,7 +2,8 @@ package minerd.relic.area;
 
 import java.io.IOException;
 
-import minerd.relic.RomManipulator;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 
 public class FriendArea{
 	private String name;
@@ -11,9 +12,10 @@ public class FriendArea{
 	
 	public FriendArea(String name) throws IOException {
 		this.name = name;
-		setPopulation(RomManipulator.readUnsignedShort());
-		setCondition(RomManipulator.readUnsignedShort());
-		setPrice(RomManipulator.readUnsignedInt());
+		RomFile rom = Rom.getAll();
+		setPopulation(rom.readUnsignedShort());
+		setCondition(rom.readUnsignedShort());
+		setPrice(rom.readUnsignedInt());
 	}
 
 	public String getName() {

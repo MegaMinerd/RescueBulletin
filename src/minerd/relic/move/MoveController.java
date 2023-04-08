@@ -10,9 +10,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import minerd.relic.InvalidPointerException;
-import minerd.relic.RomManipulator;
 import minerd.relic.data.Text;
+import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 
 public class MoveController implements Initializable {
 	public Label moveNameLabel;
@@ -31,13 +32,14 @@ public class MoveController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			String name = RomManipulator.readStringAndReturn(RomManipulator.parsePointer());
+			RomFile rom = Rom.getAll();
+			String name = rom.readStringAndReturn(rom.parsePointer());
 			moveNameLabel.setText(name);
 			moveNameField.setText(name);
-			power.setText(RomManipulator.readShort() + "");
+			power.setText(rom.readShort() + "");
 			type.getItems().addAll(Text.getTextList("Types"));
-			type.getSelectionModel().select(RomManipulator.readUnsignedByte());
-			RomManipulator.skip(1);
+			type.getSelectionModel().select(rom.readUnsignedByte());
+			rom.skip(1);
 			String[] targets = {"Enemies", "Allies", "Everyone", "User", "Two-turn move",
 					"Everyone except user", "All allies except user", "Invalid 7",
 					"Invalid 8", "Invalid 9", "Invalid 10", "Invalid 11", "Invalid 12",
@@ -48,12 +50,12 @@ public class MoveController implements Initializable {
 					"Two tiles away; cuts corners",	"Invalid 10", "Invalid 11", "Invalid 12",
 					"Invalid 13", "Invalid 14", "Special / Invalid"	
 			};
-			short actualValues = RomManipulator.readShort();
+			short actualValues = rom.readShort();
 			actualTarget.getItems().addAll(targets);
 			actualTarget.getSelectionModel().select((actualValues&0x0F));
 			actualRange.getItems().addAll(ranges);
 			actualRange.getSelectionModel().select(((actualValues&0xF0)>>4));
-			short aiValues = RomManipulator.readShort();
+			short aiValues = rom.readShort();
 			aiTarget.getItems().addAll(targets);
 			aiTarget.getSelectionModel().select((aiValues&0x0F));
 			aiRange.getItems().addAll(ranges);
@@ -65,22 +67,22 @@ public class MoveController implements Initializable {
 					"Invalid 7", "Invalid 8", "Invalid 9", "Invalid 10", "Invalid 11", 
 					"Invalid 12", "Invalid 13", "Invalid 14", "Invalid 15");
 			condition.getSelectionModel().select((aiValues&0xF00)>>8);
-			basePP.setText(RomManipulator.readUnsignedByte() + "");
-			weight.setText(RomManipulator.readUnsignedByte() + "");
-			accuracy2.setText(RomManipulator.readByte() + "");
-			accuracy1.setText(RomManipulator.readByte() + "");
-			condChance.setText(RomManipulator.readByte()+"");
-			hitNum.setText(RomManipulator.readUnsignedByte() + "");
-			upgrades.setText(RomManipulator.readByte() + "");
-			crit.setText(RomManipulator.readByte() + "");
-			magicCoat.setSelected(RomManipulator.readByte()!=0);
-			snatachable.setSelected(RomManipulator.readByte()!=0);
-			usesMouth.setSelected(RomManipulator.readByte()!=0);
-			cantHitFrozen.setSelected(RomManipulator.readByte()!=0);
-			ignoresTaunted.setSelected(RomManipulator.readByte()!=0);
-			RomManipulator.skip(3);
-			description.setText(RomManipulator.readStringAndReturn(RomManipulator.parsePointer()).replace("#n", "\n"));
-			useMessage.setText(RomManipulator.readStringAndReturn(RomManipulator.parsePointer()));
+			basePP.setText(rom.readUnsignedByte() + "");
+			weight.setText(rom.readUnsignedByte() + "");
+			accuracy2.setText(rom.readByte() + "");
+			accuracy1.setText(rom.readByte() + "");
+			condChance.setText(rom.readByte()+"");
+			hitNum.setText(rom.readUnsignedByte() + "");
+			upgrades.setText(rom.readByte() + "");
+			crit.setText(rom.readByte() + "");
+			magicCoat.setSelected(rom.readByte()!=0);
+			snatachable.setSelected(rom.readByte()!=0);
+			usesMouth.setSelected(rom.readByte()!=0);
+			cantHitFrozen.setSelected(rom.readByte()!=0);
+			ignoresTaunted.setSelected(rom.readByte()!=0);
+			rom.skip(3);
+			description.setText(rom.readStringAndReturn(rom.parsePointer()).replace("#n", "\n"));
+			useMessage.setText(rom.readStringAndReturn(rom.parsePointer()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
