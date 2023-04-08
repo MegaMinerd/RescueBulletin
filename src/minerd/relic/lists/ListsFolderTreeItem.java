@@ -1,9 +1,10 @@
 package minerd.relic.lists;
 
 import javafx.beans.value.ObservableValue;
+import minerd.relic.data.GameData;
 import minerd.relic.tree.FolderTreeItem;
 
-public class ListsFolderTreeItem extends FolderTreeItem {
+public class ListsFolderTreeItem extends FolderTreeItem<GameData> {
 	
 	public ListsFolderTreeItem(int offset) {
 		super("Lists", "This section lets you edit various lists.", offset);

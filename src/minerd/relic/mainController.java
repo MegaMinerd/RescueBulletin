@@ -16,23 +16,12 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import minerd.relic.area.AreaFolderTreeItem;
-import minerd.relic.dungeon.DungeonFolderTreeItem;
+import minerd.relic.data.Pokemon;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
-import minerd.relic.item.ItemFolderTreeItem;
 import minerd.relic.lists.ListsFolderTreeItem;
-import minerd.relic.move.MoveFolderTreeItem;
-import minerd.relic.pokemon.PokemonFolderTreeItem;
-import minerd.relic.tree.BackgroundFolderTreeItem;
 import minerd.relic.tree.DataTreeItem;
-import minerd.relic.tree.FixedRoomFolderTreeItem;
 import minerd.relic.tree.FolderTreeItem;
-import minerd.relic.tree.GraphicFolderTreeItem;
-import minerd.relic.tree.MapFolderTreeItem;
 import minerd.relic.tree.SceneFolderTreeItem;
-import minerd.relic.tree.SpriteFolderTreeItem;
-import minerd.relic.tree.TilesetFolderTreeItem;
 
 public class mainController implements Initializable{
 	FileChooser fc;
@@ -71,17 +60,17 @@ public class mainController implements Initializable{
 		//TODO: load these offsets from a config for various builds
 		root.getChildren().add(new ListsFolderTreeItem(0));
 		root.getChildren().add(new SceneFolderTreeItem(-1));
-		root.getChildren().add(new PokemonFolderTreeItem(0x00357B88));
-		root.getChildren().add(new ItemFolderTreeItem(0x00306570));
-		root.getChildren().add(new MoveFolderTreeItem(0x0360BF4));
-		root.getChildren().add(new MapFolderTreeItem(-1));
-		root.getChildren().add(new SpriteFolderTreeItem(-1));
-		root.getChildren().add(new BackgroundFolderTreeItem(-1));
-		root.getChildren().add(new AreaFolderTreeItem(0x0010AA90, 0x001139D0));
-		root.getChildren().add(new DungeonFolderTreeItem(0x00109D30, 0x00111A28, 0x01077A8));
-		root.getChildren().add(new FixedRoomFolderTreeItem(-1));
-		root.getChildren().add(new TilesetFolderTreeItem(-1));
-		root.getChildren().add(new GraphicFolderTreeItem(-1));
+		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424, 0x00357B88));
+		//root.getChildren().add(new ItemFolderTreeItem(0x00306570));
+		//root.getChildren().add(new MoveFolderTreeItem(0x0360BF4));
+		//root.getChildren().add(new MapFolderTreeItem(-1));
+		//root.getChildren().add(new SpriteFolderTreeItem(-1));
+		//root.getChildren().add(new BackgroundFolderTreeItem(-1));
+		//root.getChildren().add(new AreaFolderTreeItem(0x0010AA90, 0x001139D0));
+		//root.getChildren().add(new DungeonFolderTreeItem(0x00109D30, 0x00111A28, 0x01077A8));
+		//root.getChildren().add(new FixedRoomFolderTreeItem(-1));
+		//root.getChildren().add(new TilesetFolderTreeItem(-1));
+		//root.getChildren().add(new GraphicFolderTreeItem(-1));
 	}
 	
 	public void openRom() {
@@ -99,8 +88,13 @@ public class mainController implements Initializable{
 		ObservableList<Node> children = editorPane.getChildren();
 		while(children.size()>0)
 			children.remove(0);
-		Node itemData = item.select();
-		if(itemData!=null)
-			children.add(itemData);
+		Node itemData;
+		try {
+			itemData = item.select();
+			if(itemData!=null)
+				children.add(itemData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

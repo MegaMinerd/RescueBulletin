@@ -3,12 +3,13 @@ package minerd.relic.move;
 import java.io.IOException;
 
 import javafx.beans.value.ObservableValue;
+import minerd.relic.data.GameData;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.tree.FolderTreeItem;
 
-public class MoveFolderTreeItem extends FolderTreeItem {
+public class MoveFolderTreeItem extends FolderTreeItem<GameData> {
 	
 	public MoveFolderTreeItem(int offset) {
 		super("Moves", "This section lets you edit settings related to moves.", offset);
@@ -20,7 +21,7 @@ public class MoveFolderTreeItem extends FolderTreeItem {
 			getChildren().remove(0);
 			try {
 				RomFile rom = Rom.getAll();
-				rom.seek(offset);
+				rom.seek(pointers[0]);
 				rom.skip(4);
 				rom.seek(rom.parsePointer());
 				int dataStart = rom.parsePointer();

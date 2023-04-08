@@ -6,12 +6,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import minerd.relic.data.GameData;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.tree.FolderTreeItem;
 
-public class DungeonDataTreeItem extends FolderTreeItem{
+public class DungeonDataTreeItem extends FolderTreeItem<GameData>{
 	//floorNum will actually be a pointer until loaded
 	int dataPointer, floorNum;
 
@@ -46,7 +47,7 @@ public class DungeonDataTreeItem extends FolderTreeItem{
 				RomFile rom = Rom.getAll();
 				
 				//Get actual floor number from pointer
-				rom.seek(floorNum+offset);
+				rom.seek(floorNum+pointers[0]);
 				floorNum = rom.readUnsignedByte();
 				
 				//Get a bunch of pointers from the SIRO file
@@ -54,7 +55,7 @@ public class DungeonDataTreeItem extends FolderTreeItem{
 				rom.skip(4);
 				rom.seek(rom.parsePointer());
 				int floorsPointer = rom.parsePointer();
-				floorsPointer += 4*offset;
+				floorsPointer += 4*pointers[0];
 				int layoutsPointer = rom.parsePointer();
 				int treasurePointer = rom.parsePointer();
 				int encountersPointer = rom.parsePointer();
