@@ -6,11 +6,10 @@ module RescueRelic {
 	requires transitive javafx.swing;
 	opens application to javafx.graphics, javafx.fxml;
     exports minerd.relic;
+    exports minerd.relic.data;
     exports minerd.relic.fxml;
     exports minerd.relic.area;
-    exports minerd.relic.item;
     exports minerd.relic.move;
     exports minerd.relic.tree;
-    exports minerd.relic.lists;
     exports minerd.relic.dungeon;
 }

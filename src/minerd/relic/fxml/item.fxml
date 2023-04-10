@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<SplitPane dividerPositions="0.3" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.item.ItemController">
+<SplitPane dividerPositions="0.3" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.fxml.ItemController">
   <items>
     <AnchorPane minWidth="-Infinity" prefHeight="400.0">
          <children>
@@ -66,17 +66,17 @@
                         <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField fx:id="spriteID" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" GridPane.columnIndex="1">
+                  <TextField fx:id="spriteId" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="paletteID" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <TextField fx:id="paletteId" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="itemID" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <TextField fx:id="itemId" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>

@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.control.TreeItem;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import minerd.relic.data.GameData;
 
 public class DataTreeItem<T extends GameData> extends TreeItem<String>{
@@ -26,7 +25,7 @@ public class DataTreeItem<T extends GameData> extends TreeItem<String>{
 		//offset = off;
 	}
 	
-	public DataTreeItem(String name, Class<T> cacheClassIn, int indexIn, int[] pointersIn) {
+	public DataTreeItem(String name, Class<T> cacheClassIn, int indexIn, int ... pointersIn) {
 		super(name);
 		this.name = name;
 		this.cacheClass = cacheClassIn;
@@ -43,12 +42,13 @@ public class DataTreeItem<T extends GameData> extends TreeItem<String>{
 	}
 	
 	public Node select() throws IOException{
-	    Control dataPane = null;
+	    Region dataPane = null;
 	    if(cache==null){
 	        //Read the data from the ROM to store as cache
 	    	try {
 	    		cache = cacheClass.getConstructor(int.class, int[].class).newInstance(index, pointers);
-	    		super.setValue(cache.getName());
+	    		//Don't delete this when the names list is fixed. Move it to the Apply button
+	    		//super.setValue(cache.getName());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}

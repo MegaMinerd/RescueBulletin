@@ -1,10 +1,11 @@
-package minerd.relic.lists;
+package minerd.relic.fxml;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import minerd.relic.data.Starters;
 import minerd.relic.data.Text;
 
 public class StartersController {

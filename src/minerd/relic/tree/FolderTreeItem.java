@@ -1,16 +1,21 @@
 	package minerd.relic.tree;
 
+import java.io.IOException;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Text;
+import minerd.relic.fxml.FolderController;
+import minerd.relic.fxml.PokemonController;
 
 public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implements ChangeListener<Boolean>{
 	private String name, info;
 	protected boolean loaded;
-	private Class cacheClass;
+	private Class<T> cacheClass;
 	private int number;
 	protected int[] pointers;
 
@@ -41,8 +46,16 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 	
 	//User clicked on the item
 	public Node select() {
-	    //Load folder.fxml and display the appropriate title and description
 		AnchorPane folderPane = null;
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/folder.fxml"));
+			folderPane = loader.load();
+		    FolderController controller = loader.getController();
+		    
+		    controller.load(name, info);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return folderPane;
 	}
 
@@ -51,7 +64,6 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 	    if(!loaded) {
 	        getChildren().remove(0);
 	        for(int i=0; i<number; i++) {
-	            //In this example, I would actually want DataTreeItem<Text>
 	            getChildren().add(new DataTreeItem<T>(Text.getText(name, i), cacheClass, i, pointers));
 	        }
 	        loaded = true;

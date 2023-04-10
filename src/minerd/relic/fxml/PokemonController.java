@@ -2,16 +2,12 @@ package minerd.relic.fxml;
 
 import java.io.IOException;
 
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import minerd.relic.data.Pokemon;
 import minerd.relic.data.Text;
-import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 
@@ -35,8 +31,8 @@ public class PokemonController{
 	public CheckBox canWalk, toolbox;
 	
 	//Level up moves tab
-	public TableView levelupTable;
-	public TableColumn levelCol, moveCol;
+	//public TableView levelupTable;
+	//public TableColumn levelCol, moveCol;
 	
 	public void load(Pokemon pokemon) {
 		pokemonNameLabel.setText(pokemon.getName());

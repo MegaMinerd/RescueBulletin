@@ -33,11 +33,11 @@ public class ImageProcessor{
 	static {
 		//Load palettes
 		try {
-			RomFile rom = Rom.getAll();
+			rom = Rom.getAll();
 			rom.seek(0x016BD42C);
 			itemPalettes = new Palette[13];
 			for(int i=0; i<13; i++)
-				itemPalettes[i] = new Palette(false);
+				itemPalettes[i] = new Palette(rom, false);
 		
 			//Todo: make this go through readSpriteSiro
 			//Goto SIRO file
@@ -85,7 +85,7 @@ public class ImageProcessor{
 			rom.seek(rom.parsePointer());
 			Tile[] spriteTiles = new Tile[4];
 			for(int j=0; j<4; j++)
-				spriteTiles[j] = new Tile(8, 8);
+				spriteTiles[j] = new Tile(rom, 8, 8);
 			itemSprites[i] = new Chunk(2, 2, spriteTiles);
 		}
 	}
@@ -109,7 +109,7 @@ public class ImageProcessor{
 			Tile[] tiles = new Tile[size];
 			rom.seek(pointer);
 			for(int i=0; i<size; i++)
-				tiles[i] = new Tile(8, 8);
+				tiles[i] = new Tile(rom, 8, 8);
 			sprite.addTiles(displace, tiles);
 		}
 		return sprite;
@@ -203,7 +203,7 @@ public class ImageProcessor{
 		short palCount = rom.readShort();
 		palettes = new Palette[palCount];
 		for(int i=0; i<palCount; i++) {
-			palettes[i] = new Palette(color0IsAlpha);
+			palettes[i] = new Palette(rom, color0IsAlpha);
 		}
 	}
 	
@@ -211,7 +211,7 @@ public class ImageProcessor{
 		stills = new Tile[stillCount];
 		
 		for(int tile=0; tile<(stillCount); tile++)
-		stills[tile] = new Tile(8, 8);
+		stills[tile] = new Tile(rom, 8, 8);
 	}
 	
 	private static void buildAnims() throws IOException{
@@ -221,7 +221,7 @@ public class ImageProcessor{
 		//Todo: Find the correct frame count
 		for(int frame=0; frame<frameCount; frame++)
 		for(int tile=0; tile<animCount; tile++)
-		anims[frame][tile] = new Tile(8, 8);
+		anims[frame][tile] = new Tile(rom, 8, 8);
 	}
 	
 	private static void buildChunks() throws IOException{

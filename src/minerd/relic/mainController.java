@@ -16,12 +16,13 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import minerd.relic.data.Item;
+import minerd.relic.data.Move;
 import minerd.relic.data.Pokemon;
 import minerd.relic.file.Rom;
-import minerd.relic.lists.ListsFolderTreeItem;
 import minerd.relic.tree.DataTreeItem;
 import minerd.relic.tree.FolderTreeItem;
-import minerd.relic.tree.SceneFolderTreeItem;
+import minerd.relic.tree.ListsFolderTreeItem;
 
 public class mainController implements Initializable{
 	FileChooser fc;
@@ -37,7 +38,7 @@ public class mainController implements Initializable{
 		fc.setTitle("Open Resource File");
 		fc.getExtensionFilters().add(new ExtensionFilter("ROM Files (.gba)", "*.gba"));
 		
-		root = new FolderTreeItem("No ROM", "");
+		root = new FolderTreeItem("No ROM", "Open a rom file from the menu");
 		dataTree.setRoot(root);
 		dataTree.getSelectionModel().selectedItemProperty().addListener( new ChangeListener<TreeItem<String>>() {
 			@Override
@@ -58,11 +59,11 @@ public class mainController implements Initializable{
 		root = new FolderTreeItem(Rom.getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
 		//TODO: load these offsets from a config for various builds
-		root.getChildren().add(new ListsFolderTreeItem(0));
-		root.getChildren().add(new SceneFolderTreeItem(-1));
+		root.getChildren().add(new ListsFolderTreeItem());
+		//root.getChildren().add(new SceneFolderTreeItem(-1));
 		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424, 0x00357B88));
-		//root.getChildren().add(new ItemFolderTreeItem(0x00306570));
-		//root.getChildren().add(new MoveFolderTreeItem(0x0360BF4));
+		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240, 0x00306570));
+		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413, 0x0360BF4));
 		//root.getChildren().add(new MapFolderTreeItem(-1));
 		//root.getChildren().add(new SpriteFolderTreeItem(-1));
 		//root.getChildren().add(new BackgroundFolderTreeItem(-1));

@@ -3,8 +3,8 @@ package minerd.relic.data;
 import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Control;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.Region;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
@@ -70,7 +70,7 @@ public class Pokemon extends GameData{
 		}
 	}
 	
-	public Control load() throws IOException {
+	public Region load() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/pokemon.fxml"));
 		SplitPane dataPane = loader.load();
 	    PokemonController controller = loader.getController();

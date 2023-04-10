@@ -12,8 +12,7 @@ public class Tile {
 	private final int[][] data;
 	private final int height, width;
 	
-	public Tile(int height, int width) throws IOException {
-		RomFile rom = Rom.getAll();
+	public Tile(RomFile rom, int height, int width) throws IOException {
 		this.height = height;
 		this.width = width;
 		data = new int[height][width];
