@@ -1,11 +1,14 @@
 package minerd.relic.file;
 
 import java.io.IOException;
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 
 public class RomFile {
-	private ByteBuffer buffer;
+	protected ByteBuffer buffer;
+	
+	public RomFile(int size){
+		this.buffer = ByteBuffer.allocate(size);
+	}
 	
 	public RomFile(ByteBuffer bufferIn) {
 		this.buffer = bufferIn;
@@ -21,6 +24,10 @@ public class RomFile {
 	
 	public void seek(int offset) throws IOException{
 		buffer.position(offset);
+	}
+	
+	public void seek(Pointer pointer) throws IOException{
+		buffer.position(pointer.isAbsolute() ? pointer.getOffset() : pointer.getOffset()+getFilePointer());
 	}
 	
 	/**
@@ -72,16 +79,14 @@ public class RomFile {
 	 * @return The integer offset represented by the pointer
 	 * @throws InvalidPointerException If the bytes read are not a valid pointer
 	 */
-	public int parsePointer() throws IOException, InvalidPointerException{
-		int[] output = readMask(4, 25, 7);
-		if(output[1]==0 && output[0]==0)
-			return -1;
-		if(output[1]!=4)
-			throw new InvalidPointerException(buffer.position() - 4);
-			return output[0];
+	public Pointer parsePointer() throws IOException, InvalidPointerException{
+		int[] output = readMask(4, 27, 5);
+		if (output[1]>2)
+			throw new InvalidPointerException(getFilePointer());
+		return (output[1]==0 && output[0]==0) ? null : new Pointer(output[0], output[1]==1);
 	}
 	
-	public int parsePointer(int offset) throws IOException, InvalidPointerException{
+	public Pointer parsePointer(int offset) throws IOException, InvalidPointerException{
 		seek(offset);
 		return parsePointer();
 	}
@@ -91,15 +96,24 @@ public class RomFile {
 	 * @param pointer
 	 * @return The string that was read
 	 */
-	public String readStringAndReturn(int offset) throws IOException {
+	public String readStringAndReturn(int offset) throws IOException, InvalidPointerException{
+		return readStringAndReturn(Pointer.fromInt(offset));
+	}
+	
+	public String readStringAndReturn(Pointer pointer) throws IOException, InvalidPointerException{
 		int mark = getFilePointer();
-		seek(offset);
+		seek(pointer);
 		String str = readString();
 		seek(mark);
 		return str;
 	}
 
-	public String readString(int offset) throws IOException {		
+	public String readString(int offset) throws IOException {
+		seek(offset);
+		return readString();
+	}
+	
+	public String readString(Pointer offset) throws IOException {
 		seek(offset);
 		return readString();
 	}
@@ -187,6 +201,10 @@ public class RomFile {
 	
 	public void writeByte(byte in) throws IOException{
 		write(1, in);
+	}
+	
+	public void writeUnsignedShort(int in){
+		
 	}
 	
 	public void writeShort(short in) throws IOException{

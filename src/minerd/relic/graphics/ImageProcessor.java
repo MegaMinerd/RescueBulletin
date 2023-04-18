@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javafx.scene.image.WritableImage;
 import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.util.FileSystem;
@@ -71,16 +72,16 @@ public class ImageProcessor{
 		rom.seek(offset);
 		rom.skip(4); //Ignore magic bytes
 		rom.seek(rom.parsePointer()); //Go to footer
-		int animationPointers = rom.parsePointer();
-		int directionPointers = rom.parsePointer();
-		int displacePointers = rom.parsePointer();
-		int spritePointers = rom.parsePointer();
+		Pointer animationPointers = rom.parsePointer();
+		Pointer directionPointers = rom.parsePointer();
+		Pointer displacePointers = rom.parsePointer();
+		Pointer spritePointers = rom.parsePointer();
 			
 		//Load sprites
 		//Todo: generalize
 		Chunk[] sprites = new Chunk[24];
 		for(int i=0; i<24; i++) {
-			rom.seek(spritePointers+4*i);
+			rom.seek(spritePointers.getOffset()+4*i);
 			rom.seek(rom.parsePointer());
 			rom.seek(rom.parsePointer());
 			Tile[] spriteTiles = new Tile[4];
@@ -95,14 +96,14 @@ public class ImageProcessor{
 		int endSize = rows*cols;
 		Chunk sprite = new Chunk(rows, cols);
 		while(totalSize<endSize){
-			int pointer = rom.parsePointer();
+			Pointer pointer = rom.parsePointer();
 			int displace = 0;
-			if(pointer == 0){
+			if(pointer == null){
 				displace = rom.readInt()/32;
 				totalSize += displace;
 				pointer = rom.parsePointer();
 			}
-			if(pointer == 0)
+			if(pointer == null)
 				break;
 			int size = rom.readInt()/32;
 			totalSize += size;

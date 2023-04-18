@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.beans.value.ObservableValue;
 import minerd.relic.data.GameData;
 import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.tree.FolderTreeItem;
@@ -24,9 +25,9 @@ public class MoveFolderTreeItem extends FolderTreeItem<GameData> {
 				rom.seek(pointers[0]);
 				rom.skip(4);
 				rom.seek(rom.parsePointer());
-				int dataStart = rom.parsePointer();
+				Pointer dataStart = rom.parsePointer();
 				for(int i=0; i<413; i++) {
-					int moveStart = dataStart + 0x24 * i;
+					int moveStart = dataStart.getOffset() + 0x24 * i;
 					rom.seek(moveStart);
 					String moveName = rom.readString(rom.parsePointer());
 					getChildren().add(new MoveDataTreeItem(moveName, moveStart));
