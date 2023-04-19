@@ -16,11 +16,14 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import minerd.relic.data.Area;
+import minerd.relic.data.FriendArea;
 import minerd.relic.data.Item;
 import minerd.relic.data.Move;
 import minerd.relic.data.Pokemon;
 import minerd.relic.file.Rom;
 import minerd.relic.tree.DataTreeItem;
+import minerd.relic.tree.DungeonFolderTreeItem;
 import minerd.relic.tree.FolderTreeItem;
 import minerd.relic.tree.ListsFolderTreeItem;
 
@@ -61,14 +64,14 @@ public class mainController implements Initializable{
 		//TODO: load these offsets from a config for various builds
 		root.getChildren().add(new ListsFolderTreeItem());
 		//root.getChildren().add(new SceneFolderTreeItem(-1));
-		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424, 0x00357B88));
+		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424, 0x00357B88, 0x0360BF4));
 		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240, 0x00306570));
-		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413, 0x0360BF4));
+		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413, 0x003679A0));
 		//root.getChildren().add(new MapFolderTreeItem(-1));
 		//root.getChildren().add(new SpriteFolderTreeItem(-1));
 		//root.getChildren().add(new BackgroundFolderTreeItem(-1));
-		//root.getChildren().add(new AreaFolderTreeItem(0x0010AA90, 0x001139D0));
-		//root.getChildren().add(new DungeonFolderTreeItem(0x00109D30, 0x00111A28, 0x01077A8));
+		root.getChildren().add(new FolderTreeItem<FriendArea>("Friend Areas", "This section lets you edit friend areas in the game.", FriendArea.class, 58, 0x0010AA90, 0x001139D0));
+		root.getChildren().add(new DungeonFolderTreeItem(0x00109D30, 0x01077A8, 0x004A2BF4));
 		//root.getChildren().add(new FixedRoomFolderTreeItem(-1));
 		//root.getChildren().add(new TilesetFolderTreeItem(-1));
 		//root.getChildren().add(new GraphicFolderTreeItem(-1));

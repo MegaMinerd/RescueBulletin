@@ -18,10 +18,10 @@ public class Pokemon extends GameData{
 	private int dexID, entityID, recruit, alphaID, parentID;
 	private boolean canWalk, toolbox;
 	
-	public Pokemon(int index, int[] pointers) {
+	public Pokemon(int index, int[] offsets) {
 		try {
 			RomFile rom = Rom.getAll();
-			rom.seek(pointers[0]);
+			rom.seek(offsets[0]);
 			rom.skip(16 + index*0x48);
 			name = rom.readStringAndReturn(rom.parsePointer());
 			category = rom.readStringAndReturn(rom.parsePointer());

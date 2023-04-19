@@ -12,16 +12,16 @@ import minerd.relic.fxml.StartersController;
 public class Starters extends GameData{
 	private int[] players, partners;
 
-	public Starters(int index, int[] pointers) {
+	public Starters(int index, int[] offsets) {
 		try {
 			RomFile rom = Rom.getAll();
 
-			rom.seek(pointers[0]);
+			rom.seek(offsets[0]);
 			players = new int[26];
 			for(int i=0; i<26; i++)
 				players[i] = rom.readUnsignedShort();
 			
-			rom.seek(pointers[1]);
+			rom.seek(offsets[1]);
 			partners = new int[10];
 			for(int i=0; i<10; i++)
 				partners[i] = rom.readUnsignedShort();

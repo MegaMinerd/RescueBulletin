@@ -1,8 +1,9 @@
-package minerd.relic.area;
+package minerd.relic.fxml;
 
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import minerd.relic.data.FriendArea;
 
 public class AreaController {
 	public Label areaName;

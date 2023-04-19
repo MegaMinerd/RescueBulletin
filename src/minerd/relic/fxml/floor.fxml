@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<SplitPane dividerPositions="0.3696682464454976" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.dungeon.FloorController">
+<SplitPane dividerPositions="0.3696682464454976" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.fxml.FloorController">
   <items>
     <AnchorPane minWidth="-Infinity" prefHeight="400.0">
          <children>

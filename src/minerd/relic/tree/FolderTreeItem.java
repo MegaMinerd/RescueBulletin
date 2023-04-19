@@ -10,14 +10,13 @@ import javafx.scene.layout.AnchorPane;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Text;
 import minerd.relic.fxml.FolderController;
-import minerd.relic.fxml.PokemonController;
 
 public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implements ChangeListener<Boolean>{
 	private String name, info;
 	protected boolean loaded;
 	private Class<T> cacheClass;
-	private int number;
-	protected int[] pointers;
+	protected int number;
+	protected int[] offsets;
 
 	public FolderTreeItem(String text, String infoIn) {
 		this(text, infoIn, Object.class, -1);
@@ -32,11 +31,11 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 		this.info = infoIn;
 		this.cacheClass = cacheClassIn;
 		this.number = numberIn;
-		this.pointers = pointersIn;
+		this.offsets = pointersIn;
 		this.name = text;
 		loaded = true;
 		
-		if(pointers.length==0 || pointers[0]>=0) {
+		if(offsets.length==0 || offsets[0]>=0) {
 			loaded = false;
 			//Force the tree to show this node as a folder, but don't actually load anything until it's needed.
 			getChildren().add(new DataTreeItem<T>(""));
@@ -64,7 +63,7 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 	    if(!loaded) {
 	        getChildren().remove(0);
 	        for(int i=0; i<number; i++) {
-	            getChildren().add(new DataTreeItem<T>(Text.getText(name, i), cacheClass, i, pointers));
+	            getChildren().add(new DataTreeItem<T>(Text.getText(name, i), cacheClass, i, offsets));
 	        }
 	        loaded = true;
 	    }

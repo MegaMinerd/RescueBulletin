@@ -27,6 +27,7 @@ public class Text extends GameData {
 		textLists.put("Weather", readTextTable(0x0F9A54, 8));
 		textLists.put("Types", readTextTable(0x10AD4C, 18));
 		textLists.put("Abilities", readTextTable(0x10B4C8, 77));
+		textLists.put("Dungeons", readTextTable(0x111A28, 98, 4));
 		textLists.put("Friend Areas", readTextTable(0x1139D0, 58));
 		textLists.put("Items", readTextTable(0x30CC28, 240, 28));
 		textLists.put("Pokemon", readTextTable(0x357B98, 424, 68));

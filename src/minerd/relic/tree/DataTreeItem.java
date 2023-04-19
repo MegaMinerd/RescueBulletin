@@ -11,15 +11,16 @@ import minerd.relic.data.GameData;
 public class DataTreeItem<T extends GameData> extends TreeItem<String>{
 	private String name;
 	private Class<T> cacheClass;
-	private int index;
-	private int[] pointers;
-	private T cache;
+	protected int index;
+	protected int[] pointers;
+	protected T cache;
 	
 	public DataTreeItem(String text) {
 		super(text);
 		name=text;
 	}
 	
+	@Deprecated
 	public DataTreeItem(String text, int off) {
 		this(text);
 		//offset = off;

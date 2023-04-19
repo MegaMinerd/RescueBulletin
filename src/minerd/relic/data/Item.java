@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Region;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
@@ -16,11 +15,11 @@ public class Item extends GameData{
 	private int itemId, buyPrice, sellPrice, itemType, spriteId, moveId, minAmnt, maxAmnt, paletteId, actionType;
 	private boolean ai1, ai2, ai3;
 
-	public Item(int index, int[] pointers){
+	public Item(int index, int[] offsets){
 		try {
 			itemId = index;
 			RomFile rom = Rom.getAll();
-			rom.seek(pointers[0]+4);
+			rom.seek(offsets[0]+4);
 			rom.seek(rom.parsePointer());
 			rom.skip(index*0x20);
 			name = rom.readStringAndReturn(rom.parsePointer());
