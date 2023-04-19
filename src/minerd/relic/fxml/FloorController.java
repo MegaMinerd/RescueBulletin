@@ -1,16 +1,19 @@
 package minerd.relic.fxml;
 
-import java.io.IOException;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import minerd.relic.data.Encounter;
 import minerd.relic.data.Floor;
 import minerd.relic.data.Text;
-import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.data.Trap;
 
 public class FloorController{
 	public Label floorNum;
@@ -31,16 +34,29 @@ public class FloorController{
 	
 	//Chances tab
 	public Slider shopChance, houseChance, mazeChance, stickyChance;
+	
+	//Pokemon spawns tab
+	public TableView<Encounter> encounterTable;
+	public TableColumn<Encounter, Integer> encounterId, encounterLevel;
+	public TableColumn<Encounter, String> encounterName, encounterFloorChance, encounterHouseChance;
+	
+	//Trap spawns tab
+	public TableView<Trap> trapTable;
+	public TableColumn<Trap, String> trapName, trapChance;
 
 	public void load(Floor floor) {
 		loadLayout(floor);
+		loadEncounters(floor); 
+		loadTraps(floor); 
 	}
 	
 	public void loadLayout(Floor floor) {
 		layoutType.getSelectionModel().select(floor.getLayoutType());
 		roomDensity.setText(floor.getRoomDensity()+"");
 		tileset.getSelectionModel().select(floor.getTileset());
+		music.getItems().addAll(Text.getTextList("Dungeon Music"));
 		music.getSelectionModel().select(floor.getMusic());
+		System.out.println(floor.getMusic());
 		weather.getItems().addAll(Text.getTextList("Weather"));
 		weather.getSelectionModel().select(floor.getWeather());
 		connectivity.setText(floor.getConnectivity()+"");
@@ -63,5 +79,28 @@ public class FloorController{
 		visibility.getSelectionModel().select(floor.getVisibility());
 		maxCoinAmnt.setText(floor.getMaxCoinAmnt()*5+"");
 		buriedDensity.setText(floor.getBuriedDensity()+"");
+	}
+	
+	public void loadEncounters(Floor floor) {
+		ObservableList<Encounter> encounterList  = FXCollections.observableArrayList();
+		encounterList.addAll(floor.getEncounters());
+		
+		encounterId.setCellValueFactory(new PropertyValueFactory<Encounter, Integer>("id"));
+		encounterName.setCellValueFactory(new PropertyValueFactory<Encounter, String>("species"));
+		encounterLevel.setCellValueFactory(new PropertyValueFactory<Encounter, Integer>("level"));
+		encounterFloorChance.setCellValueFactory(new PropertyValueFactory<Encounter, String>("floorPercent"));
+		encounterHouseChance.setCellValueFactory(new PropertyValueFactory<Encounter, String>("housePercent"));
+		
+		encounterTable.setItems(encounterList);
+	}
+	
+	public void loadTraps(Floor floor) {
+		ObservableList<Trap> trapList  = FXCollections.observableArrayList();
+		trapList.addAll(floor.getTraps());
+		
+		trapName.setCellValueFactory(new PropertyValueFactory<Trap, String>("name"));
+		trapChance.setCellValueFactory(new PropertyValueFactory<Trap, String>("percent"));
+		
+		trapTable.setItems(trapList);
 	}
 }

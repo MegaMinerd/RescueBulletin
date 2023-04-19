@@ -1,10 +1,12 @@
 package minerd.relic.data;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
+import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.FloorController;
@@ -13,12 +15,13 @@ public class Floor extends GameData {
 	private int layoutType, roomDensity, tileset, music, weather, connectivity, pokemonDensity, shopChance, houseChance, mazeChance, stickyChance;
 	private int itemDensity, trapDensity, floorNum, fixedRoom, hallDensity, terrainRooms, waterDensity, visibility, maxCoinAmnt, buriedDensity;
 	private boolean hasDeadEnds, hasPonds, hasExtraTiles;
+	private ArrayList<Encounter> encounters;
+	private ArrayList<Trap> traps;
 	
 	public Floor(int index, int[] offsets) {
 		try {
 			RomFile rom = Rom.getAll();
 			rom.seek(offsets[0]);
-			System.out.println(Integer.toHexString(rom.getFilePointer()));
 			int layoutId = rom.readUnsignedShort();
 			int pokemonTableId = rom.readUnsignedShort();
 			int trapListId = rom.readUnsignedShort();
@@ -27,9 +30,18 @@ public class Floor extends GameData {
 			int houseTableId = rom.readUnsignedShort();
 			int buriedTableId = rom.readUnsignedShort();
 			
-			rom.seek(offsets[1]+index*0x1C);
-			loadLayout(rom, layoutId);
-		} catch (IOException e) {
+			rom.seek(offsets[1]+layoutId*0x1C);
+			loadLayout(rom);
+			
+			rom.seek(offsets[3]+pokemonTableId*0x4);
+			rom.seek(rom.parsePointer());
+			encounters = loadEncounters(rom);
+			
+			rom.seek(offsets[4]+trapListId*0x4);
+			System.out.println(Integer.toHexString(rom.getFilePointer()));
+			rom.seek(rom.parsePointer());
+			traps = loadTraps(rom);
+		} catch (IOException | InvalidPointerException e) {
 			e.printStackTrace();
 		}
 	}
@@ -44,7 +56,7 @@ public class Floor extends GameData {
 	    return dataPane;
 	}
 	
-	private void loadLayout(RomFile rom, int index) throws IOException {
+	private void loadLayout(RomFile rom) throws IOException {
 		layoutType = rom.readUnsignedByte();
 		roomDensity = rom.readUnsignedByte();
 		tileset = rom.readUnsignedByte();
@@ -71,6 +83,37 @@ public class Floor extends GameData {
 		maxCoinAmnt = rom.readUnsignedByte();
 		buriedDensity = rom.readUnsignedByte();
 	}
+	
+	public ArrayList<Encounter> loadEncounters(RomFile rom) throws IOException {
+		short lastProb = 0;
+		short lastHouseProb = 0;
+		ArrayList<Encounter> entries = new ArrayList<Encounter>();
+		while(rom.read(8)!=0) {
+			rom.seek(rom.getFilePointer()-8);
+			int[] mon = rom.readMask(2, 9, 7);	
+			int prob = rom.readUnsignedShort();	
+			prob = Math.max(prob-lastProb, 0);	
+			lastProb += prob;	
+			int houseProb = rom.readUnsignedShort();	
+			houseProb = Math.max(houseProb-lastHouseProb, 0);	
+			lastHouseProb += houseProb;	
+			Encounter entry = new Encounter(mon[0], mon[1], prob, houseProb);	
+			rom.skip(2);	
+			entries.add(entry);
+		}
+		return entries;
+	}
+
+	private ArrayList<Trap> loadTraps(RomFile rom) throws IOException {
+		ArrayList<Trap> entries = new ArrayList<Trap>();
+		int lastProb = 0;		
+		for(int i=0; i<20; i++){		
+			int prob = rom.readUnsignedShort();	
+			entries.add(new Trap(Text.getText("Traps", i), Math.max(prob-lastProb, 0)));	
+			lastProb = prob==0 ? lastProb : prob;	
+		}
+		return entries;
+	}		
 
 	@Override
 	public String getName() {
@@ -259,5 +302,21 @@ public class Floor extends GameData {
 
 	public void setHasExtraTiles(boolean hasExtraTiles) {
 		this.hasExtraTiles = hasExtraTiles;
+	}
+
+	public ArrayList<Encounter> getEncounters() {
+		return encounters;
+	}
+
+	public void setEncounters(ArrayList<Encounter> encounters) {
+		this.encounters = encounters;
+	}
+
+	public ArrayList<Trap> getTraps() {
+		return traps;
+	}
+
+	public void setTraps(ArrayList<Trap> traps) {
+		this.traps = traps;
 	}
 }

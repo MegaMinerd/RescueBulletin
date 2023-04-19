@@ -9,6 +9,8 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -40,12 +42,12 @@
                         <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                      </GridPane.margin>
                   </Label>
-                  <ChoiceBox fx:id="tileset" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <ChoiceBox fx:id="tileset" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
                   </ChoiceBox>
-                  <Button mnemonicParsing="false" prefWidth="150.0" text="Go to" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Button mnemonicParsing="false" prefWidth="180.0" text="Go to" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
@@ -55,12 +57,12 @@
                         <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                      </GridPane.margin>
                   </Label>
-                  <ChoiceBox fx:id="music" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <ChoiceBox fx:id="music" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
                   </ChoiceBox>
-                  <Button mnemonicParsing="false" prefWidth="150.0" text="Go to" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <Button mnemonicParsing="false" prefWidth="180.0" text="Go to" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
@@ -70,12 +72,12 @@
                         <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                      </GridPane.margin>
                   </Label>
-                  <ChoiceBox fx:id="fixedRoom" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                  <ChoiceBox fx:id="fixedRoom" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
                   </ChoiceBox>
-                  <Button mnemonicParsing="false" prefWidth="150.0" text="Go to" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                  <Button mnemonicParsing="false" prefWidth="180.0" text="Go to" GridPane.columnIndex="1" GridPane.rowIndex="7">
                      <GridPane.margin>
                         <Insets bottom="2.0" right="5.0" top="2.0" />
                      </GridPane.margin>
@@ -374,12 +376,31 @@
                   </Tab>
                   <Tab text=" Pokemon Spawns ">
                      <content>
-                        <AnchorPane prefHeight="180.0" />
+                        <AnchorPane prefHeight="180.0">
+                           <children>
+                              <TableView fx:id="encounterTable" prefHeight="360.0" prefWidth="300.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                <columns>
+                                  <TableColumn fx:id="encounterId" prefWidth="30.0" text="ID" />
+                                  <TableColumn fx:id="encounterName" prefWidth="120.0" text="Species" />
+                                    <TableColumn fx:id="encounterLevel" prefWidth="40.0" text="Level" />
+                                    <TableColumn fx:id="encounterFloorChance" prefWidth="50.0" text="Floor%" />
+                                    <TableColumn fx:id="encounterHouseChance" prefWidth="50.0" text="House%" />
+                                </columns>
+                              </TableView>
+                           </children></AnchorPane>
                      </content>
                   </Tab>
                   <Tab text=" Traps ">
                      <content>
-                        <AnchorPane prefHeight="180.0" />
+                        <AnchorPane prefHeight="180.0">
+                           <children>
+                              <TableView fx:id="trapTable" prefHeight="300.0" prefWidth="215.0">
+                                 <columns>
+                                    <TableColumn fx:id="trapName" prefWidth="150.0" text="Trap" />
+                                    <TableColumn fx:id="trapChance" prefWidth="50.0" text="Chance" />
+                                 </columns>
+                              </TableView>
+                           </children></AnchorPane>
                      </content>
                   </Tab>
                   <Tab text=" Items ">

@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import javafx.scene.control.Control;
 import minerd.relic.file.InvalidPointerException;
+import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 
@@ -24,6 +25,7 @@ public class Text extends GameData {
 		};
 		textLists.put("Natures", natures);
 
+		textLists.put("Traps", readTextTable(0x0F91F0, 20));
 		textLists.put("Weather", readTextTable(0x0F9A54, 8));
 		textLists.put("Types", readTextTable(0x10AD4C, 18));
 		textLists.put("Abilities", readTextTable(0x10B4C8, 77));
@@ -33,6 +35,19 @@ public class Text extends GameData {
 		textLists.put("Pokemon", readTextTable(0x357B98, 424, 68));
 		textLists.put("Categories", readTextTable(0x357B9C, 424, 68));
 		textLists.put("Moves", readTextTable(0x3679A0, 413, 32));
+		textLists.put("Tracks", readTextTable(0x1E80054, 940, 4));
+		
+		try {
+			String[] dunTracks = new String[75]; 
+			RomFile rom = Rom.getAll();
+			rom.seek(0xF5668);
+			for(int i=0; i<75; i++) {
+				dunTracks[i] = getText("Tracks", rom.readUnsignedShort());
+			}
+			textLists.put("Dungeon Music", dunTracks);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 
@@ -47,7 +62,8 @@ public class Text extends GameData {
 			RomFile rom = Rom.getAll();
 			rom.seek(tablePointer);
 			for(int i=0; i<count; i++) {
-				texts[i] = rom.readStringAndReturn(rom.parsePointer());
+				Pointer p = rom.parsePointer();
+				texts[i] = p==null?"null string":rom.readStringAndReturn(p);
 				rom.skip(gap);
 			}
 		} catch(InvalidPointerException e) {

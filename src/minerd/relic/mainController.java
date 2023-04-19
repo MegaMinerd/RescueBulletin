@@ -16,7 +16,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import minerd.relic.data.Area;
 import minerd.relic.data.FriendArea;
 import minerd.relic.data.Item;
 import minerd.relic.data.Move;
