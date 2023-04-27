@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.RandomizerController">
    <children>
       <GridPane AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
         <columnConstraints>
@@ -41,12 +40,12 @@
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
             </Label>
-            <CheckBox mnemonicParsing="false" text="Player" GridPane.rowIndex="1">
+            <CheckBox fx:id="player" mnemonicParsing="false" text="Player" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
             </CheckBox>
-            <CheckBox mnemonicParsing="false" text="Partner" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <CheckBox fx:id="partner" mnemonicParsing="false" text="Partner" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
@@ -147,6 +146,6 @@
             </CheckBox>
          </children>
       </GridPane>
-      <Button layoutX="14.0" layoutY="361.0" mnemonicParsing="false" text="Apply" />
+      <Button layoutX="5.0" layoutY="266.0" mnemonicParsing="false" onAction="#randomize" text="Apply" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="266.0" />
    </children>
 </AnchorPane>

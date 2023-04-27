@@ -13,6 +13,10 @@ public class RomFile {
 	public RomFile(ByteBuffer bufferIn) {
 		this.buffer = bufferIn;
 	}
+	
+	public ByteBuffer getBuffer() {
+		return buffer;
+	}
 
 	public int getFilePointer() throws IOException {
 		return buffer.position();
@@ -204,7 +208,7 @@ public class RomFile {
 	}
 	
 	public void writeUnsignedShort(int in){
-		
+		//Todo
 	}
 	
 	public void writeShort(short in) throws IOException{

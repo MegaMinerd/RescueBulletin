@@ -10,12 +10,14 @@ import minerd.relic.file.RomFile;
 import minerd.relic.fxml.StartersController;
 
 public class Starters extends GameData{
-	private int[] players, partners;
+	private int[] offsets, players, partners;
 
 	public Starters(int index, int[] offsets) {
+		this.offsets = offsets;
+		
 		try {
 			RomFile rom = Rom.getAll();
-
+			
 			rom.seek(offsets[0]);
 			players = new int[26];
 			for(int i=0; i<26; i++)
@@ -25,7 +27,6 @@ public class Starters extends GameData{
 			partners = new int[10];
 			for(int i=0; i<10; i++)
 				partners[i] = rom.readUnsignedShort();
-			System.out.println("loaded");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -39,6 +40,21 @@ public class Starters extends GameData{
 	    
 	    controller.load(this);
 	    return dataPane;
+	}
+	
+	public void save(RomFile rom) {
+		try {
+			rom.seek(offsets[0]);
+			for(int i=0; i<26; i++) {
+				rom.writeShort((short)players[i]);
+			}
+			
+			rom.seek(offsets[1]);
+			for(int i=0; i<10; i++)
+				rom.writeShort((short)partners[i]);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

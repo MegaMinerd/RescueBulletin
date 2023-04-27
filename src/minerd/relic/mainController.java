@@ -8,14 +8,18 @@ import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import minerd.relic.data.FriendArea;
 import minerd.relic.data.Item;
 import minerd.relic.data.Move;
@@ -97,6 +101,22 @@ public class mainController implements Initializable{
 			if(itemData!=null)
 				children.add(itemData);
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void randomize() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/rando.fxml"));
+		Parent rando;
+		try {
+			rando = (Parent) loader.load();
+			Stage stage = new Stage();
+			stage.setTitle("Randomize");
+			stage.setScene(new Scene(rando));
+			
+			stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
