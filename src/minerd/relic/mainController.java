@@ -62,18 +62,18 @@ public class mainController implements Initializable{
 		dataTree.setRoot(root);
 		//TODO: load these offsets from a config for various builds
 		root.getChildren().add(new ListsFolderTreeItem());
-		//root.getChildren().add(new SceneFolderTreeItem(-1));
+		//root.getChildren().add(new FolderTreeItem<Scene>("Script Scenes", "This section lets you edit overworld scenes in the game.", Scene.class, -1));
 		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424, 0x00357B88, 0x0360BF4));
 		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240, 0x00306570));
 		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413, 0x003679A0));
-		//root.getChildren().add(new MapFolderTreeItem(-1));
-		//root.getChildren().add(new SpriteFolderTreeItem(-1));
-		//root.getChildren().add(new BackgroundFolderTreeItem(-1));
+		//root.getChildren().add(new FolderTreeItem<Map>("Map Backgrounds", "This section lets you edit map backgrounds.", Map.class, -1));
+		//root.getChildren().add(new FolderTreeItem<Sprite>("Object Sprites", "This section lets you import and export object sprites.", Sprite.class, -1));
+		//root.getChildren().add(new FolderTreeItem<Background>("Backgrounds", "This section lets you edit backgrounds.", Background.class, -1));
 		root.getChildren().add(new FolderTreeItem<FriendArea>("Friend Areas", "This section lets you edit friend areas in the game.", FriendArea.class, 58, 0x0010AA90, 0x001139D0));
 		root.getChildren().add(new DungeonFolderTreeItem(0x00109D30, 0x01077A8, 0x004A2BF4));
-		//root.getChildren().add(new FixedRoomFolderTreeItem(-1));
-		//root.getChildren().add(new TilesetFolderTreeItem(-1));
-		//root.getChildren().add(new GraphicFolderTreeItem(-1));
+		//root.getChildren().add(new FolderTreeItem<FixedRoom>("Fixed Rooms", "This section lets you edit fixed rooms.", FixedRoom.class, -1));
+		//root.getChildren().add(new FolderTreeItem<Tileset>("Dungeon Tilesets", "This section lets you edit the graphics of dungeon tiles.", Tileset.class, -1));
+		//root.getChildren().add(new FolderTreeItem<Graphic>("Misc. Graphics", "This section lets you edit miscellaneous graphics.", Graphic.class, -1));
 	}
 	
 	public void openRom() {
