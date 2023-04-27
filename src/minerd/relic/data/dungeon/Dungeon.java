@@ -1,10 +1,12 @@
-package minerd.relic.data;
+package minerd.relic.data.dungeon;
 
 import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import minerd.relic.data.GameData;
+import minerd.relic.data.Text;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.DungeonController;
@@ -203,5 +205,4 @@ public class Dungeon extends GameData {
 	public void setWaterTypeNeeded(boolean waterTypeNeeded) {
 		this.waterTypeNeeded = waterTypeNeeded;
 	}
-
 }

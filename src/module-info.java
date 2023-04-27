@@ -7,6 +7,7 @@ module RescueRelic {
 	opens application to javafx.graphics, javafx.fxml;
     exports minerd.relic;
     exports minerd.relic.data;
+    exports minerd.relic.data.dungeon;
     exports minerd.relic.fxml;
     exports minerd.relic.tree;
 }

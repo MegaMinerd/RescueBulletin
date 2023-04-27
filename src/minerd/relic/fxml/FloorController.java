@@ -10,10 +10,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import minerd.relic.data.Encounter;
-import minerd.relic.data.Floor;
 import minerd.relic.data.Text;
-import minerd.relic.data.Trap;
+import minerd.relic.data.dungeon.Encounter;
+import minerd.relic.data.dungeon.Floor;
+import minerd.relic.data.dungeon.Trap;
 
 public class FloorController{
 	public Label floorNum;
@@ -56,7 +56,7 @@ public class FloorController{
 		tileset.getSelectionModel().select(floor.getTileset());
 		music.getItems().addAll(Text.getTextList("Dungeon Music"));
 		music.getSelectionModel().select(floor.getMusic());
-		System.out.println(floor.getMusic());
+		//System.out.println(floor.getMusic());
 		weather.getItems().addAll(Text.getTextList("Weather"));
 		weather.getSelectionModel().select(floor.getWeather());
 		connectivity.setText(floor.getConnectivity()+"");
@@ -83,7 +83,7 @@ public class FloorController{
 	
 	public void loadEncounters(Floor floor) {
 		ObservableList<Encounter> encounterList  = FXCollections.observableArrayList();
-		encounterList.addAll(floor.getEncounters());
+		encounterList.addAll(floor.getEncounters().getEntries());
 		
 		encounterId.setCellValueFactory(new PropertyValueFactory<Encounter, Integer>("id"));
 		encounterName.setCellValueFactory(new PropertyValueFactory<Encounter, String>("species"));
@@ -96,7 +96,7 @@ public class FloorController{
 	
 	public void loadTraps(Floor floor) {
 		ObservableList<Trap> trapList  = FXCollections.observableArrayList();
-		trapList.addAll(floor.getTraps());
+		trapList.addAll(floor.getTraps().getEntries());
 		
 		trapName.setCellValueFactory(new PropertyValueFactory<Trap, String>("name"));
 		trapChance.setCellValueFactory(new PropertyValueFactory<Trap, String>("percent"));

@@ -3,7 +3,7 @@ package minerd.relic.fxml;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import minerd.relic.data.Dungeon;
+import minerd.relic.data.dungeon.Dungeon;
 
 public class DungeonController{
 	public TextField rescuesAllowed, maxItemCount, maxPartySize, turnLimit, randWalkChance;

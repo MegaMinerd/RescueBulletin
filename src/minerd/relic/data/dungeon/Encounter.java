@@ -1,4 +1,6 @@
-package minerd.relic.data;
+package minerd.relic.data.dungeon;
+
+import minerd.relic.data.Text;
 
 public class Encounter {
 	private int id, level, floorProb, houseProb;

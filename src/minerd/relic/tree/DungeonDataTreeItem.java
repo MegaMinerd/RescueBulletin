@@ -5,20 +5,20 @@ import java.io.IOException;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.layout.Region;
-import minerd.relic.data.Dungeon;
-import minerd.relic.data.Floor;
+import minerd.relic.data.Cache;
+import minerd.relic.data.GameData;
+import minerd.relic.data.dungeon.Dungeon;
+import minerd.relic.data.dungeon.Floor;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 
 public class DungeonDataTreeItem extends FolderTreeItem<Floor>{
-	Dungeon cache;
 	private int index, floorStart;
 
 	public DungeonDataTreeItem(String dunName, int index, int floors, int start, int floorStart) {
-		super(dunName, "", Floor.class, floors, start);
-		cache = null;
+		super(dunName, "", Floor.class, 0-floors, start);
 		this.index = index;
 		this.floorStart = floorStart;
 		
@@ -29,12 +29,14 @@ public class DungeonDataTreeItem extends FolderTreeItem<Floor>{
 	@Override
 	public Node select(){
 		Region dataPane = null;
-	    if(cache==null){
+	    GameData data = Cache.get("Dungeon", index);
+	    if(data==null){
 	        //Read the data from the ROM to store as cache
-    		cache = new Dungeon(index, offsets);
+	    	data = new Dungeon(index, offsets);
+    		Cache.add("Dungeon", index, data);
 	    }
 	    try {
-	    	dataPane = cache.load();
+	    	dataPane = data.load();
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	    }

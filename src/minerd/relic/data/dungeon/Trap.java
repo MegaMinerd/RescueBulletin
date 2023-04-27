@@ -1,4 +1,4 @@
-package minerd.relic.data;
+package minerd.relic.data.dungeon;
 
 public class Trap {
 	private String name;

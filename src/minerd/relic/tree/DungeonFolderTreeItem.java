@@ -3,8 +3,9 @@ package minerd.relic.tree;
 import java.io.IOException;
 
 import javafx.beans.value.ObservableValue;
-import minerd.relic.data.Dungeon;
+import minerd.relic.data.Cache;
 import minerd.relic.data.Text;
+import minerd.relic.data.dungeon.Dungeon;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 
@@ -33,6 +34,10 @@ public class DungeonFolderTreeItem extends FolderTreeItem<Dungeon> {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			Cache.alloc("Floor", 1764);
+			Cache.alloc("EncounterList", 839);
+			Cache.alloc("LootList", 178);
+			Cache.alloc("TrapList", 148);
 		}
 	}
 }

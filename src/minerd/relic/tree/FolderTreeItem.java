@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Text;
 import minerd.relic.fxml.FolderController;
@@ -19,7 +20,7 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 	protected int[] offsets;
 
 	public FolderTreeItem(String text, String infoIn) {
-		this(text, infoIn, Object.class, -1);
+		this(text, infoIn, Object.class, 0);
 	}
 	
 	public FolderTreeItem(String text, String infoIn, int off) {
@@ -30,10 +31,13 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 		super(text);
 		this.info = infoIn;
 		this.cacheClass = cacheClassIn;
-		this.number = numberIn;
+		this.number = Math.abs(numberIn);
 		this.offsets = pointersIn;
 		this.name = text;
 		loaded = true;
+		
+		if(numberIn>0)
+			Cache.alloc(cacheClassIn.getSimpleName(), number);
 		
 		if(offsets.length==0 || offsets[0]>=0) {
 			loaded = false;

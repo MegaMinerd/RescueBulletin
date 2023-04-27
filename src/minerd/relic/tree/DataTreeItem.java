@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Region;
+import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 
 public class DataTreeItem<T extends GameData> extends TreeItem<String>{
@@ -13,7 +14,6 @@ public class DataTreeItem<T extends GameData> extends TreeItem<String>{
 	private Class<T> cacheClass;
 	protected int index;
 	protected int[] pointers;
-	protected T cache;
 	
 	public DataTreeItem(String text) {
 		super(text);
@@ -44,17 +44,19 @@ public class DataTreeItem<T extends GameData> extends TreeItem<String>{
 	
 	public Node select() throws IOException{
 	    Region dataPane = null;
-	    if(cache==null){
+	    GameData data = Cache.get(cacheClass.getSimpleName(), index);
+	    if(data==null){
 	        //Read the data from the ROM to store as cache
 	    	try {
-	    		cache = cacheClass.getConstructor(int.class, int[].class).newInstance(index, pointers);
+	    		data = cacheClass.getConstructor(int.class, int[].class).newInstance(index, pointers);
+	    		Cache.add(data.getClass().getSimpleName(), index, data);
 	    		//Don't delete this when the names list is fixed. Move it to the Apply button
 	    		//super.setValue(cache.getName());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}
 	    }
-		dataPane = cache.load();
+		dataPane = data.load();
 	    return dataPane;
 	}
 }
