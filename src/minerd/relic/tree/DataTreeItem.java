@@ -20,12 +20,6 @@ public class DataTreeItem<T extends GameData> extends TreeItem<String>{
 		name=text;
 	}
 	
-	@Deprecated
-	public DataTreeItem(String text, int off) {
-		this(text);
-		//offset = off;
-	}
-	
 	public DataTreeItem(String name, Class<T> cacheClassIn, int indexIn, int ... pointersIn) {
 		super(name);
 		this.name = name;

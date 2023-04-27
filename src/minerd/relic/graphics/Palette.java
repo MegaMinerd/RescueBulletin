@@ -3,7 +3,6 @@ package minerd.relic.graphics;
 import java.io.IOException;
 
 import javafx.scene.paint.Color;
-import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 
 public class Palette {

@@ -11,8 +11,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import minerd.relic.data.Text;
+import minerd.relic.data.dungeon.Category;
 import minerd.relic.data.dungeon.Encounter;
 import minerd.relic.data.dungeon.Floor;
+import minerd.relic.data.dungeon.Loot;
+import minerd.relic.data.dungeon.LootList;
 import minerd.relic.data.dungeon.Trap;
 
 public class FloorController{
@@ -43,13 +46,29 @@ public class FloorController{
 	//Trap spawns tab
 	public TableView<Trap> trapTable;
 	public TableColumn<Trap, String> trapName, trapChance;
+	
+	//Item spawns tab
+	public TableView<Category> floorCategoryTable, shopCategoryTable, houseCategoryTable, buriedCategoryTable;
+	public TableView<Loot> floorItemTable, shopItemTable, houseItemTable, buriedItemTable;
+	
+	public TableColumn<Category, Integer> floorCategoryId, floorCategoryWeight, shopCategoryId, shopCategoryWeight;
+	public TableColumn<Category, Integer> houseCategoryId, houseCategoryWeight, buriedCategoryId, buriedCategoryWeight;
+	public TableColumn<Category, String> floorCategoryName, floorCategoryChance, shopCategoryName, shopCategoryChance;
+	public TableColumn<Category, String> houseCategoryName, houseCategoryChance, buriedCategoryName, buriedCategoryChance;
+	
+	public TableColumn<Loot, Integer> floorItemId, floorItemCat, floorItemWeight;
+	public TableColumn<Loot, String> floorItemName, floorItemChance;
 
 	public void load(Floor floor) {
 		loadLayout(floor);
 		loadEncounters(floor); 
 		loadTraps(floor); 
+		loadLoot(floor.getFloorLoot(), floorCategoryId,  floorCategoryName,  floorCategoryWeight,  floorCategoryChance,  floorCategoryTable);
+		loadLoot(floor.getShopLoot(), shopCategoryId,   shopCategoryName,   shopCategoryWeight,   shopCategoryChance,   shopCategoryTable);
+		loadLoot(floor.getHouseLoot(), houseCategoryId,  houseCategoryName,  houseCategoryWeight,  houseCategoryChance,  houseCategoryTable);
+		loadLoot(floor.getBuriedLoot(), buriedCategoryId, buriedCategoryName, buriedCategoryWeight, buriedCategoryChance, buriedCategoryTable);
 	}
-	
+
 	public void loadLayout(Floor floor) {
 		layoutType.getSelectionModel().select(floor.getLayoutType());
 		roomDensity.setText(floor.getRoomDensity()+"");
@@ -102,5 +121,18 @@ public class FloorController{
 		trapChance.setCellValueFactory(new PropertyValueFactory<Trap, String>("percent"));
 		
 		trapTable.setItems(trapList);
+	}
+	
+	public void loadLoot(LootList lootList, TableColumn<Category, Integer> categoryId, TableColumn<Category, String> categoryName, 
+			TableColumn<Category, Integer> categoryWeight, TableColumn<Category, String> categoryChance, TableView<Category> categoryTable) {
+		ObservableList<Category> observeList  = FXCollections.observableArrayList();
+		observeList.addAll(lootList.getCategories());
+		
+		categoryId.setCellValueFactory(new PropertyValueFactory<Category, Integer>("id"));
+		categoryName.setCellValueFactory(new PropertyValueFactory<Category, String>("name"));
+		categoryWeight.setCellValueFactory(new PropertyValueFactory<Category, Integer>("weight"));
+		categoryChance.setCellValueFactory(new PropertyValueFactory<Category, String>("chance"));
+		
+		categoryTable.setItems(observeList);
 	}
 }

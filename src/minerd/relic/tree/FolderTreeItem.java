@@ -23,10 +23,6 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 		this(text, infoIn, Object.class, 0);
 	}
 	
-	public FolderTreeItem(String text, String infoIn, int off) {
-		super(text, off);
-	}
-	
 	public FolderTreeItem(String text, String infoIn, Class cacheClassIn, int numberIn, int ... pointersIn) {
 		super(text);
 		this.info = infoIn;

@@ -9,6 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import minerd.relic.data.Item;
+import minerd.relic.data.Text;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.graphics.ImageProcessor;
 
@@ -26,8 +27,7 @@ public class ItemController{
 			itemNameField.setText(item.getName());
 			buyPrice.setText(item.getBuyPrice() + "");
 			sellPrice.setText(item.getSellPrice() + "");
-			itemType.getItems().addAll("Throwable", "Rock", "Berry/Seed", "Apple/Gummi", "Hold Item", "TM", "Money",
-					"Unused", "Misc.", "Orb", "Link Box", "Used TM");
+			itemType.getItems().addAll(Text.getTextList("Item Types"));
 			itemType.getSelectionModel().select(item.getItemType());
 			spriteId.setText(item.getSpriteId() + "");
 			description.setText(item.getDescription());

@@ -24,6 +24,13 @@ public class Text extends GameData {
 		        "Relaxed", 	"Lonely", 	"Quirky"
 		};
 		textLists.put("Natures", natures);
+		
+		String[] itemTypes = {
+				"Throwable", "Rock",  	"Berry/Seed", 	"Apple/Gummi", 	"Hold Item", 
+				"TM", 		 "Money",	"Unused", 		"Misc.", 		"Orb", 
+				"Link Box",  "Used TM"
+		};
+		textLists.put("Item Types", itemTypes);
 
 		textLists.put("Traps", readTextTable(0x0F91F0, 20));
 		textLists.put("Weather", readTextTable(0x0F9A54, 8));

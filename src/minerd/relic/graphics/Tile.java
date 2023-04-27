@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 
 public class Tile {

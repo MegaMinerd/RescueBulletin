@@ -1,7 +1,7 @@
 package minerd.relic.data.dungeon;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
@@ -19,6 +19,7 @@ public class Floor extends GameData {
 	private boolean hasDeadEnds, hasPonds, hasExtraTiles;
 	private EncounterList encounters;
 	private TrapList traps;
+	private LootList floorLoot, shopLoot, houseLoot, buriedLoot;
     
     public Floor(int index, int[] offsets) {
         try {
@@ -35,25 +36,31 @@ public class Floor extends GameData {
             rom.seek(offsets[1]+layoutId*0x1C);
             loadLayout(rom);
             
-            encounters = (EncounterList) Cache.get("EncounterList", pokemonTableId);
-            if(encounters == null) {
-            	rom.seek(offsets[3]+pokemonTableId*0x4);
-            	rom.seek(rom.parsePointer());
-            	encounters = new EncounterList(rom);
-            	Cache.add("EncounterList", pokemonTableId, encounters);
-            }
-            
-            traps = (TrapList) Cache.get("TrapList", trapListId);
-            if(traps == null) {
-            	rom.seek(offsets[4]+trapListId*0x4);
-            	//System.out.println(Integer.toHexString(rom.getFilePointer()));
-            	rom.seek(rom.parsePointer());
-            	traps = new TrapList(rom);
-            	Cache.add("TrapList", trapListId, traps);
-            }
+            encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId, offsets[3], rom, EncounterList.class);
+            traps = (TrapList) loadSubdata("TrapList", trapListId, offsets[4], rom, TrapList.class);
+            floorLoot = (LootList) loadSubdata("LootList", itemTableId, offsets[2], rom, LootList.class);
+            shopLoot = (LootList) loadSubdata("LootList", shopTableId, offsets[2], rom, LootList.class);
+            houseLoot = (LootList) loadSubdata("LootList", houseTableId, offsets[2], rom, LootList.class);
+            buriedLoot = (LootList) loadSubdata("LootList", buriedTableId, offsets[2], rom, LootList.class);
         } catch (IOException | InvalidPointerException e) {
             e.printStackTrace();
         }
+    }
+    
+    private GameData loadSubdata(String cacheListName, int index, int offset, RomFile rom, Class cacheClass) throws IOException, InvalidPointerException {
+    	GameData data = Cache.get(cacheListName, index);
+        if(data == null) {
+        	rom.seek(offset+index*0x4);
+        	rom.seek(rom.parsePointer());
+        	try {
+				data = (GameData) cacheClass.getConstructor(RomFile.class).newInstance(rom);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+			}
+        	Cache.add(cacheListName, index, data);
+        }
+        return data;
     }
 
 	@Override
@@ -301,5 +308,37 @@ public class Floor extends GameData {
 
 	public void setTraps(TrapList traps) {
 		this.traps = traps;
+	}
+
+	public LootList getFloorLoot() {
+		return floorLoot;
+	}
+
+	public void setFloorLoot(LootList floorLoot) {
+		this.floorLoot = floorLoot;
+	}
+
+	public LootList getShopLoot() {
+		return shopLoot;
+	}
+
+	public void setShopLoot(LootList shopLoot) {
+		this.shopLoot = shopLoot;
+	}
+
+	public LootList getHouseLoot() {
+		return houseLoot;
+	}
+
+	public void setHouseLoot(LootList houseLoot) {
+		this.houseLoot = houseLoot;
+	}
+
+	public LootList getBuriedLoot() {
+		return buriedLoot;
+	}
+
+	public void setBuriedLoot(LootList buriedLoot) {
+		this.buriedLoot = buriedLoot;
 	}
 }

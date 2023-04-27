@@ -8,6 +8,7 @@ module RescueRelic {
     exports minerd.relic;
     exports minerd.relic.data;
     exports minerd.relic.data.dungeon;
+    exports minerd.relic.file;
     exports minerd.relic.fxml;
     exports minerd.relic.tree;
 }

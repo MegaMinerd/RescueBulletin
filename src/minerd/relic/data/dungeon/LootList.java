@@ -9,8 +9,8 @@ import minerd.relic.data.GameData;
 import minerd.relic.file.RomFile;
 
 public class LootList extends GameData{
-    ArrayList<Category> categories;
-    ArrayList<Loot> entries;
+    private ArrayList<Category> categories;
+    private ArrayList<Loot> loot;
     
     public LootList(RomFile rom) throws IOException{
         HashMap<Integer, Integer> iweightEntries = new HashMap<Integer, Integer>();
@@ -25,18 +25,20 @@ public class LootList extends GameData{
                 itemId += data-30000;
         }
         
-        //Todo: use actusl size
+        //Todo: use actual size
         int catNum = 12;
         int lastValue = 0;
         categories = new ArrayList<Category>();
-        iweightEntries.forEach((key, value) -> {
+        for(int key : iweightEntries.keySet())  {
+        	int value = iweightEntries.get(key);
             if(key < catNum){
-                //catWeights [key] = value;
-                //categories.set(key, value-lastValue);
+                Category cat = new Category(key, value-lastValue);
+                categories.add(cat);
+                lastValue= value;
             }else{
                 // Todo
             }
-        });
+        }
     }
     
     public Region load() throws IOException{
@@ -50,4 +52,20 @@ public class LootList extends GameData{
     public String getName(){
         return "Loot List";
     }
+
+	public ArrayList<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(ArrayList<Category> categories) {
+		this.categories = categories;
+	}
+
+	public ArrayList<Loot> getLoot() {
+		return loot;
+	}
+
+	public void setLoot(ArrayList<Loot> loot) {
+		this.loot = loot;
+	}
 }
