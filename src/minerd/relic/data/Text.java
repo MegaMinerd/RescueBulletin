@@ -14,10 +14,10 @@ import minerd.relic.file.RomFile;
 public class Text extends GameData {
 	public static ArrayList<String> pokemon = new ArrayList<String>();
 	private static HashMap<String, String[]> textLists;
-	
-	static {
+
+	static{
 		textLists = new HashMap<String, String[]>();
-		
+
 		String[] natures = {
 		        "Hardy", 	"Docile", 	"Brave", 	"Jolly", 	"Impish", 
 		        "Naive", 	"Timid", 	"Hasty", 	"Sassy", 	"Calm", 
@@ -43,68 +43,67 @@ public class Text extends GameData {
 		textLists.put("Categories", readTextTable(0x357B9C, 424, 68));
 		textLists.put("Moves", readTextTable(0x3679A0, 413, 32));
 		textLists.put("Tracks", readTextTable(0x1E80054, 940, 4));
-		
-		try {
-			String[] dunTracks = new String[75]; 
+
+		try{
+			String[] dunTracks = new String[75];
 			RomFile rom = Rom.getAll();
 			rom.seek(0xF5668);
-			for(int i=0; i<75; i++) {
+			for(int i = 0; i<75; i++){
 				dunTracks[i] = getText("Tracks", rom.readUnsignedShort());
 			}
 			textLists.put("Dungeon Music", dunTracks);
-		} catch (IOException e) {
+		} catch(IOException e){
 			e.printStackTrace();
 		}
 	}
-	
 
 	public static String[] readTextTable(int tablePointer, int count) {
 		return readTextTable(tablePointer, count, 0);
 	}
-	
-	//Used when there's a pointer table
+
+	// Used when there's a pointer table
 	public static String[] readTextTable(int tablePointer, int count, int gap) {
 		String[] texts = new String[count];
-		try {
+		try{
 			RomFile rom = Rom.getAll();
 			rom.seek(tablePointer);
-			for(int i=0; i<count; i++) {
+			for(int i = 0; i<count; i++){
 				Pointer p = rom.parsePointer();
-				texts[i] = p==null?"null string":rom.readStringAndReturn(p);
+				texts[i] = p==null ? "null string" : rom.readString(p);
 				rom.skip(gap);
 			}
-		} catch(InvalidPointerException e) {
-			
-		} catch (IOException e) {
+		} catch(InvalidPointerException e){
+
+		} catch(IOException e){
 		}
 		return texts;
 	}
-	
-	//Used when there's no pointer table
+
+	// Used when there's no pointer table
 	public static String[][] readTextList(int listPointer, int count, int interlaces) {
 		String[][] texts = new String[interlaces][count];
-		try {
+		try{
 			RomFile rom = Rom.getAll();
 			rom.seek(listPointer);
-			Stack<String> textStack = new Stack<String>(); 
-			for(int i=0; i<count*interlaces; i++) {
+			Stack<String> textStack = new Stack<String>();
+			for(int i = 0; i<count*interlaces; i++){
 				textStack.push(rom.readString());
 				System.out.println(Integer.toHexString(rom.getFilePointer()));
 				while(rom.peek()==0)
 					rom.skip(1);
 			}
-			for(int i=0; i<count; i++)
-				for(int j=0; j<interlaces; j++)
+			for(int i = 0; i<count; i++)
+				for(int j = 0; j<interlaces; j++)
 					texts[j][i] = textStack.pop();
-		} catch (IOException e) {
+		} catch(IOException e){
 		}
 		return texts;
 	}
-	
+
 	public static String[] getTextList(String name) {
 		return textLists.get(name);
 	}
-	
+
 	public static String getText(String name, int index) {
 		return textLists.get(name)[index];
 	}
@@ -118,5 +117,11 @@ public class Text extends GameData {
 	public Control load() throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void save(RomFile rom) {
+		// TODO Auto-generated method stub
+
 	}
 }

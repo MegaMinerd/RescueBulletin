@@ -10,28 +10,27 @@ import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.PokemonController;
 
-public class Pokemon extends GameData{
+public class Pokemon extends GameData {
 	private String name, category;
-	private int bodySize, speed, type1, type2, movement, area, ability1, ability2;
+	private int offset, palette, bodySize, speed, type1, type2, movement, area, ability1, ability2;
 	private int shadow, regen, sleepiness, baseHp, exp, baseAtk, baseSpa, baseDef, baseSpd, weight, size;
 	private int unk30, unk31, unk32, preId, evolveType, evolveParam, evolveAddition;
-	private int dexID, entityID, recruit, alphaID, parentID;
+	private int dexID, entityID, recruit, alphaID, parentID, faces;
 	private boolean canWalk, toolbox;
-	
+
 	public Pokemon(int index, int[] offsets) {
-		try {
+		try{
 			RomFile rom = Rom.getAll();
 			rom.seek(offsets[0]);
 			rom.skip(16 + index*0x48);
-			name = rom.readStringAndReturn(rom.parsePointer());
-			category = rom.readStringAndReturn(rom.parsePointer());
-			//Palette ID. Not used until image support is added.
-			rom.skip(1);
-			bodySize = rom.readByte();		
+			offset = rom.getFilePointer();
+			name = rom.readString(rom.parsePointer());
+			category = rom.readString(rom.parsePointer());
+			palette = rom.readUnsignedByte();
+			bodySize = rom.readByte();
 			rom.skip(2);
 			speed = rom.readInt();
-			//Face bitfield. Not used until image support is added.
-			rom.skip(2);
+			faces = rom.readUnsignedShort();
 			rom.skip(1);
 			type1 = rom.readUnsignedByte();
 			type2 = rom.readUnsignedByte();
@@ -65,18 +64,66 @@ public class Pokemon extends GameData{
 			recruit = rom.readShort();
 			alphaID = rom.readShort();
 			parentID = rom.readShort();
-		} catch (IOException | InvalidPointerException e) {
+		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	public Region load() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/pokemon.fxml"));
 		SplitPane dataPane = loader.load();
-	    PokemonController controller = loader.getController();
-	    
-	    controller.load(this);
-	    return dataPane;
+		PokemonController controller = loader.getController();
+
+		controller.load(this);
+		return dataPane;
+	}
+
+	public void save(RomFile rom) {
+		try{
+			rom.seek(offset);
+			rom.writeString(name, rom.parsePointer());
+			rom.writeString(category, rom.parsePointer());
+			rom.writeUnsignedByte(palette);
+			rom.writeByte((byte) bodySize);
+			rom.skip(2);
+			rom.writeInt(speed);
+			rom.writeUnsignedShort(faces);
+			rom.skip(1);
+			rom.writeUnsignedByte(type1);
+			rom.writeUnsignedByte(type2);
+			rom.writeUnsignedByte(movement);
+			rom.writeUnsignedByte(area);
+			rom.writeUnsignedByte(ability1);
+			rom.writeUnsignedByte(ability2);
+			rom.writeUnsignedByte(shadow);
+			rom.skip(1);
+			rom.writeUnsignedByte(regen);
+			rom.writeBoolean(canWalk);
+			rom.writeUnsignedByte(sleepiness);
+			rom.writeShort((short) baseHp);
+			rom.writeInt(exp);
+			rom.writeShort((short) baseAtk);
+			rom.writeShort((short) baseSpa);
+			rom.writeShort((short) baseDef);
+			rom.writeShort((short) baseSpd);
+			rom.writeShort((short) weight);
+			rom.writeShort((short) size);
+			rom.writeUnsignedByte(unk30);
+			rom.writeUnsignedByte(unk31);
+			rom.writeUnsignedByte(unk32);
+			rom.writeBoolean(toolbox);
+			rom.writeShort((short) preId);
+			rom.writeShort((short) evolveType);
+			rom.writeShort((short) evolveParam);
+			rom.writeShort((short) evolveAddition);
+			rom.writeShort((short) dexID);
+			rom.writeShort((short) entityID);
+			rom.writeShort((short) recruit);
+			rom.writeShort((short) alphaID);
+			rom.writeShort((short) parentID);
+		} catch(IOException | InvalidPointerException e){
+			e.printStackTrace();
+		}
 	}
 
 	public String getName() {

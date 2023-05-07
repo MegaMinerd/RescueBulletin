@@ -12,30 +12,27 @@ import minerd.relic.fxml.MoveController;
 
 public class Move extends GameData {
 	private String name, description, useMessage;
-	private int power, type, actualTarget, actualRange, aiTarget, aiRange, condition;
-	private int basePP, weight, accuracy1, accuracy2, condChance, hitNum, upgrades, crit;
+	// TODO: update getters/setters
+	private int[] actualValues, aiValues;
+	private int offset, power, type, basePP, weight, accuracy1, accuracy2, condChance, hitNum, upgrades, crit;
 	private boolean magicCoat, snatachable, usesMouth, cantHitFrozen, ignoresTaunted;
-	
+
 	public Move(int index, int[] offsets) {
-		try {
+		try{
 			RomFile rom = Rom.getAll();
 			rom.seek(offsets[0]);
 			rom.skip(index*0x24);
-			name = rom.readStringAndReturn(rom.parsePointer());
+			offset = rom.getFilePointer();
+			name = rom.readString(rom.parsePointer());
 			power = rom.readShort();
 			type = rom.readUnsignedByte();
 			rom.skip(1);
-			short actualValues = rom.readShort();
-			actualTarget = actualValues&0x0F;
-			actualRange = (actualValues&0xF0)>>4;
-			short aiValues = rom.readShort();
-			aiTarget = aiValues&0x0F;
-			aiRange = (aiValues&0xF0)>>4;
-			condition = (aiValues&0xF00)>>8;
+			actualValues = rom.readMask(2, 4, 4);
+			aiValues = rom.readMask(2, 4, 4, 4);
 			basePP = rom.readUnsignedByte();
 			weight = rom.readUnsignedByte();
-			accuracy2 = rom.readByte();
 			accuracy1 = rom.readByte();
+			accuracy2 = rom.readByte();
 			condChance = rom.readByte();
 			hitNum = rom.readUnsignedByte();
 			upgrades = rom.readByte();
@@ -46,21 +43,51 @@ public class Move extends GameData {
 			cantHitFrozen = rom.readByte()!=0;
 			ignoresTaunted = rom.readByte()!=0;
 			rom.skip(3);
-			description = rom.readStringAndReturn(rom.parsePointer()).replace("#n", "\n");
-			useMessage = rom.readStringAndReturn(rom.parsePointer());
-		} catch (IOException | InvalidPointerException e) {
+			description = rom.readString(rom.parsePointer()).replace("#n", "\n");
+			useMessage = rom.readString(rom.parsePointer());
+		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public Region load() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/move.fxml"));
 		SplitPane dataPane = loader.load();
-	    MoveController controller = loader.getController();
-	    
-	    controller.load(this);
-	    return dataPane;
+		MoveController controller = loader.getController();
+
+		controller.load(this);
+		return dataPane;
+	}
+
+	public void save(RomFile rom) {
+		try{
+			rom.seek(offset);
+			rom.writeString(name, rom.parsePointer());
+			rom.writeShort((short) power);
+			rom.writeUnsignedByte(type);
+			rom.skip(1);
+			rom.writeMask(actualValues, 2, 4, 4);
+			rom.writeMask(aiValues, 2, 4, 4, 4);
+			rom.writeUnsignedByte(basePP);
+			rom.writeUnsignedByte(weight);
+			rom.writeByte((byte) accuracy1);
+			rom.writeByte((byte) accuracy2);
+			rom.writeByte((byte) condChance);
+			rom.writeUnsignedByte(hitNum);
+			rom.writeByte((byte) upgrades);
+			rom.writeByte((byte) crit);
+			rom.writeByte((byte) (magicCoat ? 1 : 0));
+			rom.writeByte((byte) (snatachable ? 1 : 0));
+			rom.writeByte((byte) (usesMouth ? 1 : 0));
+			rom.writeByte((byte) (cantHitFrozen ? 1 : 0));
+			rom.writeByte((byte) (ignoresTaunted ? 1 : 0));
+			rom.skip(3);
+			rom.writeString(description.replace("\n", "#n"), rom.parsePointer());
+			rom.writeString(useMessage, rom.parsePointer());
+		} catch(IOException | InvalidPointerException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -105,43 +132,43 @@ public class Move extends GameData {
 	}
 
 	public int getActualTarget() {
-		return actualTarget;
+		return actualValues[0];
 	}
 
 	public void setActualTarget(int actualTarget) {
-		this.actualTarget = actualTarget;
+		this.actualValues[0] = actualTarget;
 	}
 
 	public int getActualRange() {
-		return actualRange;
+		return actualValues[1];
 	}
 
 	public void setActualRange(int actualRange) {
-		this.actualRange = actualRange;
+		this.actualValues[1] = actualRange;
 	}
 
 	public int getAiTarget() {
-		return aiTarget;
+		return aiValues[0];
 	}
 
 	public void setAiTarget(int aiTarget) {
-		this.aiTarget = aiTarget;
+		this.aiValues[0] = aiTarget;
 	}
 
 	public int getAiRange() {
-		return aiRange;
+		return aiValues[1];
 	}
 
 	public void setAiRange(int aiRange) {
-		this.aiRange = aiRange;
+		this.aiValues[1] = aiRange;
 	}
 
 	public int getCondition() {
-		return condition;
+		return aiValues[2];
 	}
 
 	public void setCondition(int condition) {
-		this.condition = condition;
+		this.aiValues[2] = condition;
 	}
 
 	public int getBasePP() {

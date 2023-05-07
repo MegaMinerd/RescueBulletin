@@ -10,37 +10,37 @@ import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.ItemController;
 
-public class Item extends GameData{
+public class Item extends GameData {
 	private String name, description;
-	private int itemId, buyPrice, sellPrice, itemType, spriteId, moveId, minAmnt, maxAmnt, paletteId, actionType;
+	private int itemId, offset, buyPrice, sellPrice, itemType, spriteId, moveId, order, minAmnt, maxAmnt, paletteId, actionType;
 	private boolean ai1, ai2, ai3;
 
-	public Item(int index, int[] offsets){
-		try {
-			itemId = index;
+	public Item(int index, int[] offsets) {
+		itemId = index;
+		try{
 			RomFile rom = Rom.getAll();
-			rom.seek(offsets[0]+4);
+			rom.seek(offsets[0] + 4);
 			rom.seek(rom.parsePointer());
 			rom.skip(index*0x20);
-			name = rom.readStringAndReturn(rom.parsePointer());
+			offset = rom.getFilePointer();
+			name = rom.readString(rom.parsePointer());
 			buyPrice = rom.readInt();
 			sellPrice = rom.readInt();
 			itemType = rom.readUnsignedByte();
 			spriteId = rom.readUnsignedByte();
 			rom.skip(2);
-			description = rom.readStringAndReturn(rom.parsePointer()).replace("#n", "\n");
-			ai1 = rom.readByte() != 0;
-			ai2 = rom.readByte() != 0;
-			ai3 = rom.readByte() != 0;
+			description = rom.readString(rom.parsePointer()).replace("#n", "\n");
+			ai1 = rom.readByte()!=0;
+			ai2 = rom.readByte()!=0;
+			ai3 = rom.readByte()!=0;
 			rom.skip(1);
 			moveId = rom.readShort();
-			//Item order. Not shown here.
-			rom.skip(1);
+			order = rom.readUnsignedByte();
 			minAmnt = rom.readUnsignedByte();
 			maxAmnt = rom.readUnsignedByte();
 			paletteId = rom.readUnsignedByte();
 			actionType = rom.readUnsignedByte();
-		} catch (IOException | InvalidPointerException e) {
+		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
 	}
@@ -49,10 +49,35 @@ public class Item extends GameData{
 	public Region load() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/item.fxml"));
 		SplitPane dataPane = loader.load();
-	    ItemController controller = loader.getController();
-	    
-	    controller.load(this);
-	    return dataPane;
+		ItemController controller = loader.getController();
+
+		controller.load(this);
+		return dataPane;
+	}
+
+	public void save(RomFile rom) {
+		try{
+			rom.seek(offset);
+			rom.writeString(name, rom.parsePointer());
+			rom.writeInt(buyPrice);
+			rom.writeInt(sellPrice);
+			rom.writeUnsignedByte(itemType);
+			rom.writeUnsignedByte(spriteId);
+			rom.skip(2);
+			rom.writeString(description.replace("\n", "#n"), rom.parsePointer());
+			rom.writeByte((byte) (ai1 ? 1 : 0));
+			rom.writeByte((byte) (ai2 ? 1 : 0));
+			rom.writeByte((byte) (ai3 ? 1 : 0));
+			rom.skip(1);
+			rom.writeShort((short) moveId);
+			rom.writeUnsignedByte(order);
+			rom.writeUnsignedByte(minAmnt);
+			rom.writeUnsignedByte(maxAmnt);
+			rom.writeUnsignedByte(paletteId);
+			rom.writeUnsignedByte(actionType);
+		} catch(IOException | InvalidPointerException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override

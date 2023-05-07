@@ -11,27 +11,50 @@ import minerd.relic.fxml.AreaController;
 
 public class FriendArea extends GameData {
 	private String name;
-	private int population, condition;
+	private int index, population, condition;
 	private long price;
-	
-	public FriendArea(int index, int[] offsets) throws IOException {
-		RomFile rom = Rom.getAll();
-		rom.seek(offsets[0]);
-		rom.skip(index*0x8);
+	private int[] offsets;
+
+	public FriendArea(int index, int[] offsets) {
+		this.offsets = offsets;
+		this.index = index;
 		name = Text.getText("Friend Areas", index);
-		setPopulation(rom.readUnsignedShort());
-		setCondition(rom.readUnsignedShort());
-		setPrice(rom.readUnsignedInt());
+
+		// TODO: code seems inconsistent on whether GameData
+		// constructors catch or throw IOExceptions
+		try{
+			RomFile rom = Rom.getAll();
+			rom.seek(offsets[0]);
+			rom.skip(index*0x8);
+			population = rom.readUnsignedShort();
+			condition = rom.readUnsignedShort();
+			price = rom.readUnsignedInt();
+		} catch(IOException e){
+
+		}
 	}
 
 	@Override
 	public Region load() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/area.fxml"));
 		SplitPane dataPane = loader.load();
-	    AreaController controller = loader.getController();
-	    
-	    controller.load(this);
-	    return dataPane;
+		AreaController controller = loader.getController();
+
+		controller.load(this);
+		return dataPane;
+	}
+
+	@Override
+	public void save(RomFile rom) {
+		try{
+			rom.seek(offsets[0]);
+			rom.skip(index*0x8);
+			rom.writeUnsignedShort(population);
+			rom.writeUnsignedShort(condition);
+			rom.writeUnsignedInt(price);
+		} catch(IOException e){
+
+		}
 	}
 
 	public String getName() {

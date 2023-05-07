@@ -13,48 +13,66 @@ import minerd.relic.fxml.DungeonController;
 
 public class Dungeon extends GameData {
 	private String name;
-	private int rescuesAllowed, maxItemCount, maxPartySize, turnLimit, randWalkChance; 
+	private int offset, rescuesAllowed, maxItemCount, maxPartySize, turnLimit, randWalkChance;
 	private boolean stairsUp, evoOnKo, recruitable, resetLevel, resetMoney, leaderSwitchable, hasBreakpoint, saveRequired;
-	private boolean flyNeeded, diveNeeded, waterfallNeeded, surfNeeded, waterTypeNeeded;
-	
+	private int[] hmMask;
+
 	public Dungeon(int index, int[] offsets) {
-		try {
+		try{
 			RomFile rom = Rom.getAll();
 			rom.seek(offsets[0]);
 			rom.skip(index*0x10);
+			this.offset = rom.getFilePointer();
 			name = Text.getText("Dungeons", index);
-			stairsUp = rom.readUnsignedByte()!=0;
-			evoOnKo = rom.readUnsignedByte()!=0;
-			recruitable = rom.readUnsignedByte()!=0;
+			stairsUp = rom.readBoolean();
+			evoOnKo = rom.readBoolean();
+			recruitable = rom.readBoolean();
 			rescuesAllowed = rom.readByte();
 			maxItemCount = rom.readUnsignedByte();
 			maxPartySize = rom.readUnsignedByte();
-			resetLevel = rom.readUnsignedByte()!=0;
-			resetMoney = rom.readUnsignedByte()==0;
-			leaderSwitchable = rom.readUnsignedByte()!=0;
-			hasBreakpoint = rom.readUnsignedByte()!=0;
-			saveRequired = rom.readUnsignedByte()==0;
-			int[] hmMask = rom.readMask(1, 1, 1, 1, 1, 1);
-			flyNeeded = hmMask[0]!=0;
-			diveNeeded = hmMask[1]!=0;
-			waterfallNeeded = hmMask[2]!=0;
-			surfNeeded = hmMask[3]!=0;
-			waterTypeNeeded = hmMask[4]!=0;
+			resetLevel = rom.readBoolean();
+			resetMoney = !rom.readBoolean();
+			leaderSwitchable = rom.readBoolean();
+			hasBreakpoint = rom.readBoolean();
+			saveRequired = !rom.readBoolean();
+			hmMask = rom.readMask(1, 1, 1, 1, 1, 1);
 			turnLimit = rom.readUnsignedShort();
 			randWalkChance = rom.readUnsignedShort();
-		} catch (IOException e) {
+		} catch(IOException e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public Region load() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/dungeon.fxml"));
 		AnchorPane dataPane = loader.load();
 		DungeonController controller = loader.getController();
-	    
-	    controller.load(this);
-	    return dataPane;
+
+		controller.load(this);
+		return dataPane;
+	}
+
+	public void save(RomFile rom) {
+		try{
+			rom.seek(offset);
+			rom.writeBoolean(stairsUp);
+			rom.writeBoolean(evoOnKo);
+			rom.writeBoolean(recruitable);
+			rom.writeByte((byte) rescuesAllowed);
+			rom.writeUnsignedByte(maxItemCount);
+			rom.writeUnsignedByte(maxPartySize);
+			rom.writeBoolean(resetLevel);
+			rom.writeBoolean(!resetMoney);
+			rom.writeBoolean(leaderSwitchable);
+			rom.writeBoolean(hasBreakpoint);
+			rom.writeBoolean(!saveRequired);
+			rom.writeMask(hmMask, 1, 1, 1, 1, 1, 1);
+			rom.writeUnsignedShort(turnLimit);
+			rom.writeUnsignedShort(randWalkChance);
+		} catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -167,42 +185,42 @@ public class Dungeon extends GameData {
 	}
 
 	public boolean isFlyNeeded() {
-		return flyNeeded;
+		return hmMask[0]!=0;
 	}
 
 	public void setFlyNeeded(boolean flyNeeded) {
-		this.flyNeeded = flyNeeded;
+		this.hmMask[0] = flyNeeded ? 1 : 0;
 	}
 
 	public boolean isDiveNeeded() {
-		return diveNeeded;
+		return hmMask[1]!=0;
 	}
 
 	public void setDiveNeeded(boolean diveNeeded) {
-		this.diveNeeded = diveNeeded;
+		this.hmMask[1] = diveNeeded ? 1 : 0;
 	}
 
 	public boolean isWaterfallNeeded() {
-		return waterfallNeeded;
+		return hmMask[2]!=0;
 	}
 
 	public void setWaterfallNeeded(boolean waterfallNeeded) {
-		this.waterfallNeeded = waterfallNeeded;
+		this.hmMask[2] = waterfallNeeded ? 1 : 0;
 	}
 
 	public boolean isSurfNeeded() {
-		return surfNeeded;
+		return hmMask[3]!=0;
 	}
 
 	public void setSurfNeeded(boolean surfNeeded) {
-		this.surfNeeded = surfNeeded;
+		this.hmMask[3] = surfNeeded ? 1 : 0;
 	}
 
 	public boolean isWaterTypeNeeded() {
-		return waterTypeNeeded;
+		return hmMask[4]!=0;
 	}
 
 	public void setWaterTypeNeeded(boolean waterTypeNeeded) {
-		this.waterTypeNeeded = waterTypeNeeded;
+		this.hmMask[4] = waterTypeNeeded ? 1 : 0;
 	}
 }
