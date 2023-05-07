@@ -9,6 +9,7 @@ import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.MoveController;
+import minerd.relic.util.RrtOffsetList;
 
 public class Move extends GameData {
 	private String name, description, useMessage;
@@ -17,10 +18,10 @@ public class Move extends GameData {
 	private int offset, power, type, basePP, weight, accuracy1, accuracy2, condChance, hitNum, upgrades, crit;
 	private boolean magicCoat, snatachable, usesMouth, cantHitFrozen, ignoresTaunted;
 
-	public Move(int index, int[] offsets) {
+	public Move(int index) {
 		try{
 			RomFile rom = Rom.getAll();
-			rom.seek(offsets[0]);
+			rom.seek(RrtOffsetList.moveOffset);
 			rom.skip(index*0x24);
 			offset = rom.getFilePointer();
 			name = rom.readString(rom.parsePointer());

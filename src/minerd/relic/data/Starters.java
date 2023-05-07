@@ -8,22 +8,22 @@ import javafx.scene.layout.Region;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.StartersController;
+import minerd.relic.util.RrtOffsetList;
 
 public class Starters extends GameData {
-	private int[] offsets, players, partners;
+	private int[] players, partners;
 
-	public Starters(int index, int[] offsets) {
-		this.offsets = offsets;
+	public Starters(int index) {
 
 		try{
 			RomFile rom = Rom.getAll();
 
-			rom.seek(offsets[0]);
+			rom.seek(RrtOffsetList.playersOffset);
 			players = new int[26];
 			for(int i = 0; i<26; i++)
 				players[i] = rom.readUnsignedShort();
 
-			rom.seek(offsets[1]);
+			rom.seek(RrtOffsetList.partnersOffset);
 			partners = new int[10];
 			for(int i = 0; i<10; i++)
 				partners[i] = rom.readUnsignedShort();
@@ -44,12 +44,12 @@ public class Starters extends GameData {
 
 	public void save(RomFile rom) {
 		try{
-			rom.seek(offsets[0]);
+			rom.seek(RrtOffsetList.playersOffset);
 			for(int i = 0; i<26; i++){
 				rom.writeShort((short) players[i]);
 			}
 
-			rom.seek(offsets[1]);
+			rom.seek(RrtOffsetList.partnersOffset);
 			for(int i = 0; i<10; i++)
 				rom.writeShort((short) partners[i]);
 		} catch(IOException e){

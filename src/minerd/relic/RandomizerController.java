@@ -22,7 +22,7 @@ public class RandomizerController {
 			if(player.isSelected() || partner.isSelected()) {
 				Cache.alloc("Starters", 1);
 				int[] off = {0x00F278E, 0x000F4264};
-				Starters starters = new Starters(0, off);
+				Starters starters = new Starters(0);
 				if(player.isSelected()) {
 					int[] players = new int[26];
 					for(int i=0; i<26; i++)

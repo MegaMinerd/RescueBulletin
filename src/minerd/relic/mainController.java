@@ -30,92 +30,92 @@ import minerd.relic.tree.DungeonFolderTreeItem;
 import minerd.relic.tree.FolderTreeItem;
 import minerd.relic.tree.ListsFolderTreeItem;
 
-public class mainController implements Initializable{
+public class mainController implements Initializable {
 	FileChooser fc;
-	
+
 	public ScrollPane treePane;
 	public AnchorPane editorPane;
 	public TreeView<String> dataTree;
 	TreeItem<String> root;
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		fc = new FileChooser();
 		fc.setTitle("Open Resource File");
 		fc.getExtensionFilters().add(new ExtensionFilter("ROM Files (.gba)", "*.gba"));
-		
+
 		root = new FolderTreeItem("No ROM", "Open a rom file from the menu");
 		dataTree.setRoot(root);
-		dataTree.getSelectionModel().selectedItemProperty().addListener( new ChangeListener<TreeItem<String>>() {
+		dataTree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>(){
 			@Override
-	        public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue, TreeItem<String> newValue) {
-				selectTreeItem((DataTreeItem)newValue);
-	        }
-	    });
+			public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue, TreeItem<String> newValue) {
+				selectTreeItem((DataTreeItem) newValue);
+			}
+		});
 	}
-	
+
 	public void reloadAll() throws IOException {
-		if(Rom.getAll()!=null) {
+		if(Rom.getAll()!=null){
 			reloadTree();
-			//reload views and such
+			// reload views and such
 		}
 	}
-	
+
 	public void reloadTree() throws IOException {
 		root = new FolderTreeItem(Rom.getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
 		//TODO: load these offsets from a config for various builds
 		root.getChildren().add(new ListsFolderTreeItem());
 		//root.getChildren().add(new FolderTreeItem<Scene>("Script Scenes", "This section lets you edit overworld scenes in the game.", Scene.class, -1));
-		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424, 0x00357B88, 0x0360BF4));
-		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240, 0x00306570));
-		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413, 0x003679A0));
+		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424));
+		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240));
+		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413));
 		//root.getChildren().add(new FolderTreeItem<Map>("Map Backgrounds", "This section lets you edit map backgrounds.", Map.class, -1));
 		//root.getChildren().add(new FolderTreeItem<Sprite>("Object Sprites", "This section lets you import and export object sprites.", Sprite.class, -1));
 		//root.getChildren().add(new FolderTreeItem<Background>("Backgrounds", "This section lets you edit backgrounds.", Background.class, -1));
-		root.getChildren().add(new FolderTreeItem<FriendArea>("Friend Areas", "This section lets you edit friend areas in the game.", FriendArea.class, 58, 0x0010AA90, 0x001139D0));
-		root.getChildren().add(new DungeonFolderTreeItem(0x00109D30, 0x01077A8, 0x004A2BF4));
+		root.getChildren().add(new FolderTreeItem<FriendArea>("Friend Areas", "This section lets you edit friend areas in the game.", FriendArea.class, 58));
+		root.getChildren().add(new DungeonFolderTreeItem());
 		//root.getChildren().add(new FolderTreeItem<FixedRoom>("Fixed Rooms", "This section lets you edit fixed rooms.", FixedRoom.class, -1));
 		//root.getChildren().add(new FolderTreeItem<Tileset>("Dungeon Tilesets", "This section lets you edit the graphics of dungeon tiles.", Tileset.class, -1));
 		//root.getChildren().add(new FolderTreeItem<Graphic>("Misc. Graphics", "This section lets you edit miscellaneous graphics.", Graphic.class, -1));
 	}
-	
+
 	public void openRom() {
 		File file = fc.showOpenDialog(dataTree.getScene().getWindow());
-		if(file != null) {
-			try {
+		if(file!=null){
+			try{
 				Rom.load(file);
 				reloadAll();
-			}catch (IOException fnfe) {
+			} catch(IOException fnfe){
 			}
 		}
 	}
-	
-	public void selectTreeItem(DataTreeItem item){
+
+	public void selectTreeItem(DataTreeItem item) {
 		ObservableList<Node> children = editorPane.getChildren();
 		while(children.size()>0)
 			children.remove(0);
 		Node itemData;
-		try {
+		try{
 			itemData = item.select();
 			if(itemData!=null)
 				children.add(itemData);
-		} catch (IOException e) {
+		} catch(IOException e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void randomize() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/rando.fxml"));
 		Parent rando;
-		try {
+		try{
 			rando = (Parent) loader.load();
 			Stage stage = new Stage();
 			stage.setTitle("Randomize");
 			stage.setScene(new Scene(rando));
-			
+
 			stage.show();
-		} catch (IOException e) {
+		} catch(IOException e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

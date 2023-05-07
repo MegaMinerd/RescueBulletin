@@ -8,15 +8,14 @@ import javafx.scene.layout.Region;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.AreaController;
+import minerd.relic.util.RrtOffsetList;
 
 public class FriendArea extends GameData {
 	private String name;
 	private int index, population, condition;
 	private long price;
-	private int[] offsets;
 
-	public FriendArea(int index, int[] offsets) {
-		this.offsets = offsets;
+	public FriendArea(int index) {
 		this.index = index;
 		name = Text.getText("Friend Areas", index);
 
@@ -24,7 +23,7 @@ public class FriendArea extends GameData {
 		// constructors catch or throw IOExceptions
 		try{
 			RomFile rom = Rom.getAll();
-			rom.seek(offsets[0]);
+			rom.seek(RrtOffsetList.areaOffset);
 			rom.skip(index*0x8);
 			population = rom.readUnsignedShort();
 			condition = rom.readUnsignedShort();
@@ -47,7 +46,7 @@ public class FriendArea extends GameData {
 	@Override
 	public void save(RomFile rom) {
 		try{
-			rom.seek(offsets[0]);
+			rom.seek(RrtOffsetList.areaOffset);
 			rom.skip(index*0x8);
 			rom.writeUnsignedShort(population);
 			rom.writeUnsignedShort(condition);

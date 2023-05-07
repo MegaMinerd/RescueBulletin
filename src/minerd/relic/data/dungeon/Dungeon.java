@@ -10,6 +10,7 @@ import minerd.relic.data.Text;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.DungeonController;
+import minerd.relic.util.RrtOffsetList;
 
 public class Dungeon extends GameData {
 	private String name;
@@ -17,10 +18,10 @@ public class Dungeon extends GameData {
 	private boolean stairsUp, evoOnKo, recruitable, resetLevel, resetMoney, leaderSwitchable, hasBreakpoint, saveRequired;
 	private int[] hmMask;
 
-	public Dungeon(int index, int[] offsets) {
+	public Dungeon(int index) {
 		try{
 			RomFile rom = Rom.getAll();
-			rom.seek(offsets[0]);
+			rom.seek(RrtOffsetList.dungeonOffset);
 			rom.skip(index*0x10);
 			this.offset = rom.getFilePointer();
 			name = Text.getText("Dungeons", index);

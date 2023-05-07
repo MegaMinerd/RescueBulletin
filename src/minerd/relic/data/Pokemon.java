@@ -9,6 +9,7 @@ import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.PokemonController;
+import minerd.relic.util.RrtOffsetList;
 
 public class Pokemon extends GameData {
 	private String name, category;
@@ -18,10 +19,10 @@ public class Pokemon extends GameData {
 	private int dexID, entityID, recruit, alphaID, parentID, faces;
 	private boolean canWalk, toolbox;
 
-	public Pokemon(int index, int[] offsets) {
+	public Pokemon(int index) {
 		try{
 			RomFile rom = Rom.getAll();
-			rom.seek(offsets[0]);
+			rom.seek(RrtOffsetList.pokemonOffset);
 			rom.skip(16 + index*0x48);
 			offset = rom.getFilePointer();
 			name = rom.readString(rom.parsePointer());

@@ -8,11 +8,12 @@ import minerd.relic.data.Text;
 import minerd.relic.data.dungeon.Dungeon;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
+import minerd.relic.util.RrtOffsetList;
 
 public class DungeonFolderTreeItem extends FolderTreeItem<Dungeon> {
 	
-	public DungeonFolderTreeItem(int mainOff, int floorCountOff, int floorOff) {
-		super("Dungeons", "This section lets you edit dungeons in the game.", Dungeon.class, 98, mainOff, floorCountOff, floorOff);
+	public DungeonFolderTreeItem() {
+		super("Dungeons", "This section lets you edit dungeons in the game.", Dungeon.class, 98);
 	}
 	
 	@Override
@@ -20,14 +21,12 @@ public class DungeonFolderTreeItem extends FolderTreeItem<Dungeon> {
 		if(!loaded) {
 			try {
 				getChildren().remove(0);
-				RomFile rom;
-					rom = Rom.getAll();
+				RomFile rom = Rom.getAll();
 				
-				rom.seek(offsets[1]);
+				rom.seek(RrtOffsetList.floorCountOffset);
 				for(int i=0; i<98; i++) {
-					int dunStart = offsets[0] + 0x10 * i;
 					int floorNum = rom.readUnsignedByte();
-					getChildren().add(new DungeonDataTreeItem(Text.getText("Dungeons", i), i, floorNum, dunStart, offsets[2]));
+					getChildren().add(new DungeonDataTreeItem(Text.getText("Dungeons", i), i, floorNum));
 				}
 				loaded = true;
 			} catch (IOException e) {

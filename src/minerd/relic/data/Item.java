@@ -9,17 +9,18 @@ import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.ItemController;
+import minerd.relic.util.RrtOffsetList;
 
 public class Item extends GameData {
 	private String name, description;
 	private int itemId, offset, buyPrice, sellPrice, itemType, spriteId, moveId, order, minAmnt, maxAmnt, paletteId, actionType;
 	private boolean ai1, ai2, ai3;
 
-	public Item(int index, int[] offsets) {
+	public Item(int index) {
 		itemId = index;
 		try{
 			RomFile rom = Rom.getAll();
-			rom.seek(offsets[0] + 4);
+			rom.seek(RrtOffsetList.itemOffset + 4);
 			rom.seek(rom.parsePointer());
 			rom.skip(index*0x20);
 			offset = rom.getFilePointer();

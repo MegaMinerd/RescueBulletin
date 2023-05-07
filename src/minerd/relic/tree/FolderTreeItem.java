@@ -17,29 +17,26 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 	protected boolean loaded;
 	private Class<T> cacheClass;
 	protected int number;
-	protected int[] offsets;
 
 	public FolderTreeItem(String text, String infoIn) {
 		this(text, infoIn, Object.class, 0);
 	}
 	
-	public FolderTreeItem(String text, String infoIn, Class cacheClassIn, int numberIn, int ... pointersIn) {
+	public FolderTreeItem(String text, String infoIn, Class cacheClassIn, int numberIn) {
 		super(text);
 		this.info = infoIn;
 		this.cacheClass = cacheClassIn;
 		this.number = Math.abs(numberIn);
-		this.offsets = pointersIn;
 		this.name = text;
 		loaded = true;
 		
 		if(numberIn>0)
 			Cache.alloc(cacheClassIn.getSimpleName(), number);
 		
-		if(offsets.length==0 || offsets[0]>=0) {
-			loaded = false;
-			//Force the tree to show this node as a folder, but don't actually load anything until it's needed.
-			getChildren().add(new DataTreeItem<T>(""));
-		}
+		loaded = false;
+		//Force the tree to show this node as a folder, but don't actually load anything until it's needed.
+		getChildren().add(new DataTreeItem<T>(""));
+		
 		expandedProperty().addListener(this);
 	}
 	
@@ -63,7 +60,7 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 	    if(!loaded) {
 	        getChildren().remove(0);
 	        for(int i=0; i<number; i++) {
-	            getChildren().add(new DataTreeItem<T>(Text.getText(name, i), cacheClass, i, offsets));
+	            getChildren().add(new DataTreeItem<T>(Text.getText(name, i), cacheClass, i));
 	        }
 	        loaded = true;
 	    }

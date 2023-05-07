@@ -12,20 +12,25 @@ import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
 import minerd.relic.fxml.FloorController;
+import minerd.relic.util.RrtOffsetList;
 
 public class Floor extends GameData {
-	private int layoutType, roomDensity, tileset, music, weather, connectivity, pokemonDensity, shopChance, houseChance,
-			mazeChance, stickyChance, itemDensity, trapDensity, floorNum, fixedRoom, hallDensity, terrainRooms,
-			waterDensity, visibility, maxCoinAmnt, buriedDensity;
+	private int dungeonIndex, floorIndex, layoutType, roomDensity, tileset, music, weather, connectivity,
+			pokemonDensity, shopChance, houseChance, mazeChance, stickyChance, itemDensity, trapDensity, floorNum,
+			fixedRoom, hallDensity, terrainRooms, waterDensity, visibility, maxCoinAmnt, buriedDensity;
 	private boolean hasDeadEnds, hasPonds, hasExtraTiles;
 	private EncounterList encounters;
 	private TrapList traps;
 	private LootList floorLoot, shopLoot, houseLoot, buriedLoot;
 
-	public Floor(int index, int[] offsets) {
+	public Floor(int index) {
+		this.dungeonIndex = index/100;
+		this.floorIndex = index%100;
 		try{
 			RomFile rom = Rom.getAll();
-			rom.seek(offsets[0]);
+			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
+			rom.seek(rom.parsePointer());
+			rom.skip(16*floorIndex);
 			int layoutId = rom.readUnsignedShort();
 			int pokemonTableId = rom.readUnsignedShort();
 			int trapListId = rom.readUnsignedShort();
@@ -34,16 +39,18 @@ public class Floor extends GameData {
 			int houseTableId = rom.readUnsignedShort();
 			int buriedTableId = rom.readUnsignedShort();
 
-			rom.seek(offsets[1] + layoutId*0x1C);
+			rom.seek(RrtOffsetList.layoutOffset + layoutId*0x1C);
 			loadLayout(rom);
 
-			encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId, offsets[3], rom,
-					EncounterList.class);
-			traps = (TrapList) loadSubdata("TrapList", trapListId, offsets[4], rom, TrapList.class);
-			floorLoot = (LootList) loadSubdata("LootList", itemTableId, offsets[2], rom, LootList.class);
-			shopLoot = (LootList) loadSubdata("LootList", shopTableId, offsets[2], rom, LootList.class);
-			houseLoot = (LootList) loadSubdata("LootList", houseTableId, offsets[2], rom, LootList.class);
-			buriedLoot = (LootList) loadSubdata("LootList", buriedTableId, offsets[2], rom, LootList.class);
+			encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId, RrtOffsetList.encountersOffset,
+					rom, EncounterList.class);
+			traps = (TrapList) loadSubdata("TrapList", trapListId, RrtOffsetList.trapsOffset, rom, TrapList.class);
+			floorLoot = (LootList) loadSubdata("LootList", itemTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
+			shopLoot = (LootList) loadSubdata("LootList", shopTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
+			houseLoot = (LootList) loadSubdata("LootList", houseTableId, RrtOffsetList.lootsOffset, rom,
+					LootList.class);
+			buriedLoot = (LootList) loadSubdata("LootList", buriedTableId, RrtOffsetList.lootsOffset, rom,
+					LootList.class);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
