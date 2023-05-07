@@ -4,7 +4,7 @@ public class RrtOffsetList {
 	public static int playersOffset = 0x000F278E;
 	public static int partnersOffset = 0x000F4264;
 	public static int pokemonOffset = 0x00357B88;
-	public static int learnsetOffset = 0x0360BF4;
+	public static int learnsetOffset = 0x03725F8;
 	public static int itemOffset = 0x00306570;
 	public static int moveOffset = 0x003679A0;
 	public static int areaOffset = 0x0010AA90;

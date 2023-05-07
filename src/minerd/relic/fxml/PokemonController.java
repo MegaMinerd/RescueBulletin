@@ -1,15 +1,18 @@
 package minerd.relic.fxml;
 
-import java.io.IOException;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import minerd.relic.data.Learnset.LevelMove;
+import minerd.relic.data.Learnset.TmMove;
 import minerd.relic.data.Pokemon;
 import minerd.relic.data.Text;
-import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
 
 public class PokemonController{
 	public Label pokemonNameLabel;
@@ -30,9 +33,13 @@ public class PokemonController{
 	public TextField regen, sleepiness, unk30, unk31, unk32;
 	public CheckBox canWalk, toolbox;
 	
-	//Level up moves tab
-	//public TableView levelupTable;
-	//public TableColumn levelCol, moveCol;
+	//Stats and Moves tab
+	public TableView<LevelMove> levelupTable;
+	public TableView<TmMove> tmTable;
+	public TableColumn<LevelMove, Integer> levelCol, lvIdCol;
+	public TableColumn<LevelMove, String> lvNameCol;
+	public TableColumn<TmMove, Integer> tmIdCol;
+	public TableColumn<TmMove, String> tmNameCol;
 	
 	public void load(Pokemon pokemon) {
 		pokemonNameLabel.setText(pokemon.getName());
@@ -81,14 +88,23 @@ public class PokemonController{
 		recruit.setText(pokemon.getRecruit()+"");
 		alphaID.setText(pokemon.getAlphaID()+"");
 		parentID.setText(pokemon.getParentID()+"");
+		
+		loadMoves(pokemon);
 	}
 	
-	int readMoveId() throws IOException{
-		RomFile rom = Rom.getAll();
-		int[] highByte = rom.readMask(1, 7, 1);
-		int moveId = highByte[1]==1 ?
-			(highByte[0]<<7) | rom.readUnsignedByte()
-			: highByte[0];
-		return moveId;
+	public void loadMoves(Pokemon pokemon) {
+		ObservableList<LevelMove> levelupList = FXCollections.observableArrayList();
+		levelupList.addAll(pokemon.getLearnset().getLvMoves());
+		ObservableList<TmMove> tmList = FXCollections.observableArrayList();
+		tmList.addAll(pokemon.getLearnset().getTmMoves());
+		
+		levelCol.setCellValueFactory(new PropertyValueFactory<LevelMove, Integer>("level"));
+		lvIdCol.setCellValueFactory(new PropertyValueFactory<LevelMove, Integer>("moveId"));
+		lvNameCol.setCellValueFactory(new PropertyValueFactory<LevelMove, String>("moveName"));
+		tmIdCol.setCellValueFactory(new PropertyValueFactory<TmMove, Integer>("moveId"));
+		tmNameCol.setCellValueFactory(new PropertyValueFactory<TmMove, String>("moveName"));
+		
+		levelupTable.setItems(levelupList);
+		tmTable.setItems(tmList);
 	}
 }

@@ -20,6 +20,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import minerd.relic.data.Cache;
 import minerd.relic.data.FriendArea;
 import minerd.relic.data.Item;
 import minerd.relic.data.Move;
@@ -39,6 +40,7 @@ public class mainController implements Initializable {
 	TreeItem<String> root;
 
 	@Override
+	@SuppressWarnings({ "rawtypes" , "unchecked" })
 	public void initialize(URL location, ResourceBundle resources) {
 		fc = new FileChooser();
 		fc.setTitle("Open Resource File");
@@ -61,6 +63,7 @@ public class mainController implements Initializable {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes" , "unchecked" })
 	public void reloadTree() throws IOException {
 		root = new FolderTreeItem(Rom.getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
@@ -68,6 +71,7 @@ public class mainController implements Initializable {
 		root.getChildren().add(new ListsFolderTreeItem());
 		//root.getChildren().add(new FolderTreeItem<Scene>("Script Scenes", "This section lets you edit overworld scenes in the game.", Scene.class, -1));
 		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424));
+		Cache.alloc("Learnset", 424);
 		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240));
 		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413));
 		//root.getChildren().add(new FolderTreeItem<Map>("Map Backgrounds", "This section lets you edit map backgrounds.", Map.class, -1));
@@ -91,6 +95,7 @@ public class mainController implements Initializable {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void selectTreeItem(DataTreeItem item) {
 		ObservableList<Node> children = editorPane.getChildren();
 		while(children.size()>0)

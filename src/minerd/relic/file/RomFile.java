@@ -200,7 +200,13 @@ public class RomFile {
 	}
 
 	public void writeMask(int[] data, int totalLen, int... subLens) throws IOException {
-		// TODO
+		long mask = 0;
+		int runningTotal = 0;
+		for(int i = 0; i<data.length; i++){
+			mask |= data[i] << runningTotal;
+			runningTotal += subLens[i];
+		}
+		write(totalLen, mask);
 	}
 
 	public void writePointer(Pointer pointer) throws IOException {

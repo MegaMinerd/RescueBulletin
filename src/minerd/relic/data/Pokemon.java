@@ -18,6 +18,7 @@ public class Pokemon extends GameData {
 	private int unk30, unk31, unk32, preId, evolveType, evolveParam, evolveAddition;
 	private int dexID, entityID, recruit, alphaID, parentID, faces;
 	private boolean canWalk, toolbox;
+	private Learnset learnset;
 
 	public Pokemon(int index) {
 		try{
@@ -65,6 +66,12 @@ public class Pokemon extends GameData {
 			recruit = rom.readShort();
 			alphaID = rom.readShort();
 			parentID = rom.readShort();
+			
+			learnset = (Learnset)Cache.get("Learnset", index);
+			if(learnset==null) {
+				learnset = new Learnset(index);
+				Cache.add("Learnset", index, learnset);
+			}
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
@@ -82,8 +89,9 @@ public class Pokemon extends GameData {
 	public void save(RomFile rom) {
 		try{
 			rom.seek(offset);
-			rom.writeString(name, rom.parsePointer());
-			rom.writeString(category, rom.parsePointer());
+			//rom.writeString(name, rom.parsePointer());
+			//rom.writeString(category, rom.parsePointer());
+			rom.skip(8);;
 			rom.writeUnsignedByte(palette);
 			rom.writeByte((byte) bodySize);
 			rom.skip(2);
@@ -122,7 +130,7 @@ public class Pokemon extends GameData {
 			rom.writeShort((short) recruit);
 			rom.writeShort((short) alphaID);
 			rom.writeShort((short) parentID);
-		} catch(IOException | InvalidPointerException e){
+		} catch(IOException e){
 			e.printStackTrace();
 		}
 	}
@@ -405,5 +413,13 @@ public class Pokemon extends GameData {
 
 	public void setToolbox(boolean toolbox) {
 		this.toolbox = toolbox;
+	}
+
+	public Learnset getLearnset() {
+		return learnset;
+	}
+
+	public void setLearnset(Learnset learnset) {
+		this.learnset = learnset;
 	}
 }

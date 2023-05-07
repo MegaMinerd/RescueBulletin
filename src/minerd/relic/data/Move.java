@@ -64,7 +64,8 @@ public class Move extends GameData {
 	public void save(RomFile rom) {
 		try{
 			rom.seek(offset);
-			rom.writeString(name, rom.parsePointer());
+			//rom.writeString(name, rom.parsePointer());
+			rom.skip(4);
 			rom.writeShort((short) power);
 			rom.writeUnsignedByte(type);
 			rom.skip(1);
@@ -84,9 +85,9 @@ public class Move extends GameData {
 			rom.writeByte((byte) (cantHitFrozen ? 1 : 0));
 			rom.writeByte((byte) (ignoresTaunted ? 1 : 0));
 			rom.skip(3);
-			rom.writeString(description.replace("\n", "#n"), rom.parsePointer());
-			rom.writeString(useMessage, rom.parsePointer());
-		} catch(IOException | InvalidPointerException e){
+			//rom.writeString(description.replace("\n", "#n"), rom.parsePointer());
+			//rom.writeString(useMessage, rom.parsePointer());
+		} catch(IOException e){
 			e.printStackTrace();
 		}
 	}

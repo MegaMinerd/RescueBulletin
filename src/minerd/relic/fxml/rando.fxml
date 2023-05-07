@@ -63,12 +63,12 @@
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
             </CheckBox>
-            <CheckBox mnemonicParsing="false" text="Types" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <CheckBox fx:id="pokeType" mnemonicParsing="false" text="Types" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
             </CheckBox>
-            <CheckBox mnemonicParsing="false" text="Abilities" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <CheckBox fx:id="abilities" mnemonicParsing="false" text="Abilities" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
@@ -81,7 +81,7 @@
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
             </Label>
-            <CheckBox mnemonicParsing="false" text="Type" GridPane.rowIndex="5">
+            <CheckBox fx:id="moveType" mnemonicParsing="false" text="Type" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
