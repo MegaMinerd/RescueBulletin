@@ -2,6 +2,7 @@ package minerd.relic.data.dungeon;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javafx.scene.layout.Region;
@@ -17,7 +18,7 @@ public class LootList extends GameData {
 	public LootList(RomFile rom) throws IOException {
 		HashMap<Integer, Integer> iweightEntries = new HashMap<Integer, Integer>();
 		int itemId = 0;
-		int maxId = 400; // depends on game
+		int maxId = 252;
 		while(itemId<maxId){
 			int data = rom.readUnsignedShort();
 			if(data<30000){
@@ -31,15 +32,24 @@ public class LootList extends GameData {
 		int catNum = 12;
 		int lastValue = 0;
 		categories = new ArrayList<Category>();
+		loots = new ArrayList<Loot>();
 		int[] catWeights = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		for(int key : iweightEntries.keySet()){
+		Object[] itemWeights = iweightEntries.keySet().toArray();
+		Arrays.sort(itemWeights);
+		for(int i=0; i<itemWeights.length; i++){
+			int key = (int)itemWeights[i];
 			int value = iweightEntries.get(key);
 			if(key<catNum){
 				Category cat = new Category(key, value - lastValue);
 				categories.add(cat);
 				lastValue = value;
 			} else{
-				int lootCat = ((Item) Cache.get("Items", key - catNum)).getItemType();
+				Item item = (Item) Cache.get("Item", key - catNum);
+				if(item==null){
+					item = new Item(key - catNum);
+					Cache.add("Item", key - catNum, item);
+				}
+				int lootCat = item.getItemType();
 				Loot loot = new Loot(key - catNum, value - catWeights[lootCat]);
 				loots.add(loot);
 				catWeights[lootCat] = value;

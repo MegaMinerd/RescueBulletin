@@ -1,5 +1,7 @@
 package minerd.relic.data.dungeon;
 
+import minerd.relic.data.Cache;
+import minerd.relic.data.Item;
 import minerd.relic.data.Text;
 
 public class Loot {
@@ -16,6 +18,10 @@ public class Loot {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public int getCategory() {
+		return ((Item)Cache.get("Item", id)).getItemType();
 	}
     
 	public String getName() {

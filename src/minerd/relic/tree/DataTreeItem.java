@@ -19,11 +19,11 @@ public class DataTreeItem<T extends GameData> extends TreeItem<String> {
 		name = text;
 	}
 
-	public DataTreeItem(String name, Class<T> cacheClassIn, int indexIn) {
+	public DataTreeItem(String name, Class<T> cacheClass, int index) {
 		super(name);
 		this.name = name;
-		this.cacheClass = cacheClassIn;
-		this.index = indexIn;
+		this.cacheClass = cacheClass;
+		this.index = index;
 	}
 
 	public String getName() {

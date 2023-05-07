@@ -9,11 +9,6 @@ import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.data.dungeon.Dungeon;
 import minerd.relic.data.dungeon.Floor;
-import minerd.relic.file.InvalidPointerException;
-import minerd.relic.file.Pointer;
-import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
-import minerd.relic.util.RrtOffsetList;
 
 public class DungeonDataTreeItem extends FolderTreeItem<Floor> {
 	private int index;
@@ -48,7 +43,7 @@ public class DungeonDataTreeItem extends FolderTreeItem<Floor> {
 		if(!loaded){
 			getChildren().remove(0);
 			for(int i = 1; i<number; i++){
-				getChildren().add(new DataTreeItem<Floor>("Floor " + i, Floor.class, 100*index + i));
+				getChildren().add(new FloorDataTreeItem("Floor " + i, i, index));
 			}
 			loaded = true;
 		}

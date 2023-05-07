@@ -23,9 +23,9 @@ public class Floor extends GameData {
 	private TrapList traps;
 	private LootList floorLoot, shopLoot, houseLoot, buriedLoot;
 
-	public Floor(int index) {
-		this.dungeonIndex = index/100;
-		this.floorIndex = index%100;
+	public Floor(int index, int dunIndex) {
+		this.floorIndex = index; 
+		this.dungeonIndex = dunIndex;
 		try{
 			RomFile rom = Rom.getAll();
 			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
@@ -56,6 +56,7 @@ public class Floor extends GameData {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private GameData loadSubdata(String cacheListName, int index, int offset, RomFile rom, Class cacheClass)
 			throws IOException, InvalidPointerException {
 		GameData data = Cache.get(cacheListName, index);
@@ -151,6 +152,22 @@ public class Floor extends GameData {
 		rom.writeUnsignedByte(visibility);
 		rom.writeUnsignedByte(maxCoinAmnt);
 		rom.writeUnsignedByte(buriedDensity);
+	}
+
+	public int getDungeonIndex() {
+		return dungeonIndex;
+	}
+
+	public void setDungeonIndex(int dungeonIndex) {
+		this.dungeonIndex = dungeonIndex;
+	}
+
+	public int getFloorIndex() {
+		return floorIndex;
+	}
+
+	public void setFloorIndex(int floorIndex) {
+		this.floorIndex = floorIndex;
 	}
 
 	@Override

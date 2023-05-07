@@ -33,7 +33,7 @@ public class DungeonFolderTreeItem extends FolderTreeItem<Dungeon> {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Cache.alloc("Floor", 1764);
+			Cache.alloc("Floor", 6302);
 			Cache.alloc("EncounterList", 839);
 			Cache.alloc("LootList", 178);
 			Cache.alloc("TrapList", 148);
