@@ -21,7 +21,7 @@ public class FloorDataTreeItem extends DataTreeItem<Floor> {
 
 	public Node select() throws IOException {
 		Region dataPane = null;
-		//Possibly wasteful of 
+		//Possibly wasteful of cache space
 		Floor data = (Floor) Cache.get("Floor", dungeonIndex*100 + index);
 		if(data==null){
 			// Read the data from the ROM to store as cache
