@@ -47,7 +47,7 @@ public class DataTreeItem<T extends GameData> extends TreeItem<String> {
 		if(cache==null){
 			// Read the data from the ROM to store as cache
 			try{
-				cache = cacheClass.getConstructor(int.class, int[].class).newInstance(index, pointers);
+				cache = cacheClass.getConstructor(int.class).newInstance(index);
 				// Don't delete this when the names list is fixed. Move it to the Apply button
 				// super.setValue(cache.getName());
 			} catch(InstantiationException | IllegalAccessException | IllegalArgumentException
