@@ -11,11 +11,12 @@ import minerd.relic.data.dungeon.Dungeon;
 import minerd.relic.data.dungeon.Floor;
 
 public class DungeonDataTreeItem extends FolderTreeItem<Floor> {
-	private int index;
+	private int index, floorIndex;
 
-	public DungeonDataTreeItem(String dunName, int index, int floors) {
+	public DungeonDataTreeItem(String dunName, int index, int floorIndex, int floors) {
 		super(dunName, "", Floor.class, 0 - floors);
 		this.index = index;
+		this.floorIndex = floorIndex;
 
 		if(index>63)
 			getChildren().remove(0);
@@ -43,7 +44,7 @@ public class DungeonDataTreeItem extends FolderTreeItem<Floor> {
 		if(!loaded){
 			getChildren().remove(0);
 			for(int i = 1; i<number; i++){
-				getChildren().add(new FloorDataTreeItem("Floor " + i, i, index));
+				getChildren().add(new FloorDataTreeItem("Floor " + i, floorIndex, i, index));
 			}
 			loaded = true;
 		}

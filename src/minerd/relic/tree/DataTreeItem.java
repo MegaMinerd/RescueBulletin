@@ -6,24 +6,32 @@ import java.lang.reflect.InvocationTargetException;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Region;
-import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 
 public class DataTreeItem<T extends GameData> extends TreeItem<String> {
 	private String name;
 	private Class<T> cacheClass;
 	protected int index;
+	protected int[] pointers;
+	protected T cache;
 
 	public DataTreeItem(String text) {
 		super(text);
 		name = text;
 	}
 
-	public DataTreeItem(String name, Class<T> cacheClass, int index) {
+	@Deprecated
+	public DataTreeItem(String text, int off) {
+		this(text);
+		// offset = off;
+	}
+
+	public DataTreeItem(String name, Class<T> cacheClassIn, int indexIn, int... pointersIn) {
 		super(name);
 		this.name = name;
-		this.cacheClass = cacheClass;
-		this.index = index;
+		this.cacheClass = cacheClassIn;
+		this.index = indexIn;
+		this.pointers = pointersIn;
 	}
 
 	public String getName() {
@@ -36,12 +44,10 @@ public class DataTreeItem<T extends GameData> extends TreeItem<String> {
 
 	public Node select() throws IOException {
 		Region dataPane = null;
-		GameData data = Cache.get(cacheClass.getSimpleName(), index);
-		if(data==null){
+		if(cache==null){
 			// Read the data from the ROM to store as cache
 			try{
-				data = cacheClass.getConstructor(int.class).newInstance(index);
-				Cache.add(data.getClass().getSimpleName(), index, data);
+				cache = cacheClass.getConstructor(int.class, int[].class).newInstance(index, pointers);
 				// Don't delete this when the names list is fixed. Move it to the Apply button
 				// super.setValue(cache.getName());
 			} catch(InstantiationException | IllegalAccessException | IllegalArgumentException
@@ -49,7 +55,7 @@ public class DataTreeItem<T extends GameData> extends TreeItem<String> {
 				e.printStackTrace();
 			}
 		}
-		dataPane = data.load();
+		dataPane = cache.load();
 		return dataPane;
 	}
 }

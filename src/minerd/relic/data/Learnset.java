@@ -35,11 +35,52 @@ public class Learnset extends GameData {
 		return highByte[1]==1 ? (highByte[0] << 7) | rom.readUnsignedByte() : highByte[0];
 	}
 
+	private byte[] saveMoveId(int id) {
+		if(id<0x80){
+			return new byte[] { (byte) id };
+		} else{
+			byte highByte = (byte) (((id & 0xFF80) >> 7) | 0x80);
+			byte lowByte = (byte) (id & 0x7F);
+			return new byte[] { highByte, lowByte };
+		}
+	}
+
 	public Region load() throws IOException {
 		return null;
 	}
 
 	public void save(RomFile rom) {
+	}
+
+	public byte[] saveLvMoves() {
+		ArrayList<Byte> data = new ArrayList<Byte>();
+		for(LevelMove move : lvMoves){
+			byte[] id = saveMoveId(move.getMoveId());
+			data.add(id[0]);
+			if(id.length>1)
+				data.add(id[1]);
+			data.add((byte) move.getLevel());
+		}
+		return toPrimitive(data);
+	}
+
+	public byte[] saveTmMoves() {
+		ArrayList<Byte> data = new ArrayList<Byte>();
+		for(TmMove move : tmMoves){
+			byte[] id = saveMoveId(move.getMoveId());
+			data.add(id[0]);
+			if(id.length>1)
+				data.add(id[1]);
+		}
+		return toPrimitive(data);
+	}
+
+	private byte[] toPrimitive(ArrayList<Byte> dataIn) {
+		byte[] dataOut = new byte[dataIn.size()];
+		for(int i = 0; i<dataIn.size(); i++){
+			dataOut[i] = dataIn.get(i);
+		}
+		return dataOut;
 	}
 
 	public String getName() {
@@ -77,7 +118,7 @@ public class Learnset extends GameData {
 		public void setMoveId(int moveId) {
 			this.moveId = moveId;
 		}
-		
+
 		public String getMoveName() {
 			return Text.getText("Moves", moveId);
 		}
@@ -106,7 +147,7 @@ public class Learnset extends GameData {
 		public void setMoveId(int moveId) {
 			this.moveId = moveId;
 		}
-		
+
 		public String getMoveName() {
 			return Text.getText("Moves", moveId);
 		}

@@ -15,6 +15,7 @@ import minerd.relic.fxml.FloorController;
 import minerd.relic.util.RrtOffsetList;
 
 public class Floor extends GameData {
+	private int layoutId, pokemonTableId, trapListId, itemTableId, shopTableId, houseTableId, buriedTableId;
 	private int dungeonIndex, floorIndex, layoutType, roomDensity, tileset, music, weather, connectivity,
 			pokemonDensity, shopChance, houseChance, mazeChance, stickyChance, itemDensity, trapDensity, floorNum,
 			fixedRoom, hallDensity, terrainRooms, waterDensity, visibility, maxCoinAmnt, buriedDensity;
@@ -24,34 +25,31 @@ public class Floor extends GameData {
 	private LootList floorLoot, shopLoot, houseLoot, buriedLoot;
 
 	public Floor(int index, int dunIndex) {
-		this.floorIndex = index; 
+		this.floorIndex = index;
 		this.dungeonIndex = dunIndex;
 		try{
 			RomFile rom = Rom.getAll();
 			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
 			rom.seek(rom.parsePointer());
 			rom.skip(16*floorIndex);
-			int layoutId = rom.readUnsignedShort();
-			int pokemonTableId = rom.readUnsignedShort();
-			int trapListId = rom.readUnsignedShort();
-			int itemTableId = rom.readUnsignedShort();
-			int shopTableId = rom.readUnsignedShort();
-			int houseTableId = rom.readUnsignedShort();
-			int buriedTableId = rom.readUnsignedShort();
+			layoutId = rom.readUnsignedShort();
+			pokemonTableId = rom.readUnsignedShort();
+			trapListId = rom.readUnsignedShort();
+			itemTableId = rom.readUnsignedShort();
+			shopTableId = rom.readUnsignedShort();
+			houseTableId = rom.readUnsignedShort();
+			buriedTableId = rom.readUnsignedShort();
 
 			rom.seek(RrtOffsetList.layoutOffset + layoutId*0x1C);
 			loadLayout(rom);
 
-			encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId, RrtOffsetList.encountersOffset,
-					rom, EncounterList.class);
+			encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId, RrtOffsetList.encountersOffset, rom, EncounterList.class);
 			traps = (TrapList) loadSubdata("TrapList", trapListId, RrtOffsetList.trapsOffset, rom, TrapList.class);
 			floorLoot = (LootList) loadSubdata("LootList", itemTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
 			shopLoot = (LootList) loadSubdata("LootList", shopTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
-			houseLoot = (LootList) loadSubdata("LootList", houseTableId, RrtOffsetList.lootsOffset, rom,
-					LootList.class);
-			buriedLoot = (LootList) loadSubdata("LootList", buriedTableId, RrtOffsetList.lootsOffset, rom,
-					LootList.class);
-		} catch(IOException | InvalidPointerException e){
+			houseLoot = (LootList) loadSubdata("LootList", houseTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
+			buriedLoot = (LootList) loadSubdata("LootList", buriedTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
+		} catch(IOException e){
 			e.printStackTrace();
 		}
 	}
@@ -112,16 +110,37 @@ public class Floor extends GameData {
 		buriedDensity = rom.readUnsignedByte();
 	}
 
-	public RomFile save() throws IOException {
-		return null;
-	}
-
 	@Override
 	public void save(RomFile rom) {
 		try{
+			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
+			rom.seek(rom.parsePointer());
+			rom.skip(16*floorIndex);
+			rom.writeUnsignedShort(layoutId);
+			rom.writeUnsignedShort(pokemonTableId);
+			rom.writeUnsignedShort(trapListId);
+			rom.writeUnsignedShort(itemTableId);
+			rom.writeUnsignedShort(shopTableId);
+			rom.writeUnsignedShort(houseTableId);
+			rom.writeUnsignedShort(buriedTableId);
+
+			rom.seek(RrtOffsetList.layoutOffset + layoutId*0x1C);
 			saveLayout(rom);
+
+			// TODO
+			// encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId,
+			// RrtOffsetList.encountersOffset, rom, EncounterList.class);
+			// traps = (TrapList) loadSubdata("TrapList", trapListId,
+			// RrtOffsetList.trapsOffset, rom, TrapList.class);
+			// floorLoot = (LootList) loadSubdata("LootList", itemTableId,
+			// RrtOffsetList.lootsOffset, rom, LootList.class);
+			// shopLoot = (LootList) loadSubdata("LootList", shopTableId,
+			// RrtOffsetList.lootsOffset, rom, LootList.class);
+			// houseLoot = (LootList) loadSubdata("LootList", houseTableId,
+			// RrtOffsetList.lootsOffset, rom, LootList.class);
+			// buriedLoot = (LootList) loadSubdata("LootList", buriedTableId,
+			// RrtOffsetList.lootsOffset, rom, LootList.class);
 		} catch(IOException e){
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -382,6 +401,10 @@ public class Floor extends GameData {
 	public void setFloorLoot(LootList floorLoot) {
 		this.floorLoot = floorLoot;
 	}
+	
+	public void setFloorTableId(int id) {
+		itemTableId = id;
+	}
 
 	public LootList getShopLoot() {
 		return shopLoot;
@@ -389,6 +412,10 @@ public class Floor extends GameData {
 
 	public void setShopLoot(LootList shopLoot) {
 		this.shopLoot = shopLoot;
+	}
+	
+	public void setShopTableId(int id) {
+		shopTableId = id;
 	}
 
 	public LootList getHouseLoot() {
@@ -398,6 +425,10 @@ public class Floor extends GameData {
 	public void setHouseLoot(LootList houseLoot) {
 		this.houseLoot = houseLoot;
 	}
+	
+	public void setHouseTableId(int id) {
+		houseTableId = id;
+	}
 
 	public LootList getBuriedLoot() {
 		return buriedLoot;
@@ -405,5 +436,9 @@ public class Floor extends GameData {
 
 	public void setBuriedLoot(LootList buriedLoot) {
 		this.buriedLoot = buriedLoot;
+	}
+	
+	public void setBuriedTableId(int id) {
+		buriedTableId = id;
 	}
 }

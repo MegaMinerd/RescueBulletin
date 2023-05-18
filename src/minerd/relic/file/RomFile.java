@@ -35,6 +35,7 @@ public class RomFile {
 	}
 
 	public void seek(Pointer pointer) throws IOException {
+		if(pointer == null) return;
 		buffer.position(pointer.isAbsolute() ? pointer.getOffset() : pointer.getOffset() + getFilePointer());
 	}
 
@@ -147,6 +148,8 @@ public class RomFile {
 	 * @return The string that was read
 	 */
 	public String readString(Pointer pointer) throws IOException, InvalidPointerException {
+		if(pointer==null)
+			return "";
 		int mark = getFilePointer();
 		seek(pointer);
 		String str = readString();
@@ -183,6 +186,10 @@ public class RomFile {
 
 	public long readUnsignedInt() throws IOException {
 		return read(4) & 0xFFFFFFFF;
+	}
+	
+	public void write(byte[] data) throws IOException {
+		buffer.put(data);
 	}
 
 	/**
