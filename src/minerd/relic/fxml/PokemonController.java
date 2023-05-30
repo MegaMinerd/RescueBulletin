@@ -2,6 +2,7 @@ package minerd.relic.fxml;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -15,20 +16,26 @@ import minerd.relic.data.Pokemon;
 import minerd.relic.data.Text;
 
 public class PokemonController{
+	Pokemon pokemon;
 	public Label pokemonNameLabel;
 	public TextField dexID, entityID, alphaID, parentID;
+	public Button apply;
 	
 	//Name tab
 	public TextField pokemonNameField, category;
+	
 	//General tab
 	public TextField bodySize, shadow, exp, recruit;
 	public ChoiceBox<String> movement, type1, type2, ability1, ability2, area;
+	
 	//Base stats tab
 	public TextField baseHp, baseAtk, baseSpa, baseDef, baseSpd, weight, size, speed;
+	
 	//Evolution tab
 	public Label evolveFromName, itemName;
 	public TextField evolveFrom, evolveParam;
 	public ChoiceBox<String> evolveType, evolveAddition;
+	
 	//Other tab
 	public TextField regen, sleepiness, unk30, unk31, unk32;
 	public CheckBox canWalk, toolbox;
@@ -42,6 +49,7 @@ public class PokemonController{
 	public TableColumn<TmMove, String> tmNameCol;
 	
 	public void load(Pokemon pokemon) {
+		this.pokemon = pokemon;
 		pokemonNameLabel.setText(pokemon.getName());
 		pokemonNameField.setText(pokemon.getName());
 		category.setText(pokemon.getCategory());
@@ -107,4 +115,42 @@ public class PokemonController{
 		levelupTable.setItems(levelupList);
 		tmTable.setItems(tmList);
 	}
+    
+    public void applyChanges(){
+		pokemon.setName(pokemonNameField.getText());
+		pokemonNameLabel.setText(pokemon.getName());
+		pokemon.setCategory(category.getText());
+		pokemon.setBodySize(Integer.parseInt(bodySize.getText()));
+		pokemon.setSpeed(Integer.parseInt(speed.getText()));
+		pokemon.setType1(type1.getSelectionModel().getSelectedIndex());
+		pokemon.setType2(type2.getSelectionModel().getSelectedIndex());
+		pokemon.setMovement(movement.getSelectionModel().getSelectedIndex());
+		pokemon.setArea(area.getSelectionModel().getSelectedIndex());
+		pokemon.setAbility1(ability1.getSelectionModel().getSelectedIndex());
+		pokemon.setAbility2(ability2.getSelectionModel().getSelectedIndex());
+		pokemon.setShadow(Integer.parseInt(shadow.getText()));
+		pokemon.setRegen(Integer.parseInt(regen.getText()));
+		pokemon.setCanWalk(canWalk.isSelected());
+		pokemon.setSleepiness(Integer.parseInt(sleepiness.getText()));
+		pokemon.setBaseHp(Integer.parseInt(baseHp.getText()));
+		pokemon.setExp(Integer.parseInt(exp.getText()));
+		pokemon.setBaseAtk(Integer.parseInt(baseAtk.getText()));
+		pokemon.setBaseSpa(Integer.parseInt(baseSpa.getText()));
+		pokemon.setBaseDef(Integer.parseInt(baseDef.getText()));
+		pokemon.setBaseSpd(Integer.parseInt(baseSpd.getText()));
+		pokemon.setWeight(Integer.parseInt(weight.getText()));
+		pokemon.setSize(Integer.parseInt(size.getText()));
+		pokemon.setUnk30(Integer.parseInt(unk30.getText()));
+		pokemon.setUnk31(Integer.parseInt(unk31.getText()));
+		pokemon.setUnk32(Integer.parseInt(unk32.getText()));
+		pokemon.setToolbox(toolbox.isSelected());
+		pokemon.setEvolveType(evolveType.getSelectionModel().getSelectedIndex());
+		pokemon.setEvolveParam(Integer.parseInt(evolveParam.getText()));
+		pokemon.setEvolveAddition(evolveAddition.getSelectionModel().getSelectedIndex());
+		pokemon.setDexID(Integer.parseInt(dexID.getText()));
+		pokemon.setEntityID(Integer.parseInt(entityID.getText()));
+		pokemon.setRecruit(Integer.parseInt(recruit.getText()));
+		pokemon.setAlphaID(Integer.parseInt(alphaID.getText()));
+		pokemon.setParentID(Integer.parseInt(parentID.getText()));
+    }
 }

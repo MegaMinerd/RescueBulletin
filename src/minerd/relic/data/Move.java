@@ -46,6 +46,7 @@ public class Move extends GameData {
 			rom.skip(3);
 			description = rom.readString(rom.parsePointer()).replace("#n", "\n");
 			useMessage = rom.readString(rom.parsePointer());
+			Cache.add("Move", index, this);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}

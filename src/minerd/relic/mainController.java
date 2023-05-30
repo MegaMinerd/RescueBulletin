@@ -67,7 +67,6 @@ public class mainController implements Initializable {
 	public void reloadTree() throws IOException {
 		root = new FolderTreeItem(Rom.getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
-		//TODO: load these offsets from a config for various builds
 		root.getChildren().add(new ListsFolderTreeItem());
 		//root.getChildren().add(new FolderTreeItem<Scene>("Script Scenes", "This section lets you edit overworld scenes in the game.", Scene.class, -1));
 		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424));
@@ -108,6 +107,16 @@ public class mainController implements Initializable {
 		} catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void save() {
+		try{
+			Cache.saveAll();
+		} catch(IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Saved");
 	}
 
 	public void randomize() {

@@ -2,6 +2,7 @@ package minerd.relic.fxml;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -19,35 +20,37 @@ import minerd.relic.data.dungeon.LootList;
 import minerd.relic.data.dungeon.Trap;
 
 public class FloorController {
+	Floor floor;
 	public Label dungeonName, floorNum;
 	public ChoiceBox<String> tileset, music, fixedRoom;
+	public Button apply;
 
-	// Structure tab
+	//Structure tab
 	public TextField roomDensity, connectivity, hallDensity;
 	public ChoiceBox<String> layoutType;
 	public CheckBox hasDeadEnds;
 
-	// Terrain Settings tab
+	//Terrain Settings tab
 	public TextField terrainRooms, waterDensity;
 	public ChoiceBox<String> weather, visibility;
 	public CheckBox hasPonds, hasExtraTiles;
 
-	// Items, Traps & Enemies tab
+	//Items, Traps & Enemies tab
 	public TextField itemDensity, trapDensity, maxCoinAmnt, pokemonDensity, buriedDensity;
 
-	// Chances tab
+	//Chances tab
 	public Slider shopChance, houseChance, mazeChance, stickyChance;
 
-	// Pokemon spawns tab
+	//Pokemon spawns tab
 	public TableView<Encounter> encounterTable;
 	public TableColumn<Encounter, Integer> encounterId, encounterLevel;
 	public TableColumn<Encounter, String> encounterName, encounterFloorChance, encounterHouseChance;
 
-	// Trap spawns tab
+	//Trap spawns tab
 	public TableView<Trap> trapTable;
 	public TableColumn<Trap, String> trapName, trapChance;
 
-	// Item spawns tab
+	//Item spawns tab
 	public TableView<Category> floorCategoryTable, shopCategoryTable, houseCategoryTable, buriedCategoryTable;
 	public TableView<Loot> floorItemTable, shopItemTable, houseItemTable, buriedItemTable;
 
@@ -65,6 +68,7 @@ public class FloorController {
 	public TableColumn<Loot, String> houseItemName, houseItemChance, buriedItemName, buriedItemChance;
 
 	public void load(Floor floor) {
+		this.floor = floor;
 		loadLayout(floor);
 		loadEncounters(floor);
 		loadTraps(floor);
@@ -158,4 +162,30 @@ public class FloorController {
 
 		itemTable.setItems(itemList);
 	}
+    
+    public void applyChanges(){
+		floor.setLayoutType(layoutType.getSelectionModel().getSelectedIndex());
+		floor.setRoomDensity(Integer.parseInt(roomDensity.getText()));
+		floor.setTileset(tileset.getSelectionModel().getSelectedIndex());
+		floor.setMusic(music.getSelectionModel().getSelectedIndex());
+		floor.setWeather(weather.getSelectionModel().getSelectedIndex());
+		floor.setConnectivity(Integer.parseInt(connectivity.getText()));
+		floor.setPokemonDensity(Integer.parseInt(pokemonDensity.getText()));
+		floor.setShopChance((int)(shopChance.getValue()*100.0));
+		floor.setHouseChance((int)(houseChance.getValue()*100.0));
+		floor.setMazeChance((int)(mazeChance.getValue()*100.0));
+		floor.setStickyChance((int)(stickyChance.getValue()*100.0));
+		floor.setHasDeadEnds(hasDeadEnds.isSelected());
+		floor.setHasPonds(hasPonds.isSelected());
+		floor.setHasExtraTiles(hasExtraTiles.isSelected());
+		floor.setItemDensity(Integer.parseInt(itemDensity.getText()));
+		floor.setTrapDensity(Integer.parseInt(trapDensity.getText()));
+		floor.setFixedRoom(fixedRoom.getSelectionModel().getSelectedIndex());
+		floor.setHallDensity(Integer.parseInt(hallDensity.getText()));
+		floor.setTerrainRooms(Integer.parseInt(terrainRooms.getText()));
+		floor.setWaterDensity(Integer.parseInt(waterDensity.getText()));
+		floor.setVisibility(visibility.getSelectionModel().getSelectedIndex());
+		floor.setMaxCoinAmnt(Integer.parseInt(maxCoinAmnt.getText())/5);
+		floor.setBuriedDensity(Integer.parseInt(buriedDensity.getText()));
+    }
 }

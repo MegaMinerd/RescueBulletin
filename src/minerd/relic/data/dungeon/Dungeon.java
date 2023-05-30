@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Text;
 import minerd.relic.file.Rom;
@@ -39,6 +40,7 @@ public class Dungeon extends GameData {
 			hmMask = rom.readMask(1, 1, 1, 1, 1, 1);
 			turnLimit = rom.readUnsignedShort();
 			randWalkChance = rom.readUnsignedShort();
+			Cache.add("Dungeon", index, this);
 		} catch(IOException e){
 			e.printStackTrace();
 		}

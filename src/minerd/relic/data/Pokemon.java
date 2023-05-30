@@ -66,6 +66,7 @@ public class Pokemon extends GameData {
 			recruit = rom.readShort();
 			alphaID = rom.readShort();
 			parentID = rom.readShort();
+			Cache.add("Pokemon", index, this);
 			
 			learnset = (Learnset)Cache.get("Learnset", index);
 			if(learnset==null) {

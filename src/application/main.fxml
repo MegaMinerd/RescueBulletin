@@ -58,7 +58,7 @@
             <MenuItem fx:id="menuOpenRom" mnemonicParsing="false" onAction="#openRom" text="Open" />
             <Menu mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem fx:id="menuSaveRom" mnemonicParsing="false" onAction="#save" text="Save" />
             <MenuItem mnemonicParsing="false" text="Save As…" />
             <MenuItem mnemonicParsing="false" text="Revert" />
             <SeparatorMenuItem mnemonicParsing="false" />

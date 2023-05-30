@@ -212,5 +212,6 @@
             <CheckBox fx:id="needSurf" mnemonicParsing="false" GridPane.columnIndex="7" GridPane.rowIndex="6" />
          </children>
       </GridPane>
+      <Button fx:id="apply" layoutY="372.0" mnemonicParsing="false" onAction="#applyChanges" text="Apply" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
    </children>
 </AnchorPane>

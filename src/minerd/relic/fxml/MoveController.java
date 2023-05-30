@@ -1,5 +1,6 @@
 package minerd.relic.fxml;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -8,21 +9,28 @@ import javafx.scene.control.TextField;
 import minerd.relic.data.Move;
 import minerd.relic.data.Text;
 
-public class MoveController{
+public class MoveController {
+	Move move;
 	public Label moveNameLabel;
 	public ChoiceBox<String> type;
+	public Button apply;
+	
 	//Name tab
 	public TextField moveNameField, useMessage;
 	public TextArea description;
+	
 	//General tab
 	public TextField power, basePP, accuracy1, accuracy2, hitNum, upgrades, crit;
+	
 	//Range tab
 	public TextField weight, condChance;
 	public ChoiceBox<String> actualTarget, actualRange, aiTarget, aiRange, condition;
+
 	//Other tab
 	public CheckBox magicCoat, snatachable, usesMouth, cantHitFrozen, ignoresTaunted;
-	
+
 	public void load(Move move) {
+		this.move = move;
 		moveNameLabel.setText(move.getName());
 		moveNameField.setText(move.getName());
 		power.setText(move.getPower() + "");
@@ -55,9 +63,9 @@ public class MoveController{
 		condition.getSelectionModel().select(move.getCondition());
 		basePP.setText(move.getBasePP() + "");
 		weight.setText(move.getWeight() + "");
-		accuracy2.setText(move.getAccuracy1() + "");
-		accuracy1.setText(move.getAccuracy2() + "");
-		condChance.setText(move.getCondChance() +"");
+		accuracy1.setText(move.getAccuracy1() + "");
+		accuracy2.setText(move.getAccuracy2() + "");
+		condChance.setText(move.getCondChance() + "");
 		hitNum.setText(move.getHitNum() + "");
 		upgrades.setText(move.getUpgrades() + "");
 		crit.setText(move.getCrit() + "");
@@ -68,5 +76,32 @@ public class MoveController{
 		ignoresTaunted.setSelected(move.getIgnoresTaunted());
 		description.setText(move.getDescription());
 		useMessage.setText(move.getUseMessage());
+	}
+
+	public void applyChanges() {
+		move.setName(moveNameLabel.getText());
+		move.setName(moveNameField.getText());
+		move.setPower(Integer.parseInt(power.getText()));
+		move.setType(type.getSelectionModel().getSelectedIndex());
+		move.setActualTarget(actualTarget.getSelectionModel().getSelectedIndex());
+		move.setActualRange(actualRange.getSelectionModel().getSelectedIndex());
+		move.setAiTarget(aiTarget.getSelectionModel().getSelectedIndex());
+		move.setAiRange(aiRange.getSelectionModel().getSelectedIndex());
+		move.setCondition(condition.getSelectionModel().getSelectedIndex());
+		move.setBasePP(Integer.parseInt(basePP.getText()));
+		move.setWeight(Integer.parseInt(weight.getText()));
+		move.setAccuracy1(Integer.parseInt(accuracy1.getText()));
+		move.setAccuracy2(Integer.parseInt(accuracy2.getText()));
+		move.setCondChance(Integer.parseInt(condChance.getText()));
+		move.setHitNum(Integer.parseInt(hitNum.getText()));
+		move.setUpgrades(Integer.parseInt(upgrades.getText()));
+		move.setCrit(Integer.parseInt(crit.getText()));
+		move.setMagicCoat(magicCoat.isSelected());
+		move.setSnatachable(snatachable.isSelected());
+		move.setUsesMouth(usesMouth.isSelected());
+		move.setCantHitFrozen(cantHitFrozen.isSelected());
+		move.setIgnoresTaunted(ignoresTaunted.isSelected());
+		move.setDescription(description.getText());
+		move.setUseMessage(useMessage.getText());
 	}
 }

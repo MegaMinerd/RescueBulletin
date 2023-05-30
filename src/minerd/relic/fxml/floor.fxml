@@ -98,6 +98,7 @@
                   <Insets top="5.0" />
                </padding>
             </GridPane>
+            <Button fx:id="apply" layoutY="372.0" mnemonicParsing="false" onAction="#applyChanges" text="Apply" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
          </children>
       </AnchorPane>
     <AnchorPane prefHeight="160.0">

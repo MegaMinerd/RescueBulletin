@@ -2,6 +2,7 @@ package minerd.relic.fxml;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -14,6 +15,7 @@ public class StartersController {
 	public TableColumn<PlayerOption, Integer> playerId, playerPokemon;
 	public TableColumn<PlayerOption, String> playerNature, playerGender;
 	public TableColumn<PartnerOption, Integer> partnerId, partnerPokemon;
+	public Button apply;
 	
 
 	public void load(Starters starters) {

@@ -49,6 +49,8 @@ public class Floor extends GameData {
 			shopLoot = (LootList) loadSubdata("LootList", shopTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
 			houseLoot = (LootList) loadSubdata("LootList", houseTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
 			buriedLoot = (LootList) loadSubdata("LootList", buriedTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
+			
+			Cache.add("Floor", index, this);
 		} catch(IOException e){
 			e.printStackTrace();
 		}

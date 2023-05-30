@@ -1,6 +1,10 @@
 package minerd.relic.data;
 
+import java.io.IOException;
 import java.util.HashMap;
+
+import minerd.relic.file.Rom;
+import minerd.relic.file.RomFile;
 
 public class Cache {
     private HashMap<String, GameData[]> dataCache;
@@ -43,6 +47,19 @@ public class Cache {
     public static void dump(String typeName, int index){
         instance.getCache().get(typeName)[index] = null;
     }
+
+	public static void saveAll() throws IOException {
+		RomFile rom = Rom.getAll();
+		for(String type : instance.getCache().keySet()) {
+			for(GameData data : instance.getCache().get(type)) {
+				if(data!=null) {
+					data.save(rom);
+					System.out.println(data.getName());
+				}
+			}
+		}
+		Rom.saveAll(rom);
+	}
     
     //note to self: opening scene starts at 26dfe8
 }
