@@ -30,6 +30,7 @@ import minerd.relic.tree.DataTreeItem;
 import minerd.relic.tree.DungeonFolderTreeItem;
 import minerd.relic.tree.FolderTreeItem;
 import minerd.relic.tree.ListsFolderTreeItem;
+import minerd.relic.tree.script.MapFolderTreeItem;
 
 public class mainController implements Initializable {
 	FileChooser fc;
@@ -68,7 +69,7 @@ public class mainController implements Initializable {
 		root = new FolderTreeItem(Rom.getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
 		root.getChildren().add(new ListsFolderTreeItem());
-		//root.getChildren().add(new FolderTreeItem<Scene>("Script Scenes", "This section lets you edit overworld scenes in the game.", Scene.class, -1));
+		root.getChildren().add(new MapFolderTreeItem());
 		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424));
 		Cache.alloc("Learnset", 424);
 		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240));

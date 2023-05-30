@@ -3,6 +3,7 @@ package minerd.relic.util;
 public class RrtOffsetList {
 	public static int playersOffset = 0x000F278E;
 	public static int partnersOffset = 0x000F4264;
+	public static int mapScriptOffset = 0x0011E258;
 	public static int pokemonOffset = 0x00357B88;
 	public static int learnsetOffset = 0x03725F8;
 	public static int itemOffset = 0x00306570;
