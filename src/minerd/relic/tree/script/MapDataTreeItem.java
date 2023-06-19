@@ -11,22 +11,24 @@ import minerd.relic.data.Text;
 import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
 import minerd.relic.file.RomFile;
-import minerd.relic.fxml.FolderController;
+import minerd.relic.fxml.script.MapHeaderController;
 import minerd.relic.tree.FolderTreeItem;
 import minerd.relic.util.RrtOffsetList;
 
 public class MapDataTreeItem extends FolderTreeItem<GameData> {
-    int sceneNum;
-    Pointer scenePointer, waypointPointer;
+    int sceneNum, index;
+    Pointer headerPointer, scenePointer, waypointPointer;
     
     public MapDataTreeItem(String name, int index){
         super(name, "", FolderTreeItem.class, 0);
+        this.index = index;
         
         try{
             RomFile rom = Rom.getAll();
             rom.seek(RrtOffsetList.mapScriptOffset);
             rom.skip(4*index);
-            rom.seek(rom.parsePointer());
+            this.headerPointer = rom.parsePointer();
+            rom.seek(headerPointer);
             sceneNum = rom.readInt();
             scenePointer = rom.parsePointer();
             waypointPointer = rom.parsePointer();
@@ -42,9 +44,9 @@ public class MapDataTreeItem extends FolderTreeItem<GameData> {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/script/maphead.fxml"));
             folderPane = loader.load();
-            FolderController controller = loader.getController();
+            MapHeaderController controller = loader.getController();
             
-            controller.load(name, info);
+            controller.load(headerPointer, sceneNum, scenePointer, waypointPointer);
         } catch (IOException e) {
             e.printStackTrace();
         }
