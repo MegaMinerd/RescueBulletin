@@ -10,7 +10,7 @@ public class MapFolderTreeItem extends FolderTreeItem<GameData> {
 	private boolean loaded = false;
 	
 	public MapFolderTreeItem() {
-		super("Script Scenes",  "This section lets you edit overworld scenes in the game.", MapDataTreeItem.class, 174);
+		super("Script Scenes",  "This section will let you edit overworld scenes in the game.\nWarning! This section is not complete. The current layout is designed to help with research.", MapDataTreeItem.class, 174);
 	}
 
 	@Override

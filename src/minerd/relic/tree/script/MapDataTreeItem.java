@@ -40,7 +40,7 @@ public class MapDataTreeItem extends FolderTreeItem<GameData> {
     public Node select() {
         AnchorPane folderPane = null;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/folder.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/script/maphead.fxml"));
             folderPane = loader.load();
             FolderController controller = loader.getController();
             
