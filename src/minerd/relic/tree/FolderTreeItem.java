@@ -13,8 +13,7 @@ import minerd.relic.data.Text;
 import minerd.relic.fxml.FolderController;
 
 public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implements ChangeListener<Boolean>{
-	protected String name;
-	protected String info;
+	private String name, info;
 	protected boolean loaded;
 	private Class<T> cacheClass;
 	protected int number;

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
-public class SbinFile extends RomFile {
+public class SbinFile extends BufferedDataHandler {
 	private String name;
 	private int offset; // The offset of this sbin within the full rom
 	private HashMap<String, ByteBuffer> contents;

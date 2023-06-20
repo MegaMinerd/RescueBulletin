@@ -5,13 +5,13 @@ import java.io.IOException;
 
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 
 public class Tile {
 	private final int[][] data;
 	private final int height, width;
 	
-	public Tile(RomFile rom, int height, int width) throws IOException {
+	public Tile(BufferedDataHandler rom, int height, int width) throws IOException {
 		this.height = height;
 		this.width = width;
 		data = new int[height][width];

@@ -10,7 +10,7 @@ import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.FloorController;
 import minerd.relic.util.RrtOffsetList;
 
@@ -28,7 +28,7 @@ public class Floor extends GameData {
 		this.floorIndex = index;
 		this.dungeonIndex = dunIndex;
 		try{
-			RomFile rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getAll();
 			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
 			rom.seek(rom.parsePointer());
 			rom.skip(16*floorIndex);
@@ -57,14 +57,14 @@ public class Floor extends GameData {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private GameData loadSubdata(String cacheListName, int index, int offset, RomFile rom, Class cacheClass)
+	private GameData loadSubdata(String cacheListName, int index, int offset, BufferedDataHandler rom, Class cacheClass)
 			throws IOException, InvalidPointerException {
 		GameData data = Cache.get(cacheListName, index);
 		if(data==null){
 			rom.seek(offset + index*0x4);
 			rom.seek(rom.parsePointer());
 			try{
-				data = (GameData) cacheClass.getConstructor(RomFile.class).newInstance(rom);
+				data = (GameData) cacheClass.getConstructor(BufferedDataHandler.class).newInstance(rom);
 			} catch(InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NoSuchMethodException | SecurityException e){
 				e.printStackTrace();
@@ -84,7 +84,7 @@ public class Floor extends GameData {
 		return dataPane;
 	}
 
-	private void loadLayout(RomFile rom) throws IOException {
+	private void loadLayout(BufferedDataHandler rom) throws IOException {
 		layoutType = rom.readUnsignedByte();
 		roomDensity = rom.readUnsignedByte();
 		tileset = rom.readUnsignedByte();
@@ -113,7 +113,7 @@ public class Floor extends GameData {
 	}
 
 	@Override
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 		try{
 			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
 			rom.seek(rom.parsePointer());
@@ -147,7 +147,7 @@ public class Floor extends GameData {
 		}
 	}
 
-	private void saveLayout(RomFile rom) throws IOException {
+	private void saveLayout(BufferedDataHandler rom) throws IOException {
 		rom.writeUnsignedByte(layoutType);
 		rom.writeUnsignedByte(roomDensity);
 		rom.writeUnsignedByte(tileset);

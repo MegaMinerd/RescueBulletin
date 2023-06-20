@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 
 public class Cache {
     private HashMap<String, GameData[]> dataCache;
@@ -49,7 +49,7 @@ public class Cache {
     }
 
 	public static void saveAll() throws IOException {
-		RomFile rom = Rom.getAll();
+		BufferedDataHandler rom = Rom.getAll();
 		for(String type : instance.getCache().keySet()) {
 			for(GameData data : instance.getCache().get(type)) {
 				if(data!=null) {

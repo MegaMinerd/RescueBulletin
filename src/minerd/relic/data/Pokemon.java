@@ -7,7 +7,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.PokemonController;
 import minerd.relic.util.RrtOffsetList;
 
@@ -22,7 +22,7 @@ public class Pokemon extends GameData {
 
 	public Pokemon(int index) {
 		try{
-			RomFile rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getAll();
 			rom.seek(RrtOffsetList.pokemonOffset);
 			rom.skip(16 + index*0x48);
 			offset = rom.getFilePointer();
@@ -87,7 +87,7 @@ public class Pokemon extends GameData {
 		return dataPane;
 	}
 
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 		try{
 			rom.seek(offset);
 			//rom.writeString(name, rom.parsePointer());

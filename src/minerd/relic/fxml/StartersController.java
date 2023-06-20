@@ -13,7 +13,7 @@ import javafx.util.converter.IntegerStringConverter;
 import minerd.relic.data.Starters;
 import minerd.relic.data.Text;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 
 public class StartersController {
 	public TableView<PlayerOption> playerTable;
@@ -47,7 +47,7 @@ public class StartersController {
 	}
 
 	public void applyChanges() {
-		RomFile rom;
+		BufferedDataHandler rom;
 		try{
 			rom = Rom.getAll();
 		

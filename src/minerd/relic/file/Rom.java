@@ -17,10 +17,6 @@ public class Rom{
 		instance = new Rom(fileIn);
 	}
 	
-	public static boolean isLoaded() {
-		return instance != null;
-	}
-	
 	private Rom(File fileIn) throws IOException{
 		Set<StandardOpenOption> options = new HashSet<>();
 		options.add(StandardOpenOption.READ);
@@ -33,17 +29,16 @@ public class Rom{
 		return instance.filename;
 	}
 	
-	public static RomFile getAll() throws IOException{
+	public static BufferedDataHandler getAll() throws IOException{
 		instance.file.position(0);
 		ByteBuffer buffer = ByteBuffer.allocate(0x2000000);
 		instance.file.read(buffer);
-		return new RomFile(buffer);
+		return new BufferedDataHandler(buffer);
 	}
-	
-	public static void saveAll(RomFile data) throws IOException{
-		instance.file.position(0);
-		data.seek(0);
-		instance.file.write(data.getBuffer());
-	}
+    
+    public static ByteBuffer get(int start, int end) throws IOException{
+        instance.file.position(start);
+        ByteBuffer buffer = ByteBuffer.allocate(end-start);
+        return instance.file.read(buffer);
+    }
 }
-

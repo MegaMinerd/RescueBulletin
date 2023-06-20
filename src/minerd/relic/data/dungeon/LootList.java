@@ -9,13 +9,13 @@ import javafx.scene.layout.Region;
 import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Item;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 
 public class LootList extends GameData {
 	private ArrayList<Category> categories;
 	private ArrayList<Loot> loots;
 
-	public LootList(RomFile rom) throws IOException {
+	public LootList(BufferedDataHandler rom) throws IOException {
 		HashMap<Integer, Integer> iweightEntries = new HashMap<Integer, Integer>();
 		int itemId = 0;
 		int maxId = 252;
@@ -62,7 +62,7 @@ public class LootList extends GameData {
 	}
 
 	@Override
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 	}
 
 	public String getName() {

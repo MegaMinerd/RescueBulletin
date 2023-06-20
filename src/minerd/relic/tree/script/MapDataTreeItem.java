@@ -10,7 +10,7 @@ import minerd.relic.data.GameData;
 import minerd.relic.data.Text;
 import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.script.MapHeaderController;
 import minerd.relic.tree.FolderTreeItem;
 import minerd.relic.util.RrtOffsetList;
@@ -24,7 +24,7 @@ public class MapDataTreeItem extends FolderTreeItem<GameData> {
         this.index = index;
         
         try{
-            RomFile rom = Rom.getAll();
+            BufferedDataHandler rom = Rom.getAll();
             rom.seek(RrtOffsetList.mapScriptOffset);
             rom.skip(4*index);
             this.headerPointer = rom.parsePointer();

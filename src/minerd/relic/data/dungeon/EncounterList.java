@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 import javafx.scene.layout.Region;
 import minerd.relic.data.GameData;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 
 public class EncounterList extends GameData {
 	ArrayList<Encounter> entries;
 
-	public EncounterList(RomFile rom) throws IOException {
+	public EncounterList(BufferedDataHandler rom) throws IOException {
 		short lastProb = 0;
 		short lastHouseProb = 0;
 		entries = new ArrayList<Encounter>();
@@ -34,7 +34,7 @@ public class EncounterList extends GameData {
 	}
 
 	@Override
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 		try {
 		short lastProb = 0;
 		short lastHouseProb = 0;

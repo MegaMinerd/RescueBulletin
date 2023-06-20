@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import javafx.scene.layout.Region;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Text;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 
 public class TrapList extends GameData {
 	ArrayList<Trap> entries;
 
-	public TrapList(RomFile rom) throws IOException {
+	public TrapList(BufferedDataHandler rom) throws IOException {
 		entries = new ArrayList<Trap>();
 		int lastProb = 0;
 		for(int i = 0; i<20; i++){
@@ -26,7 +26,7 @@ public class TrapList extends GameData {
 	}
 
 	@Override
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 
 	}
 

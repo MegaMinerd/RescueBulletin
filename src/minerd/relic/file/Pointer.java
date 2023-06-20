@@ -1,7 +1,7 @@
 package minerd.relic.file;
 
-public class Pointer{
-    private int offset;
+public class Pointer {
+    private final int offset;
     private final boolean absolute;
     
     public Pointer(int off, boolean abs){
@@ -17,10 +17,6 @@ public class Pointer{
         return absolute;
     }
     
-    public void move(int off) {
-    	this.offset += off;
-    }
-    
     //Todo: use this everywhere
     public static Pointer fromInt(int in) throws InvalidPointerException{
         int abs = ((in&0x08000000)>>27);
@@ -28,5 +24,13 @@ public class Pointer{
         if (abs>2)
             throw new InvalidPointerException();
         return (abs==0 && val==0) ? null : new Pointer(val, abs==1);
+    }
+    
+    public Pointer relativeTo(int off){
+        return absolute ? new Pointer(offset-off, false) : this;
+    }
+    
+    public Pointer absoluteFrom(int off){
+        return absolute ? this : new Pointer(offset-off, true);
     }
 }

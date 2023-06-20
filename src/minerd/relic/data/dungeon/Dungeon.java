@@ -9,7 +9,7 @@ import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Text;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.DungeonController;
 import minerd.relic.util.RrtOffsetList;
 
@@ -21,7 +21,7 @@ public class Dungeon extends GameData {
 
 	public Dungeon(int index) {
 		try{
-			RomFile rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getAll();
 			rom.seek(RrtOffsetList.dungeonOffset);
 			rom.skip(index*0x10);
 			this.offset = rom.getFilePointer();
@@ -56,7 +56,7 @@ public class Dungeon extends GameData {
 		return dataPane;
 	}
 
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 		try{
 			rom.seek(offset);
 			rom.writeBoolean(stairsUp);

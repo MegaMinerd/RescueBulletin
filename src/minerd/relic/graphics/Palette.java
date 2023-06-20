@@ -3,12 +3,12 @@ package minerd.relic.graphics;
 import java.io.IOException;
 
 import javafx.scene.paint.Color;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 
 public class Palette {
 	private final Color[] colors;
 	
-	public Palette(RomFile rom, boolean color0IsAlpha) throws IOException {
+	public Palette(BufferedDataHandler rom, boolean color0IsAlpha) throws IOException {
 		colors = new Color[16];
 		colors[0] = color0IsAlpha ? Color.TRANSPARENT : loadColor(rom);
 		for(int i=1; i<16; i++) {
@@ -16,7 +16,7 @@ public class Palette {
 		}
 	}
 	
-	private Color loadColor(RomFile rom) throws IOException {
+	private Color loadColor(BufferedDataHandler rom) throws IOException {
 		int red = (rom.readUnsignedByte());
 		int green = (rom.readUnsignedByte());
 		int blue = (rom.readUnsignedByte());

@@ -9,7 +9,7 @@ import javafx.scene.control.Control;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 
 public class Text extends GameData {
 	public static ArrayList<String> pokemon = new ArrayList<String>();
@@ -46,7 +46,7 @@ public class Text extends GameData {
 
 		try{
 			String[] dunTracks = new String[75];
-			RomFile rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getAll();
 			rom.seek(0xF5668);
 			for(int i = 0; i<75; i++){
 				dunTracks[i] = getText("Tracks", rom.readUnsignedShort());
@@ -65,7 +65,7 @@ public class Text extends GameData {
 	public static String[] readTextTable(int tablePointer, int count, int gap) {
 		String[] texts = new String[count];
 		try{
-			RomFile rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getAll();
 			rom.seek(tablePointer);
 			for(int i = 0; i<count; i++){
 				Pointer p = rom.parsePointer();
@@ -83,7 +83,7 @@ public class Text extends GameData {
 	public static String[][] readTextList(int listPointer, int count, int interlaces) {
 		String[][] texts = new String[interlaces][count];
 		try{
-			RomFile rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getAll();
 			rom.seek(listPointer);
 			Stack<String> textStack = new Stack<String>();
 			for(int i = 0; i<count*interlaces; i++){
@@ -120,7 +120,7 @@ public class Text extends GameData {
 	}
 
 	@Override
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 		// TODO Auto-generated method stub
 
 	}

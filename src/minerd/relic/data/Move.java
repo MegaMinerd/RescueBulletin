@@ -7,7 +7,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.MoveController;
 import minerd.relic.util.RrtOffsetList;
 
@@ -20,7 +20,7 @@ public class Move extends GameData {
 
 	public Move(int index) {
 		try{
-			RomFile rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getAll();
 			rom.seek(RrtOffsetList.moveOffset);
 			rom.skip(index*0x24);
 			offset = rom.getFilePointer();
@@ -62,7 +62,7 @@ public class Move extends GameData {
 		return dataPane;
 	}
 
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 		try{
 			rom.seek(offset);
 			//rom.writeString(name, rom.parsePointer());

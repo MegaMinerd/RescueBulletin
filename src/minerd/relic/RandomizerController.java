@@ -18,7 +18,7 @@ import minerd.relic.data.dungeon.EncounterList;
 import minerd.relic.data.dungeon.Floor;
 import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.util.RrtOffsetList;
 
 public class RandomizerController {
@@ -35,7 +35,7 @@ public class RandomizerController {
 
 		try{
 			long time = System.currentTimeMillis();
-			RomFile rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getAll();
 
 			apply.setDisable(true);
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javafx.scene.layout.Region;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.util.RrtOffsetList;
 
 public class Learnset extends GameData {
@@ -14,7 +14,7 @@ public class Learnset extends GameData {
 	private ArrayList<TmMove> tmMoves;
 
 	public Learnset(int index) throws IOException, InvalidPointerException {
-		RomFile rom = Rom.getAll();
+		BufferedDataHandler rom = Rom.getAll();
 		rom.seek(RrtOffsetList.learnsetOffset);
 		rom.skip(index*0x8);
 		rom.seek(rom.parsePointer());
@@ -30,7 +30,7 @@ public class Learnset extends GameData {
 		}
 	}
 
-	private int readMoveId(RomFile rom) throws IOException {
+	private int readMoveId(BufferedDataHandler rom) throws IOException {
 		int[] highByte = rom.readMask(1, 7, 1);
 		return highByte[1]==1 ? (highByte[0] << 7) | rom.readUnsignedByte() : highByte[0];
 	}
@@ -49,7 +49,7 @@ public class Learnset extends GameData {
 		return null;
 	}
 
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 	}
 
 	public byte[] saveLvMoves() {

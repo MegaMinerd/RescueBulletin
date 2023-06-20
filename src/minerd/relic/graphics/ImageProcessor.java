@@ -9,11 +9,11 @@ import javafx.scene.image.WritableImage;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.util.FileSystem;
 
 public class ImageProcessor {
-	private static RomFile rom;
+	private static BufferedDataHandler rom;
 
 	// Todo: make a class to wrap the variables and return that instead of
 	// BufferedImage

@@ -6,7 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
 import minerd.relic.file.Rom;
-import minerd.relic.file.RomFile;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.AreaController;
 import minerd.relic.util.RrtOffsetList;
 
@@ -22,7 +22,7 @@ public class FriendArea extends GameData {
 		// TODO: code seems inconsistent on whether GameData
 		// constructors catch or throw IOExceptions
 		try{
-			RomFile rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getAll();
 			rom.seek(RrtOffsetList.areaOffset);
 			rom.skip(index*0x8);
 			population = rom.readUnsignedShort();
@@ -44,7 +44,7 @@ public class FriendArea extends GameData {
 	}
 
 	@Override
-	public void save(RomFile rom) {
+	public void save(BufferedDataHandler rom) {
 		try{
 			rom.seek(RrtOffsetList.areaOffset);
 			rom.skip(index*0x8);
