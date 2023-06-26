@@ -14,11 +14,11 @@ public class FileSystem {
         this.siroCache = new HashMap<String, SiroFile>();
     }
     
-    public static SbinFile getSbin(String name){
-        if(!instance.sbinCache.containsKey(name))
-            instance.sbinCache.put(name, new SbinFile(name, ProjectConfig.get(name+"SbinStart"), ProjectConfig.get(name+"SbinEnd")));
-        return instance.sbinCache.get(name);
-    }
+//    public static SbinFile getSbin(String name){
+//        if(!instance.sbinCache.containsKey(name))
+//            instance.sbinCache.put(name, new SbinFile(name, ProjectConfig.get(name+"SbinStart"), ProjectConfig.get(name+"SbinEnd")));
+//        return instance.sbinCache.get(name);
+//    }
     
     public static SiroFile getSiro(String name){
         //if(!instance.siroCache.containsKey(name)){

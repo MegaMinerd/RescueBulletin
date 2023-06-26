@@ -29,6 +29,10 @@ public class Rom{
 		return instance.filename;
 	}
 	
+	public static boolean isLoaded() {
+		return instance != null;
+	}
+	
 	public static BufferedDataHandler getAll() throws IOException{
 		instance.file.position(0);
 		ByteBuffer buffer = ByteBuffer.allocate(0x2000000);
@@ -36,9 +40,15 @@ public class Rom{
 		return new BufferedDataHandler(buffer);
 	}
     
-    public static ByteBuffer get(int start, int end) throws IOException{
-        instance.file.position(start);
-        ByteBuffer buffer = ByteBuffer.allocate(end-start);
-        return instance.file.read(buffer);
-    }
+//    public static ByteBuffer get(int start, int end) throws IOException{
+//        instance.file.position(start);
+//        ByteBuffer buffer = ByteBuffer.allocate(end-start);
+//        return instance.file.read(buffer);
+//    }
+
+	public static void saveAll(BufferedDataHandler data) throws IOException {
+		instance.file.position(0);
+		data.seek(0);
+		instance.file.write(data.getBuffer());
+	}
 }
