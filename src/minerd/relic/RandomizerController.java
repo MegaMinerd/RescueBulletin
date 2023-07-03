@@ -80,15 +80,15 @@ public class RandomizerController {
 						} while(pokemon.getType1()==pokemon.getType2());
 					}
 					if(abilities.isSelected()){
-						pokemon.setAbility1((int) (Math.random()*77.0 + 1));
+						pokemon.setAbility1((int) (Math.random()*76.0 + 1));
 						//Reroll Wonder Guard once
 						if(pokemon.getAbility1()==0x35)
-							pokemon.setAbility1((int) (Math.random()*77.0 + 1));
-						pokemon.setAbility2((int) (Math.random()*78.0));
+							pokemon.setAbility1((int) (Math.random()*76.0 + 1));
+						pokemon.setAbility2((int) (Math.random()*77.0));
 						//Reroll Wonder Guard once
 						//Duplicate abilities are rare enough to ignore for now
 						if(pokemon.getAbility2()==0x35)
-							pokemon.setAbility2((int) (Math.random()*78.0));
+							pokemon.setAbility2((int) (Math.random()*77.0));
 					}
 					//No need to reach the save step if we only wanted to populate the cache
 					//Done this way to reduce number of conditional checks
@@ -255,9 +255,17 @@ public class RandomizerController {
 					floor.save(rom);
 				}
 			}
-
+		    
+		    int[] bosses = {  9,  21,  38,  63,  71,  79,  80,  96, 111, 127,
+		                    160, 162, 277, 286, 294, 298, 338, 394, 411, 427,
+		                    442, 480, 726, 838};
+		
 			if(dunPoke.isSelected()){
 				for(int i = 0; i<839; i++){
+					if(Arrays.binarySearch(bosses, i)>=0){
+						//Randomizing this WILL cause a crash
+						continue;
+					}
 					rom.seek(RrtOffsetList.encountersOffset + 4*i);
 					rom.seek(rom.parsePointer());
 					EncounterList list = new EncounterList(rom);
