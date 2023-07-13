@@ -206,6 +206,15 @@ public class BufferedDataHandler implements DataHandler {
 		}
 	}
 
+	public void write(BufferedDataHandler source, int sourceOffset) throws IOException {
+		source.seek(sourceOffset);
+		buffer.put(source.getBuffer());
+	}
+	
+	public void write(BufferedDataHandler source) {
+		buffer.put(source.getBuffer());
+	}
+
 	public void writeMask(int[] data, int totalLen, int... subLens) throws IOException {
 		long mask = 0;
 		int runningTotal = 0;
@@ -264,6 +273,7 @@ public class BufferedDataHandler implements DataHandler {
     
     //Decompress data at an offset and return to original location
     //Comments starting with - indicate original python
+	@Deprecated
     public BufferedDataHandler at4px(int offset, boolean isTiles) throws IOException {
         //System.out.println("AT4");
         //System.out.println("Offset:" + Integer.toHexString(offset));

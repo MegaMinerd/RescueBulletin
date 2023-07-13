@@ -135,4 +135,20 @@ public class mainController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	public void importPortraits() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/portraits.fxml"));
+		Parent importer;
+		try{
+			importer = (Parent) loader.load();
+			Stage stage = new Stage();
+			stage.setTitle("Import Portraits");
+			stage.setScene(new Scene(importer));
+
+			stage.show();
+		} catch(IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

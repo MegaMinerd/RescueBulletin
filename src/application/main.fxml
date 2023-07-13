@@ -69,6 +69,7 @@
             <Menu mnemonicParsing="false" text="Edit">
                <items>
                   <MenuItem fx:id="menuRandomize" mnemonicParsing="false" onAction="#randomize" text="Randomize" />
+                  <MenuItem fx:id="menuImport" mnemonicParsing="false" onAction="#importPortraits" text="Import Portraits" />
                </items>
             </Menu>
       </menus>

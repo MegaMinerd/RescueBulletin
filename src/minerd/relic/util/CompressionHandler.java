@@ -11,23 +11,23 @@ public class CompressionHandler {
 	public static BufferedDataHandler compress(BufferedDataHandler data) throws IOException{
         data.seek(0);
         int offset = 0;
-        ArrayList<Byte> output_nybbles = new ArrayList<Byte>();
+        ArrayList<Integer> output_nybbles = new ArrayList<Integer>();
         //The list of controls that can't be used because they're taken by something else
-        ArrayList<Byte> taken_controls = new ArrayList<Byte>();
+        ArrayList<Integer> taken_controls = new ArrayList<Integer>();
     
         while(offset < data.length()){
             //Compress block
             int subblocks = 0;
             int flags = 0;
             data.seek(offset);
-            ArrayList<Byte> block = new ArrayList<Byte>();
+            ArrayList<Integer> block = new ArrayList<Integer>();
             while(subblocks<8 && offset<data.length()){
                 //Try to find a repeat
                 int max_length = Math.min(19, Math.min(data.length()-offset, offset));
                 data.seek(offset);
                 byte[] target = new byte[max_length];
                 data.read(max_length);
-                int diff = Math.min(0xFFF, offset);
+                int diff = Math.min(0x0FFF, offset);
                 int match_diff = -1;
                 int match_size = 0;
                 int size = 3;
@@ -63,12 +63,12 @@ public class CompressionHandler {
                 }
                 if(match_diff!=-1){
                     if(!taken_controls.contains(match_size-3))
-                        taken_controls.add((byte) (match_size-3));
-                    block.add((byte) (match_size-3));
+                        taken_controls.add((match_size-3));
+                    block.add(match_size-3);
                     int value = 0x1000 - match_diff;
-                    block.add((byte) (value>>8));
-                    block.add((byte) ((value>>4)&0xf));
-                    block.add((byte) (value&0xf));
+                    block.add(value>>8);
+                    block.add((value>>4)&0x0f);
+                    block.add(value&0x0f);
                     offset+=match_size;
                     flags = flags<<1;
                     subblocks++;
@@ -78,39 +78,39 @@ public class CompressionHandler {
                     data.seek(offset);
                     byte temp = data.readByte();
                     nybbles[0] = (byte) (temp >> 4);
-                    nybbles[1] = (byte) (temp & 0xf);
-                    if(data.getFilePointer()==data.length()){
+                    nybbles[1] = (byte) (temp & 0x0f);
+                    if(data.getFilePointer()!=data.length()){
                     	temp = data.readByte();
                     	nybbles[2] = (byte) (temp >> 4);
-                    	nybbles[3] = (byte) (temp & 0xf);
+                    	nybbles[3] = (byte) (temp & 0x0f);
                     }
                     byte base = nybbles[0];
                     for(int i=0; i<4; i++)
                         nybbles[i] -= base;
                     int pattern;
                     if(Arrays.equals(nybbles, new byte[] {0, 0, 0, 0}))
-                        pattern = -1;
+                        pattern = 0x80;
                     else if(Arrays.equals(nybbles, new byte[] {0, 1, 1, 1}))
-                        pattern = -2;
+                        pattern = 0x81;
                     else if(Arrays.equals(nybbles, new byte[] {0, -1, 0, 0}))
-                        pattern = -3;
+                        pattern = 0x82;
                     else if(Arrays.equals(nybbles, new byte[] {0, 0, -1, 0}))
-                        pattern = -4;
+                        pattern = 0x83;
                     else if(Arrays.equals(nybbles, new byte[] {0, 0, 0, -1}))
-                        pattern = -5;
+                        pattern = 0x84;
                     else if(Arrays.equals(nybbles, new byte[] {0, -1, -1, -1}))
-                        pattern = -6;
+                        pattern = 0x85;
                     else if(Arrays.equals(nybbles, new byte[] {0, 1, 0, 0}))
-                        pattern = -7;
+                        pattern = 0x86;
                     else if(Arrays.equals(nybbles, new byte[] {0, 0, 1, 0}))
-                        pattern = -8;
+                        pattern = 0x87;
                     else if(Arrays.equals(nybbles, new byte[] {0, 0, 0, 1}))
-                        pattern = -9;
+                        pattern = 0x88;
                     else
                         pattern = 0;
-                    if(pattern<0 && (data.length()-offset)>=2){
-                        block.add((byte) pattern);
-                        block.add(base);
+                    if((pattern&0x80)!=0 && (data.length()-offset)>=2){
+                        block.add(pattern);
+                        block.add(base&0x0f);
                         offset+=2;
                         flags = flags << 1;
                         subblocks++;
@@ -119,11 +119,11 @@ public class CompressionHandler {
                         //Add as-is
                         data.seek(offset);
                         temp = data.readByte();
-                        block.add((byte) (temp>>4));
-                        block.add((byte) (temp&0xf));
+                        block.add((temp>>4)&0x0f);
+                        block.add(temp&0x0f);
                         offset++;
                         flags = flags << 1;
-                        flags+=1;
+                        flags++;
                         subblocks++;
                     }
                 }
@@ -132,48 +132,48 @@ public class CompressionHandler {
                 //Pad the flags to 8 bits
                 flags = flags<<(8-subblocks);
                 //Add the block to the output
-                output_nybbles.add((byte) (flags>>4));
-                output_nybbles.add((byte) (flags&0xf));
+                output_nybbles.add(flags>>4);
+                output_nybbles.add(flags&0x0f);
                 for(int i=0; i<block.size(); i++)
                     output_nybbles.add(block.get(i));
                 System.out.println(offset + " bytes compressed");
             }
         }
         //Generate controls
-        ArrayList<Byte> controls = new ArrayList<Byte>();
+        ArrayList<Integer> controls = new ArrayList<Integer>();
         for(int i=0; i<16; i++) {
             if(controls.size()==9)
                 break;
             if(!taken_controls.contains(i))
-                controls.add((byte) i);
+                controls.add(i);
         }
         //Inject controls into output nybbles
         for(int i=0; i<output_nybbles.size(); i++)
-            if(output_nybbles.get(i)<0)
-                output_nybbles.set(i, controls.get(-1-output_nybbles.get(i)));
+            if((output_nybbles.get(i)&0x80)!=0)
+                output_nybbles.set(i, controls.get(output_nybbles.get(i)&0x0F));
         //Build output
-        ArrayList<Byte> output = new ArrayList<Byte>();
-        output.add((byte) 0x41);
-        output.add((byte) 0x54);
-        output.add((byte) 0x34);
-        output.add((byte) 0x50);
-        output.add((byte) 0x58);
+        ArrayList<Integer> output = new ArrayList<Integer>();
+        output.add(0x41);
+        output.add(0x54);
+        output.add(0x34);
+        output.add(0x50);
+        output.add(0x58);
         int new_size = 18+(output_nybbles.size()/2);
-        output.add((byte) (new_size&0xff));
-        output.add((byte) (new_size>>8));
-        for(byte control : controls)
+        output.add(new_size&0xff);
+        output.add(new_size>>8);
+        for(int control : controls)
             output.add(control);
-        output.add((byte) (data.length()&0xff));
-        output.add((byte) (data.length()>>8));
+        output.add(data.length()&0xff);
+        output.add(data.length()>>8);
 		for(int i=0; i<output_nybbles.size(); i+=2)	
-			output.add((byte) ((output_nybbles.get(i)<<4)+output_nybbles.get(i+1)));
-		return new BufferedDataHandler(ByteBuffer.wrap(toPrimitive(output.toArray(new Byte[1]))));	
+			output.add((output_nybbles.get(i)<<4)|output_nybbles.get(i+1));
+		return new BufferedDataHandler(ByteBuffer.wrap(toPrimitive(output.toArray(new Integer[1]))));	
 	}		
 			
-	private static byte[] toPrimitive(Byte[] input){		
+	private static byte[] toPrimitive(Integer[] input){		
 		byte[] output = new byte[input.length];	
 		for(int i=0; i<input.length; i++)	
-			output[i] = (byte)input[i];
+			output[i] = (byte)(input[i]&0xFF);
 		return output;	
 	}		
 }			
