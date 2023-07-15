@@ -26,7 +26,7 @@ public class CompressionHandler {
                 int max_length = Math.min(19, Math.min(data.length()-offset, offset));
                 data.seek(offset);
                 byte[] target = new byte[max_length];
-                data.read(max_length);
+                data.read(target);
                 int diff = Math.min(0x0FFF, offset);
                 int match_diff = -1;
                 int match_size = 0;
