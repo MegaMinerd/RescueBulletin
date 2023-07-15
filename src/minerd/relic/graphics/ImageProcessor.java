@@ -83,7 +83,7 @@ public class ImageProcessor {
 		//normal happy pain angry worried sad
 		//crying shouting teary-eyed determined joyous inspired
 		//surprised dizzy special0/1 sigh stunned special2/3
-		for(int facecol = 0; facecol<4; facecol++){
+		for(int facecol = 0; facecol<6; facecol++){
 			for(int facerow = 0; facerow<5; facerow++){
 				if((faceFlags & (1 << (facerow + 5*facecol)))>0){
 					BufferedDataHandler[] faceData = convertPortrait(reader, facerow*40, facecol*40);

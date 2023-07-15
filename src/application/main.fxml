@@ -70,6 +70,7 @@
                <items>
                   <MenuItem fx:id="menuRandomize" mnemonicParsing="false" onAction="#randomize" text="Randomize" />
                   <MenuItem fx:id="menuImport" mnemonicParsing="false" onAction="#importPortraits" text="Import Portraits" />
+                  <MenuItem fx:id="menuImportlv" mnemonicParsing="false" onAction="#importLevelmap" text="Import Level Map" />
                </items>
             </Menu>
       </menus>
