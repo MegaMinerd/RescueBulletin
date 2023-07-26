@@ -90,7 +90,7 @@ public class ImageProcessor {
 					pointers.add(rom.getFilePointer() + 0x8000000);
 					rom.write(faceData[0], 0);
 					pointers.add(rom.getFilePointer() + 0x8000000);
-					rom.write(CompressionHandler.compress(faceData[1]), 0);
+					rom.write(CompressionHandler.compress(faceData[1], true), 0);
 					while(rom.getFilePointer()%4!=0)
 						rom.writeUnsignedByte(0);
 				}
