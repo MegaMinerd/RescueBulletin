@@ -10,7 +10,7 @@ Run it through a JDK. The best of my googling suggests the JavaFX packaging tool
 ## Goals
 These are in order of importance
 * Achieve data shiftability by completing and integrating SbinFile, SiroFile, SiroSegment, SiroFactory, and ConfigHandler
-* Ensure that data currently viewable is accurate and savable.
+* Ensure that data currently viewable is accurate and savable. (This is best done second in case the first step breaks something.)
 * Import and convert code from precursor script viewing tool. For now, it will be diaplayed as raw data annotated with current understanding to assist in verification and further reverse engineering.
 
 ## Contributing
