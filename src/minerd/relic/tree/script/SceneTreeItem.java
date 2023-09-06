@@ -10,7 +10,7 @@ public class SceneTreeItem extends FolderTreeItem<GameData> {
 	Pointer scenePointer, waypointPointer;
 
 	public SceneTreeItem(String name, int index, int offset) {
-		super(name, "", FolderTreeItem.class, 0);
+		super(name, "", FolderTreeItem.class, 0, false);
 	}
 
 	@Override

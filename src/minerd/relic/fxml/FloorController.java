@@ -42,15 +42,18 @@ public class FloorController {
 	public Slider shopChance, houseChance, mazeChance, stickyChance;
 
 	//Pokemon spawns tab
+	public Label encounterTableId;
 	public TableView<Encounter> encounterTable;
 	public TableColumn<Encounter, Integer> encounterId, encounterLevel;
 	public TableColumn<Encounter, String> encounterName, encounterFloorChance, encounterHouseChance;
 
 	//Trap spawns tab
+	public Label trapTableId;
 	public TableView<Trap> trapTable;
 	public TableColumn<Trap, String> trapName, trapChance;
 
 	//Item spawns tab
+	public Label floorTableId, shopTableId, houseTableId, buriedTableId;
 	public TableView<Category> floorCategoryTable, shopCategoryTable, houseCategoryTable, buriedCategoryTable;
 	public TableView<Loot> floorItemTable, shopItemTable, houseItemTable, buriedItemTable;
 
@@ -70,8 +73,14 @@ public class FloorController {
 	public void load(Floor floor) {
 		this.floor = floor;
 		loadLayout(floor);
+		encounterTableId.setText(floor.getEncounterTableId() + "");
 		loadEncounters(floor);
+		trapTableId.setText(floor.getTrapTableId() + "");
 		loadTraps(floor);
+		floorTableId.setText(floor.getFloorTableId() + "");
+		shopTableId.setText(floor.getShopTableId() + "");
+		houseTableId.setText(floor.getHouseTableId() + "");
+		buriedTableId.setText(floor.getBuriedTableId() + "");
 		loadLoot(floor.getFloorLoot(), 	floorCategoryId,	floorCategoryName, 	floorCategoryWeight, 	floorCategoryChance, 	floorCategoryTable,
 				 floorItemId, 			floorItemCat, 		floorItemName, 		floorItemWeight, 		floorItemChance, 		floorItemTable);
 		loadLoot(floor.getShopLoot(), 	shopCategoryId, 	shopCategoryName, 	shopCategoryWeight, 	shopCategoryChance, 	shopCategoryTable,

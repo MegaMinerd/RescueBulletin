@@ -18,9 +18,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.3696682464454976" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="320.0" prefHeight="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.fxml.FloorController">
+<SplitPane dividerPositions="0.3696682464454976" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.fxml.FloorController">
   <items>
-    <AnchorPane minWidth="-Infinity" prefHeight="400.0">
+    <AnchorPane>
          <children>
             <GridPane>
               <columnConstraints>
@@ -101,9 +101,9 @@
             <Button fx:id="apply" layoutY="372.0" mnemonicParsing="false" onAction="#applyChanges" text="Apply" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
          </children>
       </AnchorPane>
-    <AnchorPane prefHeight="160.0">
+    <AnchorPane>
          <children>
-            <TabPane prefHeight="400.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <tabs>
                   <Tab text=" Layout ">
                      <content>
@@ -380,7 +380,9 @@
                      <content>
                         <AnchorPane prefHeight="180.0">
                            <children>
-                              <TableView fx:id="encounterTable" prefHeight="360.0" prefWidth="300.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label text="Encounter table #:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                              <Label fx:id="encounterTableId" text="Label" AnchorPane.leftAnchor="105.0" AnchorPane.topAnchor="5.0" />
+                              <TableView fx:id="encounterTable" prefHeight="360.0" prefWidth="300.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
                                 <columns>
                                   <TableColumn fx:id="encounterId" prefWidth="30.0" text="ID" />
                                   <TableColumn fx:id="encounterName" prefWidth="120.0" text="Species" />
@@ -396,7 +398,9 @@
                      <content>
                         <AnchorPane prefHeight="180.0">
                            <children>
-                              <TableView fx:id="trapTable" prefHeight="300.0" prefWidth="215.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <Label layoutX="311.0" layoutY="123.0" text="Loot table #:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                              <Label fx:id="trapTableId" layoutX="99.0" layoutY="5.0" text="Label" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="5.0" />
+                              <TableView fx:id="trapTable" prefWidth="215.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
                                  <columns>
                                     <TableColumn fx:id="trapName" prefWidth="150.0" text="Trap" />
                                     <TableColumn fx:id="trapChance" prefWidth="50.0" text="Chance" />
@@ -413,12 +417,14 @@
                                  <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <Label layoutX="14.0" layoutY="14.0" text="Categories" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                          <Label text="Loot table #:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                          <Label fx:id="floorTableId" text="Label" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="5.0" />
+                                          <Label layoutX="14.0" layoutY="14.0" text="Categories" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TableView fx:id="floorCategoryTable" layoutY="22.0" prefHeight="120.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
+                                          <TableView fx:id="floorCategoryTable" layoutY="22.0" prefHeight="120.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="45.0">
                                             <columns>
                                                 <TableColumn fx:id="floorCategoryId" prefWidth="30.0" text="ID" />
                                               <TableColumn fx:id="floorCategoryName" prefWidth="200.0" text="Category" />
@@ -426,12 +432,12 @@
                                                 <TableColumn fx:id="floorCategoryChance" minWidth="0.0" prefWidth="50.0" text="Chance" />
                                             </columns>
                                           </TableView>
-                                          <Label layoutX="5.0" layoutY="184.0" text="Items" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="150.0">
+                                          <Label layoutX="5.0" layoutY="184.0" text="Items" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="170.0">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TableView fx:id="floorItemTable" layoutX="5.0" layoutY="167.0" prefHeight="150.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="170.0">
+                                          <TableView fx:id="floorItemTable" layoutX="5.0" layoutY="167.0" prefHeight="150.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="190.0">
                                              <columns>
                                                 <TableColumn fx:id="floorItemId" prefWidth="30.0" text="ID" />
                                                 <TableColumn fx:id="floorItemCat" prefWidth="30.0" text="Cat" />
@@ -447,12 +453,14 @@
                                  <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <Label layoutX="14.0" layoutY="14.0" text="Categories" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                          <Label text="Loot table #:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                          <Label fx:id="shopTableId" text="Label" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="5.0" />
+                                          <Label layoutX="14.0" layoutY="14.0" text="Categories" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TableView fx:id="shopCategoryTable" layoutY="22.0" prefHeight="120.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
+                                          <TableView fx:id="shopCategoryTable" layoutY="22.0" prefHeight="120.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="45.0">
                                              <columns>
                                                 <TableColumn fx:id="shopCategoryId" prefWidth="30.0" text="ID" />
                                                 <TableColumn fx:id="shopCategoryName" prefWidth="200.0" text="Category" />
@@ -460,12 +468,12 @@
                                                 <TableColumn fx:id="shopCategoryChance" minWidth="0.0" prefWidth="50.0" text="Chance" />
                                              </columns>
                                           </TableView>
-                                          <Label layoutX="5.0" layoutY="184.0" text="Items" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="150.0">
+                                          <Label layoutX="5.0" layoutY="184.0" text="Items" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="170.0">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TableView fx:id="shopItemTable" layoutX="5.0" layoutY="167.0" prefHeight="150.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="170.0">
+                                          <TableView fx:id="shopItemTable" layoutX="5.0" layoutY="167.0" prefHeight="150.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="190.0">
                                              <columns>
                                                 <TableColumn fx:id="shopItemId" prefWidth="30.0" text="ID" />
                                                 <TableColumn fx:id="shopItemCat" prefWidth="30.0" text="Cat" />
@@ -482,12 +490,14 @@
                                  <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <Label layoutX="14.0" layoutY="14.0" text="Categories" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                          <Label text="Loot table #:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                          <Label fx:id="houseTableId" text="Label" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="5.0" />
+                                          <Label layoutX="14.0" layoutY="14.0" text="Categories" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TableView fx:id="houseCategoryTable" layoutY="22.0" prefHeight="120.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
+                                          <TableView fx:id="houseCategoryTable" layoutY="22.0" prefHeight="120.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="45.0">
                                              <columns>
                                                 <TableColumn fx:id="houseCategoryId" prefWidth="30.0" text="ID" />
                                                 <TableColumn fx:id="houseCategoryName" prefWidth="200.0" text="Category" />
@@ -495,12 +505,12 @@
                                                 <TableColumn fx:id="houseCategoryChance" minWidth="0.0" prefWidth="50.0" text="Chance" />
                                              </columns>
                                           </TableView>
-                                          <Label layoutX="5.0" layoutY="184.0" text="Items" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="150.0">
+                                          <Label layoutX="5.0" layoutY="184.0" text="Items" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="170.0">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TableView fx:id="houseItemTable" layoutX="5.0" layoutY="167.0" prefHeight="150.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="170.0">
+                                          <TableView fx:id="houseItemTable" layoutX="5.0" layoutY="167.0" prefHeight="150.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="190.0">
                                              <columns>
                                                 <TableColumn fx:id="houseItemId" prefWidth="30.0" text="ID" />
                                                 <TableColumn fx:id="houseItemCat" prefWidth="30.0" text="Cat" />
@@ -517,12 +527,14 @@
                                  <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <Label layoutX="14.0" layoutY="14.0" text="Categories" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                          <Label text="Loot table #:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                          <Label fx:id="buriedTableId" text="Label" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="5.0" />
+                                          <Label layoutX="14.0" layoutY="14.0" text="Categories" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TableView fx:id="buriedCategoryTable" layoutY="22.0" prefHeight="120.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
+                                          <TableView fx:id="buriedCategoryTable" layoutY="22.0" prefHeight="120.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="45.0">
                                              <columns>
                                                 <TableColumn fx:id="buriedCategoryId" prefWidth="30.0" text="ID" />
                                                 <TableColumn fx:id="buriedCategoryName" prefWidth="200.0" text="Category" />
@@ -530,12 +542,12 @@
                                                 <TableColumn fx:id="buriedCategoryChance" minWidth="0.0" prefWidth="50.0" text="Chance" />
                                              </columns>
                                           </TableView>
-                                          <Label layoutX="5.0" layoutY="184.0" text="Items" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="150.0">
+                                          <Label layoutX="5.0" layoutY="184.0" text="Items" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="170.0">
                                              <font>
                                                 <Font name="System Bold" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TableView fx:id="buriedItemTable" layoutX="5.0" layoutY="167.0" prefHeight="150.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="170.0">
+                                          <TableView fx:id="buriedItemTable" layoutX="5.0" layoutY="167.0" prefHeight="150.0" prefWidth="345.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="190.0">
                                              <columns>
                                                 <TableColumn fx:id="buriedItemId" prefWidth="30.0" text="ID" />
                                                 <TableColumn fx:id="buriedItemCat" prefWidth="30.0" text="Cat" />

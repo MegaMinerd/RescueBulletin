@@ -25,7 +25,8 @@ public class DungeonFolderTreeItem extends FolderTreeItem<Dungeon> {
 				int floorTotal = 0;
 
 				for(int i = 0; i<98; i++){
-					int floorNum = rom.readUnsignedByte();
+					//The numbers in the data appear to count from 1 instead of 0.
+					int floorNum = rom.readUnsignedByte() - 1;
 					getChildren().add(new DungeonDataTreeItem(Text.getText("Dungeons", i), i, floorTotal, floorNum));
 					floorTotal += floorNum;
 				}

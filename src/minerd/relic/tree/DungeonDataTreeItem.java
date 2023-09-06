@@ -14,7 +14,7 @@ public class DungeonDataTreeItem extends FolderTreeItem<Floor> {
 	private int index, floorIndex;
 
 	public DungeonDataTreeItem(String dunName, int index, int floorIndex, int floors) {
-		super(dunName, "", Floor.class, 0 - floors);
+		super(dunName, "", Floor.class, floors, false);
 		this.index = index;
 		this.floorIndex = floorIndex;
 
@@ -43,8 +43,8 @@ public class DungeonDataTreeItem extends FolderTreeItem<Floor> {
 	public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
 		if(!loaded){
 			getChildren().remove(0);
-			for(int i = 1; i<number; i++){
-				getChildren().add(new FloorDataTreeItem("Floor " + i, floorIndex, i, index));
+			for(int i = 0; i<number; i++){
+				getChildren().add(new FloorDataTreeItem("Floor " + (i+1), floorIndex+i, i, index));
 			}
 			loaded = true;
 		}

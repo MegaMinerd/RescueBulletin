@@ -27,7 +27,7 @@ public class FloorDataTreeItem extends DataTreeItem<Floor> {
 		if(data==null){
 			// Read the data from the ROM to store as cache
 			try{
-				data = new Floor(relIndex, dungeonIndex);
+				data = new Floor(index, relIndex, dungeonIndex);
 				Cache.add("Floor", index, data);
 			} catch(IllegalArgumentException | SecurityException e){
 				e.printStackTrace();

@@ -196,7 +196,7 @@ public class RandomizerController {
 									  25,   26,   40,   41,   66,   67,   68,   69,   73,   74 };
 				
 				for(int i = 1; i<1764; i++){
-					Floor floor = new Floor(i, 0);
+					Floor floor = new Floor(i, 0, 0);
 					Cache.add("Floor", i, floor);
 					if(floor.getFixedRoom()!=0){
 						//Randomizing this may cause a crash

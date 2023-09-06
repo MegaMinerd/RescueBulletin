@@ -20,7 +20,7 @@ public class MapDataTreeItem extends FolderTreeItem<GameData> {
     Pointer headerPointer, scenePointer, waypointPointer;
     
     public MapDataTreeItem(String name, int index){
-        super(name, "", FolderTreeItem.class, 0);
+        super(name, "", FolderTreeItem.class, 0, false);
         this.index = index;
         
         try{

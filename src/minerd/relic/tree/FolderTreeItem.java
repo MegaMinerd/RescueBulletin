@@ -19,19 +19,24 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 	protected int number;
 
 	public FolderTreeItem(String text, String infoIn) {
-		this(text, infoIn, Object.class, 0);
+		this(text, infoIn, Object.class, 0, false);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public FolderTreeItem(String text, String infoIn, Class cacheClassIn, int numberIn) {
+		this(text, infoIn, cacheClassIn, numberIn, true);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public FolderTreeItem(String text, String infoIn, Class cacheClassIn, int numberIn) {
+	public FolderTreeItem(String text, String infoIn, Class cacheClassIn, int numberIn, boolean shouldAlloc) {
 		super(text);
 		this.info = infoIn;
 		this.cacheClass = cacheClassIn;
-		this.number = Math.abs(numberIn);
+		this.number = numberIn;
 		this.name = text;
 		loaded = true;
 		
-		if(numberIn>0)
+		if(shouldAlloc)
 			Cache.alloc(cacheClassIn.getSimpleName(), number);
 		
 		loaded = false;
