@@ -10,7 +10,7 @@ public class MapFolderTreeItem extends FolderTreeItem<GameData> {
 	
 	public MapFolderTreeItem() {
 		super("Script Scenes",  "This section will let you edit overworld scenes in the game."
-							  + "\nWarning! This section is not complete. The current layout is designed to help with research."
+							  + "\nWarning! This section is not complete. The current layout displays raw data to help with research."
 							  + "\nIf you would like to help contact MegaMinerd on discord or PokeCommunity.", MapDataTreeItem.class, 174, false);
 	}
 
