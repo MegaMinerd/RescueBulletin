@@ -15,4 +15,4 @@ These are in order of importance
 * Import and convert code from precursor script viewing tool. For now, it will be diaplayed as raw data annotated with current understanding to assist in verification and further reverse engineering.
 
 ## Contributing
-Pull requests are welcome.
+Pull requests are welcome. The currently most desired assistance is the script system and the comment beginning on line 29 of minerd.relic.util.CompressionHandler.
