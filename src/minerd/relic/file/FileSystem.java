@@ -1,7 +1,6 @@
 package minerd.relic.file;
 
 import java.util.HashMap;
-import java.nio.ByteBuffer;
 
 public class FileSystem {
     private HashMap<String, SbinFile> sbinCache;

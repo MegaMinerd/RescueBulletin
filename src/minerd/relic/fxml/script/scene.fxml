@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.fxml.script.MapSceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.fxml.script.SceneController">
    <children>
       <GridPane layoutY="4.0">
         <columnConstraints>
@@ -25,7 +25,7 @@
             <Insets left="5.0" top="5.0" />
          </padding>
          <children>
-            <Label text="# calls" GridPane.columnIndex="1">
+            <Label text="# actors" GridPane.columnIndex="1">
                <font>
                   <Font name="Monospaced Regular" size="12.0" />
                </font>
@@ -54,7 +54,7 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
             </Label>
-            <Label fx:id="callNum" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label fx:id="actorNum" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font name="Monospaced Regular" size="12.0" />
                </font>
@@ -65,7 +65,7 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
             </Label>
-            <Label fx:id="callPointer" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <Label fx:id="scriptPointer" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <font>
                   <Font name="Monospaced Regular" size="12.0" />
                </font>
@@ -76,7 +76,7 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
             </Label>
-            <Label fx:id="sceneNum" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <Label fx:id="scriptType" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <font>
                   <Font name="Monospaced Regular" size="12.0" />
                </font>

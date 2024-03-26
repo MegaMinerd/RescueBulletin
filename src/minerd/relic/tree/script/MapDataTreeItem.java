@@ -36,6 +36,10 @@ public class MapDataTreeItem extends FolderTreeItem<GameData> {
 		}
 	}
 
+	public Pointer getHeaderPointer() {
+		return headerPointer;
+	}
+
 	@Override
 	public Node select() {
 		AnchorPane folderPane = null;
