@@ -6,6 +6,7 @@ public class RrtOffsetList {
 	public static int mapScriptOffset = 0x0011E258;
 	public static int pokemonOffset = 0x00357B88;
 	public static int learnsetOffset = 0x03725F8;
+	public static int levelmapOffset = 0x0300558;
 	public static int itemOffset = 0x00306570;
 	public static int moveOffset = 0x003679A0;
 	public static int areaOffset = 0x0010AA90;

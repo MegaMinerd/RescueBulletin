@@ -1,14 +1,16 @@
 package minerd.relic.data;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
-import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.PokemonController;
+import minerd.relic.util.CompressionHandler;
 import minerd.relic.util.RrtOffsetList;
 
 public class Pokemon extends GameData {
@@ -19,6 +21,7 @@ public class Pokemon extends GameData {
 	private int dexID, entityID, recruit, alphaID, parentID, faces;
 	private boolean canWalk, toolbox;
 	private Learnset learnset;
+	private Levelmap lvmp;
 
 	public Pokemon(int index) {
 		try{
@@ -73,6 +76,17 @@ public class Pokemon extends GameData {
 				learnset = new Learnset(index);
 				Cache.add("Learnset", index, learnset);
 			}
+			
+
+			rom.seek(RrtOffsetList.levelmapOffset);
+			rom.skip(index*0x8+0x4);
+			rom.seek(rom.parsePointer());
+			rom.skip(16);
+			int start = rom.getFilePointer();
+			rom.skip(5);
+			byte temp[] = new byte[rom.readShort()];
+			rom.getBuffer().get(start, temp);
+			lvmp = new Levelmap(CompressionHandler.decompress(new BufferedDataHandler(ByteBuffer.wrap(temp)), false), this);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
@@ -422,5 +436,9 @@ public class Pokemon extends GameData {
 
 	public void setLearnset(Learnset learnset) {
 		this.learnset = learnset;
+	}
+
+	public Levelmap getLvmp() {
+		return lvmp;
 	}
 }

@@ -2,6 +2,9 @@ package minerd.relic.fxml;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -12,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import minerd.relic.data.Learnset.LevelMove;
 import minerd.relic.data.Learnset.TmMove;
+import minerd.relic.data.Levelmap;
 import minerd.relic.data.Pokemon;
 import minerd.relic.data.Text;
 
@@ -40,7 +44,10 @@ public class PokemonController{
 	public TextField regen, sleepiness, unk30, unk31, unk32;
 	public CheckBox canWalk, toolbox;
 	
+	
 	//Stats and Moves tab
+	public LineChart statGraph;
+	public NumberAxis graphLevel, graphAmount;
 	public TableView<LevelMove> levelupTable;
 	public TableView<TmMove> tmTable;
 	public TableColumn<LevelMove, Integer> levelCol, lvIdCol;
@@ -98,6 +105,7 @@ public class PokemonController{
 		parentID.setText(pokemon.getParentID()+"");
 		
 		loadMoves(pokemon);
+		loadGraph(pokemon);
 	}
 	
 	public void loadMoves(Pokemon pokemon) {
@@ -114,6 +122,55 @@ public class PokemonController{
 		
 		levelupTable.setItems(levelupList);
 		tmTable.setItems(tmList);
+	}
+	
+	public void loadGraph(Pokemon pokemon) {
+		Levelmap lvmp = pokemon.getLvmp();
+		
+
+        XYChart.Series expLine = new XYChart.Series();
+        expLine.setName("Experience");
+        int[] exp = lvmp.getExp();
+        
+
+        XYChart.Series hpLine = new XYChart.Series();
+        hpLine.setName("HP");
+        int[] hp = lvmp.getHp();
+        
+
+        XYChart.Series attLine = new XYChart.Series();
+        attLine.setName("Attack");
+        int[] att = lvmp.getAtt();
+        
+
+        XYChart.Series defLine = new XYChart.Series();
+        defLine.setName("Defense");
+        int[] def = lvmp.getDef();
+        
+
+        XYChart.Series saLine = new XYChart.Series();
+        saLine.setName("Sp. Att");
+        int[] sa = lvmp.getSa();
+        
+
+        XYChart.Series sdLine = new XYChart.Series();
+        sdLine.setName("Sp. Def");
+        int[] sd = lvmp.getSd();
+        
+        for(int i=0; i<100; i++) {
+        	expLine.getData().add(new XYChart.Data(i+1, exp[i]));
+        	hpLine.getData().add(new XYChart.Data(i+1, hp[i]));
+        	attLine.getData().add(new XYChart.Data(i+1, att[i]));
+        	defLine.getData().add(new XYChart.Data(i+1, def[i]));
+        	saLine.getData().add(new XYChart.Data(i+1, sa[i]));
+        	sdLine.getData().add(new XYChart.Data(i+1, sd[i]));
+        }
+        //statGraph.getData().add(expLine);
+        statGraph.getData().add(hpLine);
+        statGraph.getData().add(attLine);
+        statGraph.getData().add(defLine);
+        statGraph.getData().add(saLine);
+        statGraph.getData().add(sdLine);
 	}
     
     public void applyChanges(){

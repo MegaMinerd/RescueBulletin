@@ -176,6 +176,106 @@ public class CompressionHandler {
 		return new BufferedDataHandler(ByteBuffer.wrap(toPrimitive(output.toArray(new Integer[1]))));
 	}
 
+	//Decompress data at an offset and return to original location
+	public static BufferedDataHandler decompress(BufferedDataHandler input, boolean isImage) throws IOException {
+		//System.out.println("AT4");
+		//System.out.println("Offset:" + Integer.toHexString(offset));
+		ArrayList<Byte> data = new ArrayList<Byte>();
+		input.skip(7);
+
+		//The control codes used for 0-flags vary
+		ArrayList<Byte> controls = new ArrayList<Byte>();
+		for(int i = 0; i<9; i++){
+			controls.add(input.readByte());
+		}
+
+		int len = input.readShort();
+		if(isImage){
+			data.add((byte) 3);
+			data.add((byte) 0);
+			data.add((byte) 3);
+			data.add((byte) 0);
+			//System.out.println("Length:" + Integer.toHexString(len));
+			data.add((byte) ((len/0x20) & 0xFF));
+			data.add((byte) (((len/0x20) & 0xFF00) >> 8));
+			for(int i = 0; i<10; i++)
+				data.add((byte) 0);
+		}
+
+		while((isImage ? data.size() - 0x10 : data.size())<len){
+			byte flags = input.readByte();
+			//if(!isTiles) System.out.println("Flags:" + Integer.toHexString(flags));
+			for(int i = 0; i<8; i++){
+				if((flags & (0x80 >> i))!=0){
+					//Flag 1: append one byte as-is
+					data.add((byte) (input.readUnsignedByte() & 0xFF));
+				} else{
+					//Flag 0: do one of two fancy things based on the next byte's high and low nybbles
+					byte control = input.readByte();
+					byte high = (byte) ((control >> 4) & 0x0F);
+					byte low = (byte) (control & 0x0F);
+
+					if(controls.contains(high)){
+						//Append a pattern of four nybbles. The high bits determine
+						//the pattern, and the low bits determine the base nybble.
+						control = (byte) controls.indexOf(high);
+						byte[] nybbles = { low, low, low, low };
+
+						if(control==0){
+						} else if(control<=4){
+							//Lower a particular pixel
+							if(control==1)
+								for(int j = 0; j<4; j++)
+									nybbles[j]++;
+							nybbles[control - 1]--;
+						} else if(control<=8){
+							//5 <= control <= 8; raise a particular pixel
+							if(control==5)
+								for(int j = 0; j<4; j++)
+									nybbles[j]--;
+							nybbles[control - 5]++;
+						}
+						//Pack the pixels into bytes and append them
+						data.add((byte) ((nybbles[0] << 4) | nybbles[1]));
+						data.add((byte) ((nybbles[2] << 4) | nybbles[3]));
+					} else{
+						//Append a sequence of bytes previously used in the data.
+						//This can overlap with the beginning of the appended bytes!
+						//The high bits determine the length of the sequence, and
+						//the low bits help determine the where the sequence starts.
+						int off = -0x1000;
+						off += ((low << 8) | (input.readByte() & 0xFF));
+						for(int j = 0; j<(high + 3); j++)
+							try{
+								data.add(data.get(data.size() + off));
+							} catch(IndexOutOfBoundsException e){
+								data.add((byte) 0);
+							}
+					}
+				}
+				if((isImage ? data.size() - 0x10 : data.size())>=len)
+					break;
+			}
+		}
+		BufferedDataHandler output = new BufferedDataHandler(data.size());
+
+		for(byte b : data)
+			output.writeByte(b);
+
+		output.seek(0);
+		for(int i = 0; i<100; i++){
+			for(int j = 0; j<12; j++){
+				String str = Integer.toHexString(output.readByte()&0xFF);
+				if(str.length()==1)
+					str = "0" + str;
+				//System.out.print(str);
+			}
+			//System.out.print("\n");
+		}
+		
+		return output;
+	}
+
 	private static byte[] toPrimitive(Integer[] input) {
 		byte[] output = new byte[input.length];
 		for(int i = 0; i<input.length; i++)

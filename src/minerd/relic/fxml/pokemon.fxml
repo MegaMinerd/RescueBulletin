@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -541,7 +543,21 @@
                      <content>
                         <TabPane prefHeight="200.0" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
-                            <Tab closable="false" text=" Graph " />
+                            <Tab closable="false" text=" Graph ">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <LineChart fx:id="statGraph" prefHeight="340.0" prefWidth="370.0">
+                                            <xAxis>
+                                              <NumberAxis fx:id="graphLevel" prefHeight="25.0" prefWidth="327.0" side="BOTTOM" upperBound="99.0" />
+                                            </xAxis>
+                                            <yAxis>
+                                              <NumberAxis fx:id="graphAmount" side="LEFT" />
+                                            </yAxis>
+                                          </LineChart>
+                                       </children>
+                                    </AnchorPane>
+                                 </content></Tab>
                             <Tab closable="false" text=" Stats " />
                               <Tab closable="false" text=" Level Up Moves ">
                                 <content>
