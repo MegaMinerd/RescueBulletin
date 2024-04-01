@@ -70,6 +70,10 @@ public class Pokemon extends GameData {
 			alphaID = rom.readShort();
 			parentID = rom.readShort();
 			Cache.add("Pokemon", index, this);
+
+			//I don't know why
+			if(entityID>226)
+				entityID-=2;
 			
 			learnset = (Learnset)Cache.get("Learnset", index);
 			if(learnset==null) {
@@ -79,7 +83,7 @@ public class Pokemon extends GameData {
 			
 
 			rom.seek(RrtOffsetList.levelmapOffset);
-			rom.skip(index*0x8+0x4);
+			rom.skip(entityID*0x8+0x4);
 			rom.seek(rom.parsePointer());
 			rom.skip(16);
 			int start = rom.getFilePointer();
@@ -102,7 +106,12 @@ public class Pokemon extends GameData {
 	}
 
 	public void save(BufferedDataHandler rom) {
-		try{
+		try{	
+
+			//I don't know why
+			if(entityID>226)
+				entityID+=2;
+			
 			rom.seek(offset);
 			//rom.writeString(name, rom.parsePointer());
 			//rom.writeString(category, rom.parsePointer());

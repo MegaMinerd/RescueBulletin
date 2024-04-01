@@ -547,7 +547,7 @@
                                  <content>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
-                                          <LineChart fx:id="statGraph" prefHeight="340.0" prefWidth="370.0">
+                                          <LineChart fx:id="statGraph" createSymbols="false" prefHeight="340.0" prefWidth="370.0">
                                             <xAxis>
                                               <NumberAxis fx:id="graphLevel" prefHeight="25.0" prefWidth="327.0" side="BOTTOM" upperBound="99.0" />
                                             </xAxis>

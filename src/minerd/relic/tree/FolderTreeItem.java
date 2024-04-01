@@ -29,7 +29,7 @@ public class FolderTreeItem<T extends GameData> extends DataTreeItem<T> implemen
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public FolderTreeItem(String text, String infoIn, Class cacheClassIn, int numberIn, boolean shouldAlloc) {
-		super(text);
+		super(text); 
 		this.info = infoIn;
 		this.cacheClass = cacheClassIn;
 		this.number = numberIn;
