@@ -94,7 +94,7 @@
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
             </Label>
-            <CheckBox fx:id="dunName" mnemonicParsing="false" text="Name" GridPane.rowIndex="7">
+            <CheckBox fx:id="dunName" disable="true" mnemonicParsing="false" text="Name (NYI)" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
@@ -144,6 +144,7 @@
                   <Insets bottom="6.0" left="5.0" right="5.0" top="6.0" />
                </GridPane.margin>
             </CheckBox>
+            <Label text="(Requires crashless patch)" GridPane.columnIndex="1" GridPane.columnSpan="2" />
          </children>
       </GridPane>
       <Button fx:id="apply" layoutX="5.0" layoutY="266.0" mnemonicParsing="false" onAction="#randomize" text="Apply" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="266.0" />
