@@ -1,19 +1,13 @@
 package minerd.relic.tree.script;
 
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Node;
-import minerd.relic.data.GameData;
+import minerd.relic.fxml.script.Script;
 import minerd.relic.tree.FolderTreeItem;
 
-public class ScriptFolderTreeItem extends FolderTreeItem<GameData> {
+public class ScriptFolderTreeItem extends FolderTreeItem<Script> {
 
-	public ScriptFolderTreeItem(String name, int number, int offset) {
-		super(name, "", FolderTreeItem.class, number, false);
-	}
-
-	@Override
-	public Node select() {
-		return null;
+	public ScriptFolderTreeItem(String name, String desc, int number, int offset) {
+		super(name, desc, FolderTreeItem.class, number, false);
 	}
 
 	//User expanded the folder
