@@ -1,7 +1,7 @@
 package minerd.relic.tree.script;
 
 import javafx.beans.value.ObservableValue;
-import minerd.relic.fxml.script.Script;
+import minerd.relic.data.Script;
 import minerd.relic.tree.FolderTreeItem;
 
 public class ScriptFolderTreeItem extends FolderTreeItem<Script> {

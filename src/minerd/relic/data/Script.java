@@ -1,9 +1,8 @@
-package minerd.relic.fxml.script;
+package minerd.relic.data;
 
 import java.io.IOException;
 
 import javafx.scene.layout.Region;
-import minerd.relic.data.GameData;
 import minerd.relic.file.BufferedDataHandler;
 
 public class Script extends GameData{
