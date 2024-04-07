@@ -12,12 +12,12 @@ import minerd.relic.fxml.script.CharacterFolderController;
 import minerd.relic.fxml.script.SceneFolderController;
 import minerd.relic.tree.FolderTreeItem;
 
-public class CharacterFolder<T extends GameData> extends FolderTreeItem<T> {
+public class CharacterFolderTreeItem<T extends GameData> extends FolderTreeItem<T> {
 	Pointer pointer;
 	int number;
 	SceneFolderController controller;
 	
-	public CharacterFolder(Pointer pointer, int number) {
+	public CharacterFolderTreeItem(Pointer pointer, int number) {
 		super("Characters", "Anything that moves on screen", ScriptTreeItem.class, 0);
 		this.pointer = pointer;
 		this.number = number;

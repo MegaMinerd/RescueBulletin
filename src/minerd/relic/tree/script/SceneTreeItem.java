@@ -45,7 +45,7 @@ public class SceneTreeItem extends FolderTreeItem<GameData> {
 				FolderTreeItem call = new FolderTreeItem("Call " + i, "", null, 0, false);
 				boolean hasChildren = false;
 				if(!ptrStrs[i*5].equals("null")) {
-					call.getChildren().add(new CharacterFolder(Pointer.fromInt(Integer.parseInt(ptrStrs[i*5], 16) + 0x08000000), Integer.parseInt(numStrs[i*5], 16)));
+					call.getChildren().add(new CharacterFolderTreeItem(Pointer.fromInt(Integer.parseInt(ptrStrs[i*5], 16) + 0x08000000), Integer.parseInt(numStrs[i*5], 16)));
 					hasChildren = true;
 				}
 				if(!ptrStrs[i*5 + 1].equals("null")){
@@ -53,7 +53,7 @@ public class SceneTreeItem extends FolderTreeItem<GameData> {
 					hasChildren = true;
 				}
 				if(!ptrStrs[i*5 + 2].equals("null")){
-					call.getChildren().add(new ScriptFolderTreeItem("Camera", "The camera, such as panning.", Integer.parseInt(numStrs[i*5 + 2]), Integer.parseInt(ptrStrs[i*5 + 2], 16)));
+					call.getChildren().add(new CameraTreeItem(Pointer.fromInt(Integer.parseInt(ptrStrs[i*5 + 2], 16) + 0x08000000)));
 					hasChildren = true;
 				}
 				if(!ptrStrs[i*5 + 3].equals("null")){

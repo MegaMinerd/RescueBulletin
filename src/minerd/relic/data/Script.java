@@ -9,7 +9,6 @@ public class Script extends GameData{
 
 	@Override
 	public Region load() throws IOException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -25,4 +24,5 @@ public class Script extends GameData{
 		return null;
 	}
 
+	
 }

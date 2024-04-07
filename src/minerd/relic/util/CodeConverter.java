@@ -1,7 +1,5 @@
 package minerd.relic.util;
 
-import java.io.IOException;
-
 public class CodeConverter {
 	
 	/**
