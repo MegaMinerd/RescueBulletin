@@ -16,9 +16,7 @@ public class CameraController {
 		rom.seek(pointer);
 		
 		offset.setText(Integer.toHexString(rom.getFilePointer()));
-		for(int i=0; i<12; i++) {
-			data.setText(data.getText() + Integer.toHexString(rom.readByte()&0xFF) + " ");
-		}
+		data.setText(data.getText() + rom.readAsString(12));
 		
 		rom.seek(rom.getFilePointer()-4);
 		System.out.println(Integer.toHexString(rom.getFilePointer()));

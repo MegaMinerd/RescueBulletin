@@ -28,12 +28,10 @@ public class ScriptPane extends AnchorPane{
 		byte[] code = new byte[16];
 		while(true) {
 			offset.setText(offset.getText() + Integer.toHexString(rom.getFilePointer()) + "\n\n");
+
+			data.setText(data.getText() + rom.readAsString(16) + "\n\n");
+			rom.seek(rom.getFilePointer()-16);
 			rom.read(code);
-			String line = "";
-			for(byte b : code) 
-				line +=  String.format("%2x ", (b&0xFF));
-			//System.out.println(line);
-			data.setText(data.getText() + line + "\n\n");
 			desc.setText(desc.getText() + CodeConverter.interpretCommand(code) + "\n");
 			if((code[0]&0xFF)>=0xE8 && (code[0]&0xFF)<=0xF1 && rom.peek()!=0xF4)
 				break;

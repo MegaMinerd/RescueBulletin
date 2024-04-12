@@ -16,7 +16,11 @@ public class SceneFolderController {
 		for(int i=0; i<number; i++) {
 			offset.setText(offset.getText() + Integer.toHexString(rom.getFilePointer()) + "\n");
 			callNum.setText(callNum.getText() + Integer.toHexString(rom.readInt()) + "\n");
+			try {
 			callPointer.setText(callPointer.getText() + Integer.toHexString(rom.parsePointer().getOffset()) + "\n");
+			} catch(NullPointerException e) {
+				callPointer.setText(callPointer.getText() + "000000\n");
+			}
 			sceneNum.setText(sceneNum.getText() + "Scene " + (i+1) + "\n");
 		}
 		return this;

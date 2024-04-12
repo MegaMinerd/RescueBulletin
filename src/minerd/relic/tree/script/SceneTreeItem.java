@@ -57,7 +57,7 @@ public class SceneTreeItem extends FolderTreeItem<GameData> {
 					hasChildren = true;
 				}
 				if(!ptrStrs[i*5 + 3].equals("null")){
-					call.getChildren().add(new ScriptFolderTreeItem("Unknown 3", "", Integer.parseInt(numStrs[i*5 + 3]), Integer.parseInt(ptrStrs[i*5 + 3], 16)));
+					call.getChildren().add(new ScriptFolderTreeItem("Objects", "", Integer.parseInt(numStrs[i*5 + 3]), Integer.parseInt(ptrStrs[i*5 + 3], 16)));
 					hasChildren = true;
 				}
 				if(!ptrStrs[i*5 + 4].equals("null")){

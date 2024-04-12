@@ -10,17 +10,13 @@ import minerd.relic.file.Rom;
 public class CharacterFolderController {
 	public Label data;
 
-	public void load(Pointer pointer, int number) throws IOException {
-		BufferedDataHandler rom = Rom.getAll(); 
+	public CharacterFolderController load(Pointer pointer, int number) throws IOException {
+		BufferedDataHandler rom = Rom.getAll();
 		rom.seek(pointer);
 		data.setText("");
 		for(int i=0; i<number*2; i++) {
-			for(int j=0; j<12; j++) {
-				String next = Integer.toHexString(rom.readByte()&0xFF).toUpperCase();
-				next = next.length()==1 ? "0" + next + "  " :  next + "  ";
-				data.setText(data.getText() + next);
-			}
-			data.setText(data.getText() + "\n");
+			data.setText(data.getText() + rom.readAsString(12, "  ") + "\n");
 		} 
+		return this;
 	}
 }

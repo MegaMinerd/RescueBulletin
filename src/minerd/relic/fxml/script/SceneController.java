@@ -20,11 +20,11 @@ public class SceneController {
 				Pointer ptr =rom.parsePointer();
 				scriptPointer.setText(scriptPointer.getText() + (ptr==null ? "null" : Integer.toHexString(ptr.getOffset()))+ "\n");
 			}
-			scriptType.setText(scriptType.getText() + "Call " + (i+1) + " character data\n");
+			scriptType.setText(scriptType.getText() + "Call " + (i) + " character data\n");
 			scriptType.setText(scriptType.getText() + "Unknown\n");
-			scriptType.setText(scriptType.getText() + "Call " + (i+1) + " camera data\n");
-			scriptType.setText(scriptType.getText() + "Unknown\n");
-			scriptType.setText(scriptType.getText() + "Call " + (i+1) + " main data\n");
+			scriptType.setText(scriptType.getText() + "Call " + (i) + " camera data\n");
+			scriptType.setText(scriptType.getText() + "Call " + (i) + " object data\n");
+			scriptType.setText(scriptType.getText() + "Call " + (i) + " main data\n");
 		}
 	}
 }

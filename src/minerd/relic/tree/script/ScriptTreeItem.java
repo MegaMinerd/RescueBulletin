@@ -1,29 +1,34 @@
 package minerd.relic.tree.script;
 
-import javafx.beans.value.ObservableValue;
+import java.io.IOException;
+
 import javafx.scene.Node;
 import minerd.relic.data.GameData;
-import minerd.relic.tree.FolderTreeItem;
+import minerd.relic.file.BufferedDataHandler;
+import minerd.relic.file.Rom;
+import minerd.relic.fxml.script.ScriptPane;
+import minerd.relic.tree.DataTreeItem;
 
-public class ScriptTreeItem extends FolderTreeItem<GameData> {
+public class ScriptTreeItem extends DataTreeItem<GameData> {
+	int offset;
+	ScriptPane script;
 
-	public ScriptTreeItem(String name, int index, int number, int offset) {
-		super(name, "", FolderTreeItem.class, number, false);
+	public ScriptTreeItem(String name, int offset) {
+		super(name);
+		this.offset = offset;
 	}
 
 	@Override
 	public Node select() {
-		return null;
-	}
-
-	//User expanded the folder
-	public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-		if(!loaded){
-			getChildren().remove(0);
-			for(int i = 0; i<number; i++){
-				//getChildren().add(new FolderTreeItem("Call " + i, "", null, 0, false));
-			}
-			loaded = true;
+        script = new ScriptPane();
+        try{
+        	BufferedDataHandler rom = Rom.getAll();
+        	rom.seek(offset);
+			script.load(rom);
+		} catch(IOException e){
+			e.printStackTrace();
 		}
+        return script;
+       
 	}
 }

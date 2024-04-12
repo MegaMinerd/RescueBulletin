@@ -5,6 +5,6 @@ Allocating Item: 240
 Allocating Move: 413
 Allocating FriendArea: 58
 Allocating Dungeon: 98
+Allocating Starters: 1
 Allocating SceneTreeItem: 31
 Allocating ScriptTreeItem: 0
-189128

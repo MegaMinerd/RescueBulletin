@@ -104,6 +104,10 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
             </Label>
+            <Label text="Params (confidence)" GridPane.columnIndex="7" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Monospaced Regular" size="12.0" />
+               </font></Label>
          </children>
       </GridPane>
    </children>

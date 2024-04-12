@@ -90,6 +90,21 @@ public class BufferedDataHandler implements DataHandler {
 		}
 		return value;
 	}
+	
+	public String readAsString(int length) throws IOException {
+		return readAsString(length, " ");
+	}
+	
+	public String readAsString(int length, String separator) throws IOException {
+		String[] str = new String[length];
+		for(int i = 0; i<length; i++){
+			String sub = Integer.toHexString(readByte() & 0xFF).toUpperCase();
+			if(sub.length()==1)
+				sub = "0" + sub;
+			str[i] = sub;
+		}
+		return String.join(separator, str);
+	}
 
 	/**
 	 * Reads multiple values packed into totalLen bytes
