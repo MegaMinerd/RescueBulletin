@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -9,9 +10,10 @@
 <?import javafx.scene.text.Font?>
 <?scenebuilder-classpath-element ../../../../../bin?>
 
+
 <fx:root type="AnchorPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <GridPane layoutY="4.0">
+      <GridPane>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.0" minWidth="10.0" prefWidth="22.0" />
@@ -24,6 +26,7 @@
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <padding>
@@ -68,46 +71,68 @@
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="offset" lineSpacing="5.0" wrapText="true" GridPane.rowIndex="1">
-               <font>
-                  <Font name="Monospaced Regular" size="12.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <padding>
-                  <Insets bottom="5.0" top="5.0" />
-               </padding>
-            </Label>
-            <Label fx:id="data" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="1">
-               <font>
-                  <Font name="Monospaced Regular" size="12.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <padding>
-                  <Insets bottom="5.0" top="5.0" />
-               </padding>
-            </Label>
-            <Label fx:id="desc" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="7" GridPane.rowIndex="1">
-               <font>
-                  <Font name="Monospaced Regular" size="12.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
-                  <Insets bottom="5.0" top="5.0" />
-               </padding>
-            </Label>
             <Label text="Params (confidence)" GridPane.columnIndex="7" GridPane.rowIndex="1">
                <font>
                   <Font name="Monospaced Regular" size="12.0" />
-               </font></Label>
+               </font>
+            </Label>
+            <ScrollPane GridPane.columnSpan="8" GridPane.rowIndex="2">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="45.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.0" minWidth="10.0" prefWidth="22.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="22.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="44.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="86.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="86.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="86.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label fx:id="offset" lineSpacing="5.0" wrapText="true">
+                           <font>
+                              <Font name="Monospaced Regular" size="12.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="data" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="6">
+                           <font>
+                              <Font name="Monospaced Regular" size="12.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="desc" lineSpacing="5.0" wrapText="true" GridPane.columnIndex="7">
+                           <font>
+                              <Font name="Monospaced Regular" size="12.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </GridPane>
+               </content>
+            </ScrollPane>
          </children>
       </GridPane>
    </children>

@@ -45,11 +45,11 @@ public class SceneTreeItem extends FolderTreeItem<GameData> {
 				FolderTreeItem call = new FolderTreeItem("Call " + i, "", null, 0, false);
 				boolean hasChildren = false;
 				if(!ptrStrs[i*5].equals("null")) {
-					call.getChildren().add(new CharacterFolderTreeItem(Pointer.fromInt(Integer.parseInt(ptrStrs[i*5], 16) + 0x08000000), Integer.parseInt(numStrs[i*5], 16)));
+					call.getChildren().add(new ScriptFolderTreeItem("Characters", "ID", "Rot", Pointer.fromInt(Integer.parseInt(ptrStrs[i*5], 16) + 0x08000000), Integer.parseInt(numStrs[i*5], 16), true));
 					hasChildren = true;
 				}
 				if(!ptrStrs[i*5 + 1].equals("null")){
-					call.getChildren().add(new ScriptFolderTreeItem("Unknown 1", "", Integer.parseInt(numStrs[i*5 + 1]), Integer.parseInt(ptrStrs[i*5 + 1], 16)));
+					call.getChildren().add(new ScriptFolderTreeItem("Objects", "W", "H", Pointer.fromInt(Integer.parseInt(ptrStrs[i*5 + 1], 16) + 0x08000000), Integer.parseInt(numStrs[i*5 + 1], 16), false));
 					hasChildren = true;
 				}
 				if(!ptrStrs[i*5 + 2].equals("null")){
@@ -57,11 +57,11 @@ public class SceneTreeItem extends FolderTreeItem<GameData> {
 					hasChildren = true;
 				}
 				if(!ptrStrs[i*5 + 3].equals("null")){
-					call.getChildren().add(new ScriptFolderTreeItem("Objects", "", Integer.parseInt(numStrs[i*5 + 3]), Integer.parseInt(ptrStrs[i*5 + 3], 16)));
+					//call.getChildren().add(new ScriptFolderTreeItem("Objects", "ID", "Rot", Pointer.fromInt(Integer.parseInt(ptrStrs[i*5 + 3], 16) + 0x08000000), Integer.parseInt(numStrs[i*5 + 3], 16)));
 					hasChildren = true;
 				}
 				if(!ptrStrs[i*5 + 4].equals("null")){
-					call.getChildren().add(new ScriptFolderTreeItem("Main", "The behavior map itself, such as music.", Integer.parseInt(numStrs[i*5 + 4]), Integer.parseInt(ptrStrs[i*5 + 4], 16)));
+					//call.getChildren().add(new ScriptFolderTreeItem("Main", "The behavior map itself, such as music.", Integer.parseInt(numStrs[i*5 + 4]), Integer.parseInt(ptrStrs[i*5 + 4], 16)));
 					hasChildren = true;
 				}
 				//Counting children is buggy. Must check a boolean
