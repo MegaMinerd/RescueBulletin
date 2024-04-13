@@ -158,12 +158,12 @@ public class PokemonController{
         int[] sd = lvmp.getSd();
         
         for(int i=0; i<100; i++) {
-        	expLine.getData().add(new XYChart.Data(i+1, exp[i]));
-        	hpLine.getData().add(new XYChart.Data(i+1, hp[i]));
-        	attLine.getData().add(new XYChart.Data(i+1, att[i]));
-        	defLine.getData().add(new XYChart.Data(i+1, def[i]));
-        	saLine.getData().add(new XYChart.Data(i+1, sa[i]));
-        	sdLine.getData().add(new XYChart.Data(i+1, sd[i]));
+        	expLine.getData().add(new XYChart.Data(i, exp[i]));
+        	hpLine.getData().add(new XYChart.Data(i, hp[i]));
+        	attLine.getData().add(new XYChart.Data(i, att[i]));
+        	defLine.getData().add(new XYChart.Data(i, def[i]));
+        	saLine.getData().add(new XYChart.Data(i, sa[i]));
+        	sdLine.getData().add(new XYChart.Data(i, sd[i]));
         }
         //statGraph.getData().add(expLine);
         statGraph.getData().add(hpLine);

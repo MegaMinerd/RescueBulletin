@@ -31,8 +31,8 @@ public class Levelmap {
 			hp[i] = hp[i-1] + data.readByte();
 			data.skip(1);
 			att[i] = att[i-1] + data.readByte();
-			def[i] =def[i-1] + data.readByte();
 			sa[i] = sa[i-1] + data.readByte();
+			def[i] =def[i-1] + data.readByte();
 			sd[i] = sd[i-1] + data.readByte();
 			data.skip(2);
 		}
