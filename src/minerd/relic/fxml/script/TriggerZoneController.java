@@ -7,16 +7,16 @@ import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
 
-public class CameraController {
-	public Label offset, data, desc;
+public class TriggerZoneController {
+	public Label offset, pointer, data, desc;
 	public ScriptPane script;
 
-	public void load(Pointer pointer, int number) throws IOException {
+	public void load(Pointer ptr) throws IOException {
 		BufferedDataHandler rom = Rom.getAll(); 
-		rom.seek(pointer);
-		
+		rom.seek(ptr);
+
 		offset.setText(Integer.toHexString(rom.getFilePointer()));
-		data.setText(data.getText() + rom.readAsString(12));
+		data.setText(data.getText() + rom.readAsString(12, "  "));
 		
 		rom.seek(rom.getFilePointer()-4);
 		rom.seek(rom.parsePointer());

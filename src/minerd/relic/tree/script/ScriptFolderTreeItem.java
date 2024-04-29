@@ -18,15 +18,16 @@ public class ScriptFolderTreeItem<T extends GameData> extends FolderTreeItem<T> 
 	String a, b;
 	Pointer pointer;
 	int number;
-	boolean hasNames;
+	boolean hasLine2, hasNames;
 	ScriptFolderController controller;
 	
-	public ScriptFolderTreeItem(String name, String a, String b, Pointer pointer, int number, boolean hasNames) {
+	public ScriptFolderTreeItem(String name, String a, String b, Pointer pointer, int number, boolean hasLine2, boolean hasNames) {
 		super(name, "", ScriptTreeItem.class, 0);
 		this.pointer = pointer;
 		this.number = number;
 		this.a = a;
 		this.b = b;
+		this.hasLine2 = hasLine2;
 		this.hasNames = hasNames;
 	}
     
@@ -38,7 +39,7 @@ public class ScriptFolderTreeItem<T extends GameData> extends FolderTreeItem<T> 
             folderPane = loader.load();
             ScriptFolderController cont = loader.getController();
             
-            controller = cont.load(a, b, pointer, number);
+            controller = cont.load(a, b, pointer, number, hasLine2);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,16 +55,28 @@ public class ScriptFolderTreeItem<T extends GameData> extends FolderTreeItem<T> 
 			try{
 				rom = Rom.getAll();
 				rom.seek(pointer);
-				for(int i = 0; i<number; i++){
-					String name = hasNames ? Text.getText("Actors", rom.readByte() & 0xFF) : "Object " + i;
-					FolderTreeItem actor = new FolderTreeItem(name, "");
-					rom.skip(hasNames ? 7 : 8);
-					for(int j = 0; j<4; j++){
-						Pointer ptr = rom.parsePointer();
-						if(ptr!=null)
-							actor.getChildren().add(new ScriptTreeItem("Script " + j, ptr.getOffset()));
+
+				if(!controller.s2.getText().equals("")){
+					// hasLine2 was true
+					for(int i = 0; i<number; i++){
+						String name = hasNames ? Text.getText("Actors", rom.readByte() & 0xFF) : "Object " + i;
+						FolderTreeItem actor = new FolderTreeItem(name, "");
+						rom.skip(hasNames ? 7 : 8);
+						for(int j = 0; j<4; j++){
+							Pointer ptr = rom.parsePointer();
+							if(ptr!=null){
+								actor.getChildren().add(new ScriptTreeItem("Script " + j, ptr.getOffset()));
+							}
+						}
+						getChildren().add(actor);
 					}
-					getChildren().add(actor);
+				} else{
+					// hasLine2 was false
+					for(int i = 0; i<number; i++){
+						rom.skip(8);
+						TriggerZoneTreeItem actor = new TriggerZoneTreeItem(i, rom.parsePointer());
+						getChildren().add(actor);
+					}
 				}
 			} catch(IOException e){
 				// TODO Auto-generated catch block

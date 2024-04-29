@@ -6,12 +6,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.util.CodeConverter;
 
 public class ScriptPane extends AnchorPane{
 	@FXML
 	public Label offset, data, desc;
+	public GridPane codegrid;
 	
 	public ScriptPane() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/script/ScriptPane.fxml"));
@@ -27,12 +29,18 @@ public class ScriptPane extends AnchorPane{
 	public void load(BufferedDataHandler rom) throws IOException {
 		byte[] code = new byte[16];
 		while(true) {
+			int lines = 0;
 			offset.setText(offset.getText() + Integer.toHexString(rom.getFilePointer()) + "\n\n");
 
 			data.setText(data.getText() + rom.readAsString(16) + "\n\n");
 			rom.seek(rom.getFilePointer()-16);
 			rom.read(code);
 			desc.setText(desc.getText() + CodeConverter.interpretCommand(code) + "\n");
+			
+			lines++;
+			
+			codegrid.setPrefHeight(lines * 20);
+			
 			if((code[0]&0xFF)>=0xE8 && (code[0]&0xFF)<=0xF1 && rom.peek()!=0xF4)
 				break;
 		}
