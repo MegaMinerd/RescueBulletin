@@ -1,4 +1,4 @@
-module RescueRelic {
+module RescueBulletin {
 	requires java.desktop;
 	requires javafx.base;
     requires javafx.fxml;
