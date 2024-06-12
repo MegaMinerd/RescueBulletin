@@ -1,7 +1,7 @@
 # RescueBulletin
 
 ## Installation
-This program requires Java 11. You csn check version by typing "java --version" into the command prompt. Make sure your java installation is listed in your system's PATH variable.
+This program requires Java 11. You can check version by typing "java --version" into the command prompt. Make sure your java installation is listed in your system's PATH variable.
 https://www.java.com/en/download/
 https://www.java.com/en/download/help/path.html
 ## Features
