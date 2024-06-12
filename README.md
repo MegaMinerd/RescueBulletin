@@ -1,7 +1,9 @@
 # RescueBulletin
 
 ## Installation
-This program requires Java 11. Download the latest JDK or a JRE that supports Java 11. Don't forget to update your system's PATH variable.
+This program requires Java 11. You csn check version by typing "java --version" into the command prompt. Make sure your java installation is listed in your system's PATH variable.
+https://www.java.com/en/download/
+https://www.java.com/en/download/help/path.html
 ## Features
 * Ability to edit and randomize PMD: Red Rescue Team (US/Aus)
 
