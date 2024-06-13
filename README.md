@@ -6,6 +6,8 @@ https://www.java.com/en/download/
 https://www.java.com/en/download/help/path.html
 ## Features
 * Ability to edit and randomize PMD: Red Rescue Team (US/Aus)
+Note: Some randomizer settings require an extra patch.
+https://www.pokecommunity.com/threads/patch-for-crash-when-using-a-modified-player-partner-in-pmd-rrt.493301/
 
 ## Goals
 These are in order of importance

@@ -269,7 +269,9 @@ public class RandomizerController {
 					rom.seek(RrtOffsetList.encountersOffset + 4*i);
 					rom.seek(rom.parsePointer());
 					EncounterList list = new EncounterList(rom);
-					for(Encounter mon : list.getEntries()){
+					//Can't be foreach. The last 2 must be skipped to avoid a crash.
+					for(int j=0; j<list.getEntries().size()-2; j++){
+						Encounter mon = list.getEntries().get(j);
 						mon.setId((int) (Math.random()*415.0+1));
 						if(Arrays.binarySearch(legendaries, mon.getId())>=0 && Math.random()>0.5f)
 							mon.setId((int) (Math.random()*415.0+1));
