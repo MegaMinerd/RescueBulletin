@@ -19,43 +19,49 @@ public class Text extends GameData {
 		textLists = new HashMap<String, String[]>();
 
 		String[] natures = {
-		        "Hardy", 	"Docile", 	"Brave", 	"Jolly", 	"Impish", 
-		        "Naive", 	"Timid", 	"Hasty", 	"Sassy", 	"Calm", 
-		        "Relaxed", 	"Lonely", 	"Quirky"
+		        "Hardy",    "Docile",   "Brave",    "Jolly",    "Impish", 
+		        "Naive",    "Timid",    "Hasty",    "Sassy",    "Calm", 
+		        "Relaxed",  "Lonely",   "Quirky"
 		};
 		textLists.put("Natures", natures);
 		
 		String[] itemTypes = {
-				"Throwable", "Rock",  	"Berry/Seed", 	"Apple/Gummi", 	"Hold Item", 
-				"TM", 		 "Money",	"Unused", 		"Misc.", 		"Orb", 
+				"Throwable", "Rock",    "Berry/Seed",   "Apple/Gummi",  "Hold Item", 
+				"TM",        "Money",   "Unused",       "Misc.",        "Orb", 
 				"Link Box",  "Used TM"
 		};
 		textLists.put("Item Types", itemTypes);
 		
 		String[] actors = {
-				"Player",		"Unknown 01",	"Unknown 02",	"Unknown 03",	"Unknown 04",	"Unknown 05",	"Unknown 06",	"Unknown 07",
-				"Unknown 08",	"Unknown 09",	"Teammate 2",	"Teammate 3",	"Unknown 0C",	"Unknown 0D",	"Inhabitant 0",	"Inhabitant 1",
-				"Inhabitant 2",	"Inhabitant 3",	"Inhabitant 4",	"Inhabitant 5",	"Inhabitant 6",	"Inhabitant 7",	"Inhabitant 8",	"Inhabitant 9",
-				"Inhabitant A",	"Inhabitant B",	"Inhabitant C",	"Inhabitant D",	"Inhabitant E",	"Inhabitant F",	"Client 0",		"Client 1",
-				"Unknown 20",	"Unknown 21",	"Partner",		"Unknown 23",	"Random",		"Wartortle",	"Blastoise 0)",	"Meowth",
-				"Lickitung",	"Jirachi 0",	"Hypno",		"Noctowl",		"Metapod 0",	"Jirachi 1",	"Wigglytuff 0",	"Pelipper 0",
-				"Pelipper 1",	"Pelipper 2",	"Pelipper 3",	"Azumarill",	"Unknown 34",	"Butterfree",	"Caterpie",		"Pelipper 4",	
-				"Pelipper 5",	"Pelipper 6",	"Pelipper 7",	"Pelipper 8",	"Magnemite 0",	"Magnemite 1",	"Magnemite 2", 	"Magneton",	
-				"Magnemite 3",	"Magnemite 4",	"Dugtrio 0",	"Dugtrio 1",	"Diglett",		"Skarmory",		"Green Kecleon","Purple Kecleon",	
-				"Persian",		"Wigglytuff 1",	"Gulpin 0",		"Kangaskhan",	"Gulpin 1",		"Lombre",		"Jumpluff 0",	"Bellsprout",	
-				"Snubbull",		"Granbull",		"Gardevoir",	"Absol",		"Makuhita",		"Shiftry",		"Nuzleaf 0",	"Nuzleaf 1",	
-				"Alakazam",		"Charizard",	"Tyranitar",	"Gengar",		"Ekans",		"Medicham",		"Metapod 1",	"Jumpluff 1",	
-				"Zapdos",		"Xatu",			"Wishcash",		"Ninetales",	"Decoy",		"Moltres",		"Articuno",		"Groudon",
-				"Blastoise 1",	"Octillery",	"Golem",		"Blastoise 2",	"Rayquaza",		"Wynaut",		"Wobbuffet",	"Mankey 0",	
-				"Mankey 1",		"Mankey 2",		"Mankey 3",		"Spinda",		"Entei",		"Raikou",		"Suicune",		"Ho oh",	
-				"Mewtwo",		"Latios",		"Latias",		"Jirachi 2",	"Smeargle 0",	"Smeargle 1",	"Smeargle 2",	"MunchlaX",
-				"Mew",			"Regirock",		"Regice",		"Registeel",	"Kyogre",		"Lugia",		"Deoxys",		"Raichu",	
-				"Golbat",		"Rhydon",		"Mr Mime",		"Scyther",		"Pinsir",		"Meganium",		"Aipom",		"Phanpy",	
-				"Merchant 0",	"Merchant 1",	"Unknown 92",	"Donphan"
+				"Player",       "Unknown 01",   "Unknown 02",   "Unknown 03",   "Unknown 04",   "Unknown 05",   "Unknown 06",   "Unknown 07",
+				"Unknown 08",   "Unknown 09",   "Teammate 2",   "Teammate 3",   "Unknown 0C",   "Unknown 0D",   "Inhabitant 0", "Inhabitant 1",
+				"Inhabitant 2", "Inhabitant 3", "Inhabitant 4", "Inhabitant 5", "Inhabitant 6", "Inhabitant 7", "Inhabitant 8", "Inhabitant 9",
+				"Inhabitant A", "Inhabitant B", "Inhabitant C", "Inhabitant D", "Inhabitant E", "Inhabitant F", "Client 0",     "Client 1",
+				"Unknown 20",   "Unknown 21",   "Partner",      "Unknown 23",   "Random",       "Wartortle",    "Blastoise 0)", "Meowth",
+				"Lickitung",    "Jirachi 0",    "Hypno",        "Noctowl",      "Metapod 0",    "Jirachi 1",    "Wigglytuff 0", "Pelipper 0",
+				"Pelipper 1",   "Pelipper 2",   "Pelipper 3",   "Azumarill",    "Unknown 34",   "Butterfree",   "Caterpie",     "Pelipper 4",    
+				"Pelipper 5",   "Pelipper 6",   "Pelipper 7",   "Pelipper 8",   "Magnemite 0",  "Magnemite 1",  "Magnemite 2",  "Magneton",    
+				"Magnemite 3",  "Magnemite 4",  "Dugtrio 0",    "Dugtrio 1",    "Diglett",      "Skarmory",     "Green Kecleon","Purple Kecleon",    
+				"Persian",      "Wigglytuff 1", "Gulpin 0",     "Kangaskhan",   "Gulpin 1",     "Lombre",       "Jumpluff 0",   "Bellsprout",    
+				"Snubbull",     "Granbull",     "Gardevoir",    "Absol",        "Makuhita",     "Shiftry",      "Nuzleaf 0",    "Nuzleaf 1",    
+				"Alakazam",     "Charizard",    "Tyranitar",    "Gengar",       "Ekans",        "Medicham",     "Metapod 1",    "Jumpluff 1",    
+				"Zapdos",       "Xatu",         "Wishcash",     "Ninetales",    "Decoy",        "Moltres",      "Articuno",     "Groudon",
+				"Blastoise 1",  "Octillery",    "Golem",        "Blastoise 2",  "Rayquaza",     "Wynaut",       "Wobbuffet",    "Mankey 0",    
+				"Mankey 1",     "Mankey 2",     "Mankey 3",     "Spinda",       "Entei",        "Raikou",       "Suicune",      "Ho oh",    
+				"Mewtwo",       "Latios",       "Latias",       "Jirachi 2",    "Smeargle 0",   "Smeargle 1",   "Smeargle 2",   "MunchlaX",
+				"Mew",          "Regirock",     "Regice",       "Registeel",    "Kyogre",       "Lugia",        "Deoxys",       "Raichu",    
+				"Golbat",       "Rhydon",       "Mr Mime",      "Scyther",      "Pinsir",       "Meganium",     "Aipom",        "Phanpy",    
+				"Merchant 0",   "Merchant 1",   "Unknown 92",   "Donphan"
 		};
 		textLists.put("Actors", actors);
 				
-		
+		String[] generators = {
+				"1/2 Width Standard",   "Single Monster House", "Dense Middle Rooms",   "Dense Middle Halls",   
+				"Double Monster House", "Line of Five Rooms",   "Rooms in a Cross",     "Full Width Standard",  
+				"Big Middle Room",      "Rooms in a Circle",    "3/4 Width Standard"
+		};
+
+		textLists.put("Generators", generators);
 
 		textLists.put("Traps", readTextTable(0x0F91F0, 20));
 		textLists.put("Weather", readTextTable(0x0F9A54, 8));
