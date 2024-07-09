@@ -86,7 +86,7 @@ public class BufferedDataHandler implements DataHandler {
 	public long read(int length) throws IOException {
 		long value = 0;
 		for(int i = 0; i<length; i++){
-			value |= (buffer.get() & 0xFF) << (8*i);
+			value = (value << 8) | (buffer.get() & 0xFF);
 		}
 		return value;
 	}
@@ -134,10 +134,7 @@ public class BufferedDataHandler implements DataHandler {
 	 * @throws InvalidPointerException If the bytes read are not a valid pointer
 	 */
 	public Pointer parsePointer() throws IOException, InvalidPointerException {
-		int[] output = readMask(4, 27, 5);
-		if(output[1]>2)
-			throw new InvalidPointerException(getFilePointer());
-		return (output[1]==0 && output[0]==0) ? null : new Pointer(output[0], output[1]==1);
+		return  new Pointer(readInt(), true);
 	}
 
 	public String readString() throws IOException {

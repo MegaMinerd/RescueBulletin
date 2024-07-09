@@ -21,16 +21,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import minerd.relic.data.Cache;
-import minerd.relic.data.FriendArea;
-import minerd.relic.data.Item;
-import minerd.relic.data.Move;
-import minerd.relic.data.Pokemon;
 import minerd.relic.file.Rom;
 import minerd.relic.tree.DataTreeItem;
 import minerd.relic.tree.DungeonFolderTreeItem;
 import minerd.relic.tree.FolderTreeItem;
-import minerd.relic.tree.ListsFolderTreeItem;
-import minerd.relic.tree.script.MapFolderTreeItem;
 
 public class mainController implements Initializable {
 	FileChooser fc;
@@ -68,16 +62,16 @@ public class mainController implements Initializable {
 	public void reloadTree() throws IOException {
 		root = new FolderTreeItem(Rom.getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
-		root.getChildren().add(new ListsFolderTreeItem());
-		root.getChildren().add(new MapFolderTreeItem());
-		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424));
-		Cache.alloc("Learnset", 424);
-		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240));
-		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413));
+		//root.getChildren().add(new ListsFolderTreeItem());
+		//root.getChildren().add(new MapFolderTreeItem());
+		//root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424));
+		//Cache.alloc("Learnset", 424);
+		//root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240));
+		//root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413));
 		//root.getChildren().add(new FolderTreeItem<Map>("Map Backgrounds", "This section lets you edit map backgrounds.", Map.class, -1));
 		//root.getChildren().add(new FolderTreeItem<Sprite>("Object Sprites", "This section lets you import and export object sprites.", Sprite.class, -1));
 		//root.getChildren().add(new FolderTreeItem<Background>("Backgrounds", "This section lets you edit backgrounds.", Background.class, -1));
-		root.getChildren().add(new FolderTreeItem<FriendArea>("Friend Areas", "This section lets you edit friend areas in the game.", FriendArea.class, 58));
+		//root.getChildren().add(new FolderTreeItem<FriendArea>("Friend Areas", "This section lets you edit friend areas in the game.", FriendArea.class, 58));
 		root.getChildren().add(new DungeonFolderTreeItem());
 		//root.getChildren().add(new FolderTreeItem<FixedRoom>("Fixed Rooms", "This section lets you edit fixed rooms.", FixedRoom.class, -1));
 		//root.getChildren().add(new FolderTreeItem<Tileset>("Dungeon Tilesets", "This section lets you edit the graphics of dungeon tiles.", Tileset.class, -1));
@@ -91,7 +85,10 @@ public class mainController implements Initializable {
 				Rom.load(file);
 				reloadAll();
 			} catch(IOException fnfe){
+				System.out.println("fnfe");
 			}
+		}else {
+			System.out.println("null file");
 		}
 	}
 

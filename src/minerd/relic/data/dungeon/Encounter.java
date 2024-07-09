@@ -45,7 +45,11 @@ public class Encounter {
 	}
 
 	public String getSpecies() {
-		return Text.getText("Pokemon", id);
+		try {
+			return Text.getText("Pokemon", id);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return id + "";
+		}
 	}
 	
 	public String getFloorPercent() {
@@ -56,3 +60,4 @@ public class Encounter {
 		return (houseProb/100.0)+"%";
 	}
 }
+

@@ -81,14 +81,14 @@ public class FloorController {
 		shopTableId.setText(floor.getShopTableId() + "");
 		houseTableId.setText(floor.getHouseTableId() + "");
 		buriedTableId.setText(floor.getBuriedTableId() + "");
-		loadLoot(floor.getFloorLoot(), 	floorCategoryId,	floorCategoryName, 	floorCategoryWeight, 	floorCategoryChance, 	floorCategoryTable,
-				 floorItemId, 			floorItemCat, 		floorItemName, 		floorItemWeight, 		floorItemChance, 		floorItemTable);
-		loadLoot(floor.getShopLoot(), 	shopCategoryId, 	shopCategoryName, 	shopCategoryWeight, 	shopCategoryChance, 	shopCategoryTable,
-				 shopItemId, 			shopItemCat, 		shopItemName, 		shopItemWeight, 		shopItemChance, 		shopItemTable);
-		loadLoot(floor.getHouseLoot(), 	houseCategoryId, 	houseCategoryName, 	houseCategoryWeight, 	houseCategoryChance,	houseCategoryTable,
-				houseItemId, 			houseItemCat, 		houseItemName, 		houseItemWeight, 		houseItemChance,		houseItemTable);
-		loadLoot(floor.getBuriedLoot(), buriedCategoryId, 	buriedCategoryName, buriedCategoryWeight, 	buriedCategoryChance, 	buriedCategoryTable,
-				buriedItemId, 			buriedItemCat, 		buriedItemName, 	buriedItemWeight, 		buriedItemChance, 		buriedItemTable);
+		//loadLoot(floor.getFloorLoot(), 	floorCategoryId,	floorCategoryName, 	floorCategoryWeight, 	floorCategoryChance, 	floorCategoryTable,
+		//		 floorItemId, 			floorItemCat, 		floorItemName, 		floorItemWeight, 		floorItemChance, 		floorItemTable);
+		//loadLoot(floor.getShopLoot(), 	shopCategoryId, 	shopCategoryName, 	shopCategoryWeight, 	shopCategoryChance, 	shopCategoryTable,
+		//		 shopItemId, 			shopItemCat, 		shopItemName, 		shopItemWeight, 		shopItemChance, 		shopItemTable);
+		//loadLoot(floor.getHouseLoot(), 	houseCategoryId, 	houseCategoryName, 	houseCategoryWeight, 	houseCategoryChance,	houseCategoryTable,
+		//		houseItemId, 			houseItemCat, 		houseItemName, 		houseItemWeight, 		houseItemChance,		houseItemTable);
+		//loadLoot(floor.getBuriedLoot(), buriedCategoryId, 	buriedCategoryName, buriedCategoryWeight, 	buriedCategoryChance, 	buriedCategoryTable,
+		//		buriedItemId, 			buriedItemCat, 		buriedItemName, 	buriedItemWeight, 		buriedItemChance, 		buriedItemTable);
 	}
 
 	public void loadLayout(Floor floor) {

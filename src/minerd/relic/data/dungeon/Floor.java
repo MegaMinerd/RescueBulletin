@@ -24,15 +24,13 @@ public class Floor extends GameData {
 	private TrapList traps;
 	private LootList floorLoot, shopLoot, houseLoot, buriedLoot;
 
-	public Floor(int absIndex, int relIndex, int dunIndex) {
-		this.absIndex = absIndex;
+	public Floor(int relIndex, int dunIndex, int offset) {
 		this.relIndex = relIndex;
 		this.dungeonIndex = dunIndex;
 		try{
 			BufferedDataHandler rom = Rom.getAll();
-			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
-			rom.seek(rom.parsePointer());
-			rom.skip(16*relIndex+16);
+			rom.seek(offset);
+			System.out.println(Integer.toHexString(rom.getFilePointer()));
 			layoutId = rom.readUnsignedShort();
 			pokemonTableId = rom.readUnsignedShort();
 			trapListId = rom.readUnsignedShort();
@@ -41,7 +39,7 @@ public class Floor extends GameData {
 			houseTableId = rom.readUnsignedShort();
 			buriedTableId = rom.readUnsignedShort();
 
-			rom.seek(RrtOffsetList.layoutOffset + layoutId*0x1C);
+			rom.seek(RrtOffsetList.layoutOffset + layoutId*0x28);
 			loadLayout(rom);
 
 			encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId, RrtOffsetList.encountersOffset, rom, EncounterList.class);
@@ -51,7 +49,7 @@ public class Floor extends GameData {
 			houseLoot = (LootList) loadSubdata("LootList", houseTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
 			buriedLoot = (LootList) loadSubdata("LootList", buriedTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
 			
-			Cache.add("Floor", absIndex, this);
+			//Cache.add("Floor", relIndex, this);
 		} catch(IOException e){
 			e.printStackTrace();
 		}
@@ -60,7 +58,7 @@ public class Floor extends GameData {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private GameData loadSubdata(String cacheListName, int index, int offset, BufferedDataHandler rom, Class cacheClass)
 			throws IOException, InvalidPointerException {
-		GameData data = Cache.get(cacheListName, index);
+		GameData data = null;//Cache.get(cacheListName, index);
 		if(data==null){
 			rom.seek(offset + index*0x4);
 			rom.seek(rom.parsePointer());
@@ -70,7 +68,7 @@ public class Floor extends GameData {
 					| InvocationTargetException | NoSuchMethodException | SecurityException e){
 				e.printStackTrace();
 			}
-			Cache.add(cacheListName, index, data);
+			//Cache.add(cacheListName, index, data);
 		}
 		return data;
 	}

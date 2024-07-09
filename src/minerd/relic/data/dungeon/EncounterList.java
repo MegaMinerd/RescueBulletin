@@ -16,15 +16,16 @@ public class EncounterList extends GameData {
 		entries = new ArrayList<Encounter>();
 		while(rom.read(8)!=0){
 			rom.seek(rom.getFilePointer() - 8);
-			int[] mon = rom.readMask(2, 9, 7);
+			int level = rom.readByte() >> 1;
+			rom.skip(1);
 			int prob = rom.readUnsignedShort();
 			prob = Math.max(prob - lastProb, 0);
 			lastProb += prob;
 			int houseProb = rom.readUnsignedShort();
 			houseProb = Math.max(houseProb - lastHouseProb, 0);
 			lastHouseProb += houseProb;
-			Encounter entry = new Encounter(mon[0], mon[1], prob, houseProb);
-			rom.skip(2);
+			int species = rom.readShort() - 1;
+			Encounter entry = new Encounter(species, level, prob, houseProb);
 			entries.add(entry);
 		}
 	}

@@ -9,17 +9,16 @@ import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.data.dungeon.Dungeon;
 import minerd.relic.data.dungeon.Floor;
+import minerd.relic.file.BufferedDataHandler;
+import minerd.relic.file.Rom;
+import minerd.relic.util.RrtOffsetList;
 
 public class DungeonDataTreeItem extends FolderTreeItem<Floor> {
 	private int index, floorIndex;
 
-	public DungeonDataTreeItem(String dunName, int index, int floorIndex, int floors) {
-		super(dunName, "", Floor.class, floors, false);
+	public DungeonDataTreeItem(String dunName, int index) {
+		super(dunName, "", Floor.class, 1, false);
 		this.index = index;
-		this.floorIndex = floorIndex;
-
-		if(index>63)
-			getChildren().remove(0);
 	}
 
 	@Override
@@ -42,11 +41,24 @@ public class DungeonDataTreeItem extends FolderTreeItem<Floor> {
 	@Override
 	public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
 		if(!loaded){
-			getChildren().remove(0);
-			for(int i = 0; i<number; i++){
-				getChildren().add(new FloorDataTreeItem("Floor " + (i+1), floorIndex+i, i, index));
+			try{
+				getChildren().remove(0);
+				BufferedDataHandler rom = Rom.getAll();
+				rom.seek(RrtOffsetList.floorOffset);
+				rom.skip(index * 4);
+				rom.seek(rom.parsePointer());
+				rom.skip(16);
+
+				for(int i = 0; i<99; i++){
+					long temp = rom.read(8) + rom.read(8);
+					if(temp == 0)
+						break;
+					getChildren().add(new FloorDataTreeItem("Floor " + (i+1), i, index, rom.getFilePointer()-16));
+				}
+				loaded = true;
+			} catch(IOException e){
+				e.printStackTrace();
 			}
-			loaded = true;
 		}
 	}
 }
