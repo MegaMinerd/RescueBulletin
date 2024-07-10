@@ -16,7 +16,7 @@ public class RrtOffsetList {
 	public static int floorSiroOffset = 0x004A2BF4;
 	public static int floorOffset = 0x7100;
 	public static int layoutOffset = 0x7290;
-	public static int lootsOffset = 0x004CB56C;//03A400
+	public static int lootsOffset = 0x03A400;
 	public static int encountersOffset = 0x02BC70;
-	public static int trapsOffset = 0x004C4ED8;
+	public static int trapsOffset = 0x02DD54;
 }

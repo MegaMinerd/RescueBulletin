@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import javafx.scene.layout.Region;
-import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Item;
 import minerd.relic.file.BufferedDataHandler;
@@ -44,11 +43,7 @@ public class LootList extends GameData {
 				categories.add(cat);
 				lastValue = value;
 			} else{
-				Item item = (Item) Cache.get("Item", key - catNum);
-				if(item==null){
-					item = new Item(key - catNum);
-					Cache.add("Item", key - catNum, item);
-				}
+				Item item = new Item(key - catNum);
 				int lootCat = item.getItemType();
 				Loot loot = new Loot(key - catNum, value - catWeights[lootCat]);
 				loots.add(loot);

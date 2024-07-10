@@ -21,7 +21,7 @@ public class Loot {
 	}
 	
 	public int getCategory() {
-		return ((Item)Cache.get("Item", id)).getItemType();
+		return 0;//((Item)Cache.get("Item", id)).getItemType();
 	}
     
 	public String getName() {

@@ -23,7 +23,7 @@ public class DungeonFolderTreeItem extends FolderTreeItem<Dungeon> {
 			loaded = true;
 			Cache.alloc("Floor", 1764);
 			Cache.alloc("EncounterList", 839);
-			Cache.alloc("LootList", 178);
+			Cache.alloc("LootList", 176);
 			Cache.alloc("TrapList", 148);
 		}
 	}

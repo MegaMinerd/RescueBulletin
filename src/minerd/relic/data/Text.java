@@ -154,8 +154,16 @@ public class Text extends GameData {
 				"",                        "Mythic Mountain",        "",                        "Final Cavern"         
 		};
 		textLists.put("Dungeons", dungeons);
+		
+		String[] traps = {
+				"Secret",           "Mud Trap",         "Sticky Trap",      "Grimy Trap",       "Summon Trap",      
+				"Pitfall Trap",     "Warp Trap",        "Gust Trap",        "Spin Trap",        "Slumber Trap",     
+				"Slow Trap",        "Seal Trap",        "Poison Trap",      "Selfdestruct Trap","Explosion Trap",   
+				"PP Leech Trap",    "Chestnut Trap",    "Wonder Tile",      "Pokemon Trap",     "Spiked Tile",      
+				"Stealth Rock",     "Toxic Spikes",     "Trip Trap",        "Random Trap",      "Grudge Trap"       
+		};
+		textLists.put("Traps", traps);
 
-		textLists.put("Traps", readTextTable(0x0F91F0, 20));
 		textLists.put("Weather", readTextTable(0x0F9A54, 8));
 		textLists.put("Types", readTextTable(0x10AD4C, 18));
 		textLists.put("Abilities", readTextTable(0x10B4C8, 77));

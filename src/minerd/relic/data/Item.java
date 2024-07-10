@@ -41,7 +41,7 @@ public class Item extends GameData {
 			maxAmnt = rom.readUnsignedByte();
 			paletteId = rom.readUnsignedByte();
 			actionType = rom.readUnsignedByte();
-			Cache.add("Item", index, this);
+			//Cache.add("Item", index, this);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}

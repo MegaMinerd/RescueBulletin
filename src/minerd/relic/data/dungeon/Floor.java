@@ -58,7 +58,7 @@ public class Floor extends GameData {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private GameData loadSubdata(String cacheListName, int index, int offset, BufferedDataHandler rom, Class cacheClass)
 			throws IOException, InvalidPointerException {
-		GameData data = null;//Cache.get(cacheListName, index);
+		GameData data = Cache.get(cacheListName, index);
 		if(data==null){
 			rom.seek(offset + index*0x4);
 			rom.seek(rom.parsePointer());
@@ -68,7 +68,7 @@ public class Floor extends GameData {
 					| InvocationTargetException | NoSuchMethodException | SecurityException e){
 				e.printStackTrace();
 			}
-			//Cache.add(cacheListName, index, data);
+			Cache.add(cacheListName, index, data);
 		}
 		return data;
 	}
