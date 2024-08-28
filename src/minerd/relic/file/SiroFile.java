@@ -1,6 +1,8 @@
 package minerd.relic.file;
 
-public class SiroFile {
+import java.io.IOException;
+
+public class SiroFile extends BufferedDataHandler {
 	private SiroSegment head;
 	private int offset;
 
@@ -9,6 +11,7 @@ public class SiroFile {
 	 * @param offset The location of this file in the full rom
 	 */
 	public SiroFile(int offset, SiroSegment head) {
+		super(null);
 		this.offset = offset;
 		this.head = head;
 	}

@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 
 public class SiroFactory {
 	/**
-	 * Reads a data of fixed entry length from a pointer table
+	 * Reads data of fixed entry length from a pointer table
 	 * 
 	 * @param buffer    The data buffer read from
 	 * @param parent    The SiroSegment that will store this data
@@ -44,13 +44,12 @@ public class SiroFactory {
 		buffer.seek(4);
 		int dataStart = buffer.parsePointer().relativeTo(offset).getOffset();
 		buffer.skip(8);
-		SiroSegment descs = readStringList(buffer, offset, 16, dataStart, false);
+		SiroSegment descs = readStringList(buffer, offset + 16, 16, dataStart, false);
 		head.addChild("descs", descs);
 		SiroSegment items = new SiroSegment(dataStart);
 		int index = 0;
 		byte[] data = new byte[0x20];
 		while(true){
-			System.out.println(Integer.toHexString(buffer.getFilePointer()));
 			buffer.skip(3);
 			int test = buffer.readByte();
 			buffer.seek(buffer.getFilePointer() - 4);
@@ -64,8 +63,85 @@ public class SiroFactory {
 			}
 		}
 		head.addChild("items", items);
-		SiroSegment names = readStringList(buffer, offset, buffer.getFilePointer(), buffer.length(), true);
+		SiroSegment names = readStringList(buffer, offset + buffer.getFilePointer(), buffer.getFilePointer(), buffer.length(), true);
 		head.addChild("names", names);
+		return new SiroFile(offset, head);
+	}
+
+	//357B88 to 360BF4
+	public static SiroFile buildPokemonSiro(BufferedDataHandler buffer, int offset) throws IOException {
+		SiroSegment head = new SiroSegment(offset);
+		buffer.seek(16);
+		SiroSegment pokemon = new SiroSegment(offset + 16);
+		int index = 0;
+		byte[] data = new byte[0x48];
+		while(true){
+			buffer.skip(3);
+			int test = buffer.readByte();
+			buffer.seek(buffer.getFilePointer() - 4);
+			if(test==8 || test==9){
+				int off = buffer.getFilePointer();
+				buffer.read(data);
+				pokemon.addChild(index + "", new SiroSegment(off, new BufferedDataHandler(ByteBuffer.wrap(data))));
+				index++;
+			} else{
+				break;
+			}
+		}
+		head.addChild("pokemon", pokemon);
+		SiroSegment strings = readStringList(buffer, offset + buffer.getFilePointer(), buffer.getFilePointer(), buffer.length(), true);
+		head.addChild("strings", strings);
+		return new SiroFile(offset, head);
+	}
+
+	//360BF4 to 37333F
+	public static SiroFile buildMoveSiro(BufferedDataHandler buffer, int offset) throws IOException {
+		SiroSegment head = new SiroSegment(offset);
+		//Parse header
+		buffer.seek(4);
+		Pointer footerPtr = buffer.parsePointer();
+
+		//Parse footer
+		buffer.seek(footerPtr.relativeTo(offset));
+		Pointer movePtr = buffer.parsePointer();
+		Pointer learnsetPtr = buffer.parsePointer();
+
+		//Parse learnsets
+		byte[] data;
+		SiroSegment learnsets = new SiroSegment(learnsetPtr.getOffset());
+		for(int i = 0; i<424; i++){
+			buffer.seek(learnsetPtr.relativeTo(offset).getOffset() + 8*i);
+			int off1 = buffer.parsePointer().getOffset();
+			int off2 = buffer.parsePointer().getOffset();
+			int off3 = buffer.parsePointer().getOffset();
+			SiroSegment learnset = new SiroSegment(off1, null);
+			buffer.seek(off1);
+			data = new byte[off2 - off1];
+			buffer.read(data);
+			learnset.addChild("lv", new SiroSegment(off1, new BufferedDataHandler(ByteBuffer.wrap(data))));
+			buffer.seek(off2);
+			data = new byte[off3 - off2];
+			buffer.read(data);
+			learnset.addChild("tm", new SiroSegment(off2, new BufferedDataHandler(ByteBuffer.wrap(data))));
+			learnsets.addChild(i + "", learnset);
+		}
+		head.addChild("learnsets", learnsets);
+
+		//Parse moves
+		buffer.seek(movePtr.relativeTo(offset));
+		SiroSegment moves = new SiroSegment(movePtr.getOffset());
+		data = new byte[0x48];
+		for(int i = 0; i<413; i++){
+			int off = buffer.getFilePointer();
+			buffer.read(data);
+			moves.addChild(i + "", new SiroSegment(off, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		}
+		head.addChild("moves", moves);
+
+		//Parse strings
+		SiroSegment strings = readStringList(buffer, offset + buffer.getFilePointer(), buffer.getFilePointer(), learnsetPtr.getOffset(), true);
+		head.addChild("strings", strings);
+
 		return new SiroFile(offset, head);
 	}
 

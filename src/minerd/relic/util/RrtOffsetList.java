@@ -1,5 +1,6 @@
 package minerd.relic.util;
 
+@Deprecated
 public class RrtOffsetList {
 	public static int playersOffset = 0x000F278E;
 	public static int partnersOffset = 0x000F4264;
