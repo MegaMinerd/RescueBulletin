@@ -10,9 +10,10 @@ public class SiroFactory {
 	 * @param buffer    The data buffer read from
 	 * @param parent    The SiroSegment that will store this data
 	 * @param childSize The length of each entry
-	 * @param childNum  The number of entrie
+	 * @param childNum  The number of entries
 	 * @param Pointer   A pointer to the table
 	 **/
+	@Deprecated
 	private static void populateFromTable(BufferedDataHandler buffer, SiroSegment parent, int childSize, int childNum, Pointer table) throws IOException {
 		for(int i = 0; i<childNum; i++){
 			byte[] data = new byte[childSize];
@@ -21,6 +22,69 @@ public class SiroFactory {
 			buffer.read(data);
 			parent.addChild(i + "", new SiroSegment(offset, new BufferedDataHandler(ByteBuffer.wrap(data))));
 		}
+	}
+
+	/**
+	 * Reads data of fixed entry length from a pointer table
+	 * 
+	 * @param buffer    The data buffer read from
+	 * @param offset    The offset of the SIRO file
+	 * @param childSize The length of each entry
+	 * @param childNum  The number of entries
+	 * @param Pointer   A pointer to the table
+	 **/
+	private static SiroSegment populateFromTable(BufferedDataHandler buffer, int offset, int childSize, int childNum, Pointer table) throws IOException {
+		SiroSegment parent = new SiroSegment(table);
+		buffer.seek(table.relativeTo(offset));
+		for(int i = 0; i<childNum; i++){
+			byte[] data = new byte[childSize];
+			int dataOffset = table.getOffset() + 4*i;
+			buffer.seek((new Pointer(dataOffset, true)).relativeTo(offset));
+			Pointer dataPtr = buffer.parsePointer();
+			buffer.seek(dataPtr.relativeTo(offset));
+			buffer.read(data);
+			parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		}
+		return parent;
+	}
+
+	/**
+	 * Reads data of fixed entry length without a pointer table
+	 * 
+	 * @param buffer    The data buffer read from
+	 * @param offset    The offset of the SIRO file
+	 * @param childSize The length of each entry
+	 * @param childNum  The number of entries
+	 * @param Pointer   A pointer to the list
+	 **/
+	private static SiroSegment populateFromList(BufferedDataHandler buffer, int offset, int childSize, int childNum, Pointer list) throws IOException {
+		SiroSegment parent = new SiroSegment(list);
+		buffer.seek(list.relativeTo(offset));
+		for(int i = 0; i<childNum; i++){
+			byte[] data = new byte[childSize];
+			int dataOffset = list.getOffset() + 4*i;
+			buffer.seek((new Pointer(dataOffset, true)).relativeTo(offset));
+			Pointer dataPtr = buffer.parsePointer();
+			buffer.seek(dataPtr.relativeTo(offset));
+			buffer.read(data);
+			parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		}
+		return parent;
+	}
+
+	/**
+	 * Reads data of variable entry length from a pointer table
+	 * 
+	 * @param buffer    The data buffer read from
+	 * @param offset    The offset of the SIRO file
+	 * @param childNum  The number of entries
+	 * @param Pointer   A pointer to the table, assumed to be immediately after the data
+	 **/
+	private static SiroSegment populateFromTable(BufferedDataHandler buffer, int offset, int childNum, Pointer list) throws IOException {
+		SiroSegment parent = new SiroSegment(list);
+		buffer.seek(list.relativeTo(offset));
+		//TODO
+		return parent;
 	}
 
 	private static SiroSegment readStringList(BufferedDataHandler buffer, int offset, int start, int end, boolean isPadded) throws IOException {
@@ -141,6 +205,29 @@ public class SiroFactory {
 		//Parse strings
 		SiroSegment strings = readStringList(buffer, offset + buffer.getFilePointer(), buffer.getFilePointer(), learnsetPtr.getOffset(), true);
 		head.addChild("strings", strings);
+
+		return new SiroFile(offset, head);
+	}
+
+	public static SiroFile buildDungeonSiro(BufferedDataHandler buffer, int offset) throws IOException {
+		SiroSegment head = new SiroSegment(offset);
+		//Parse header
+		buffer.seek(4);
+		Pointer footerPtr = buffer.parsePointer();
+
+		//Parse footer
+		buffer.seek(footerPtr.relativeTo(offset));
+		Pointer mainPtr = buffer.parsePointer();
+		Pointer layoutPtr = buffer.parsePointer();
+		Pointer lootPtr = buffer.parsePointer();
+		Pointer spawnPtr = buffer.parsePointer();
+		Pointer trapPtr = buffer.parsePointer();
+
+		head.addChild("main", populateFromTable(buffer, offset, 0x10, 0x0727, mainPtr));
+		head.addChild("layout", populateFromList(buffer, offset, 0x1C, 0x06E4, layoutPtr));
+		//head.addChild("loot", populateFromTable(buffer, offset, 0x??, lootPtr));
+		//head.addChild("spawn", populateFromTable(buffer, offset, 0x??, spawnPtr));
+		//head.addChild("trap", populateFromTable(buffer, offset, 0x??, trapPtr));
 
 		return new SiroFile(offset, head);
 	}
