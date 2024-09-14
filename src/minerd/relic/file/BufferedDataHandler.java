@@ -168,8 +168,8 @@ public class BufferedDataHandler implements DataHandler {
 		int mark = getFilePointer();
 		seek(pointer);
 		String str = readString();
-		// Using mark() and reset() cause an InvalidMarkException while trying to read
-		// Friend Area names and I have no idea why
+		//Using mark() and reset() cause an InvalidMarkException while trying to read
+		//Friend Area names and I have no idea why
 		seek(mark);
 		return str;
 	}
@@ -285,34 +285,34 @@ public class BufferedDataHandler implements DataHandler {
 		write(4, in & 0xFFFFFFFF);
 	}
 
-	// Decompress data at an offset and return to original location
-	// Comments starting with - indicate original python
+	//Decompress data at an offset and return to original location
+	//Comments starting with - indicate original python
 	@Deprecated
 	public BufferedDataHandler at4px(int offset, boolean isTiles) throws IOException {
-		// System.out.println("AT4");
-		// System.out.println("Offset:" + Integer.toHexString(offset));
+		//System.out.println("AT4");
+		//System.out.println("Offset:" + Integer.toHexString(offset));
 		seek(offset);
 		ArrayList<Byte> data = new ArrayList<Byte>();
-		// if rom.read(5) != b'AT4PX':
-		// raise ValueError('Wrong magic bytes for compressed data')
+		//if rom.read(5) != b'AT4PX':
+		//raise ValueError('Wrong magic bytes for compressed data')
 		skip(7);
-		// end, = unpack('<H', rom.read(2))
+		//end, = unpack('<H', rom.read(2))
 
-		// The control codes used for 0-flags vary
-		// controls = list(rom.read(9))
+		//The control codes used for 0-flags vary
+		//controls = list(rom.read(9))
 		ArrayList<Byte> controls = new ArrayList<Byte>();
 		for(int i = 0; i<9; i++){
 			controls.add(readByte());
 		}
 
-		// length, = unpack('<H', rom.read(2))
+		//length, = unpack('<H', rom.read(2))
 		int len = readShort();
 		if(isTiles){
 			data.add((byte) 3);
 			data.add((byte) 0);
 			data.add((byte) 3);
 			data.add((byte) 0);
-			// System.out.println("Length:" + Integer.toHexString(len));
+			//System.out.println("Length:" + Integer.toHexString(len));
 			data.add((byte) ((len/0x20) & 0xFF));
 			data.add((byte) (((len/0x20) & 0xFF00) >> 8));
 			for(int i = 0; i<10; i++)
@@ -321,46 +321,46 @@ public class BufferedDataHandler implements DataHandler {
 
 		while((isTiles ? data.size() - 0x10 : data.size())<len){
 			byte flags = readByte();
-			// if(!isTiles) System.out.println("Flags:" + Integer.toHexString(flags));
+			//if(!isTiles) System.out.println("Flags:" + Integer.toHexString(flags));
 			for(int i = 0; i<8; i++){
 				if((flags & (0x80 >> i))!=0){
-					// Flag 1: append one byte as-is
+					//Flag 1: append one byte as-is
 					data.add((byte) (readUnsignedByte() & 0xFF));
 				} else{
-					// Flag 0: do one of two fancy things based on the next byte's
-					// high and low nybbles
+					//Flag 0: do one of two fancy things based on the next byte's
+					//high and low nybbles
 					byte control = readByte();
 					byte high = (byte) ((control >> 4) & 0x0F);
 					byte low = (byte) (control & 0x0F);
 
 					if(controls.contains(high)){
-						// Append a pattern of four nybbles. The high bits determine
-						// the pattern, and the low bits determine the base nybble.
+						//Append a pattern of four nybbles. The high bits determine
+						//the pattern, and the low bits determine the base nybble.
 						control = (byte) controls.indexOf(high);
 						byte[] nybbles = { low, low, low, low };
 
 						if(control==0){
 						} else if(control<=4){
-							// Lower a particular pixel
+							//Lower a particular pixel
 							if(control==1)
 								for(int j = 0; j<4; j++)
 									nybbles[j]++;
 							nybbles[control - 1]--;
 						} else{
-							// 5 <= control <= 8; raise a particular pixel
+							//5 <= control <= 8; raise a particular pixel
 							if(control==5)
 								for(int j = 0; j<4; j++)
 									nybbles[j]--;
 							nybbles[control - 5]++;
 						}
-						// Pack the pixels into bytes and append them
+						//Pack the pixels into bytes and append them
 						data.add((byte) ((nybbles[0] << 4) | nybbles[1]));
 						data.add((byte) ((nybbles[2] << 4) | nybbles[3]));
 					} else{
-						// Append a sequence of bytes previously used in the data.
-						// This can overlap with the beginning of the appended bytes!
-						// The high bits determine the length of the sequence, and
-						// the low bits help determine the where the sequence starts.
+						//Append a sequence of bytes previously used in the data.
+						//This can overlap with the beginning of the appended bytes!
+						//The high bits determine the length of the sequence, and
+						//the low bits help determine the where the sequence starts.
 						int off = -0x1000;
 						off += ((low << 8) | (readByte() & 0xFF));
 						for(int j = 0; j<(high + 3); j++)
