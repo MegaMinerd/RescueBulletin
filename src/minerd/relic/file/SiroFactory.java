@@ -75,15 +75,24 @@ public class SiroFactory {
 	/**
 	 * Reads data of variable entry length from a pointer table
 	 * 
-	 * @param buffer    The data buffer read from
-	 * @param offset    The offset of the SIRO file
-	 * @param childNum  The number of entries
-	 * @param Pointer   A pointer to the table, assumed to be immediately after the data
+	 * @param buffer   The data buffer read from
+	 * @param offset   The offset of the SIRO file
+	 * @param childNum The number of entries
+	 * @param Pointer  A pointer to the table, assumed to be immediately after the data
 	 **/
-	private static SiroSegment populateFromTable(BufferedDataHandler buffer, int offset, int childNum, Pointer list) throws IOException {
-		SiroSegment parent = new SiroSegment(list);
-		buffer.seek(list.relativeTo(offset));
-		//TODO
+	private static SiroSegment populateFromTable(BufferedDataHandler buffer, int offset, int childNum, Pointer table) throws IOException {
+		SiroSegment parent = new SiroSegment(table);
+		buffer.seek(table.relativeTo(offset));
+		for(int i = 0; i<childNum; i++){
+			int dataOffset = table.getOffset() + 4*i;
+			buffer.seek((new Pointer(dataOffset, true)).relativeTo(offset));
+			Pointer dataPtr = buffer.parsePointer();
+			Pointer endPtr = i==childNum - 1 ? table : buffer.parsePointer();
+			byte[] data = new byte[endPtr.getOffset() - dataPtr.getOffset()];
+			buffer.seek(dataPtr.relativeTo(offset));
+			buffer.read(data);
+			parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		}
 		return parent;
 	}
 
@@ -225,46 +234,33 @@ public class SiroFactory {
 
 		head.addChild("main", populateFromTable(buffer, offset, 0x10, 0x0727, mainPtr));
 		head.addChild("layout", populateFromList(buffer, offset, 0x1C, 0x06E4, layoutPtr));
-		//head.addChild("loot", populateFromTable(buffer, offset, 0x??, lootPtr));
-		//head.addChild("spawn", populateFromTable(buffer, offset, 0x??, spawnPtr));
-		//head.addChild("trap", populateFromTable(buffer, offset, 0x??, trapPtr));
+		head.addChild("loot", populateFromTable(buffer, offset, 0xB2, lootPtr));
+		head.addChild("spawn", populateFromTable(buffer, offset, 0x0347, spawnPtr));
+		head.addChild("trap", populateFromTable(buffer, offset, 0x94, trapPtr));
 
 		return new SiroFile(offset, head);
 	}
 
-	public static SiroFile buildPaletteSiro(BufferedDataHandler buffer, int offset) throws IOException {
+	public static SiroFile buildGraphicListSiro(BufferedDataHandler buffer, int offset) throws IOException {
 		SiroSegment head = new SiroSegment(offset);
+		//Parse header
 		buffer.seek(4);
-		Pointer table = buffer.parsePointer().relativeTo(offset);
-		for(int i = 0; i<32; i++){
-			int off = table.getOffset() + 4*i;
-			buffer.seek(offset);
-			byte[] data = new byte[buffer.peek() + 4];
-			buffer.read(data);
-			head.addChild(i + "", new SiroSegment(off, new BufferedDataHandler(ByteBuffer.wrap(data))));
-		}
-		return new SiroFile(offset, head);
-	}
+		Pointer footerPtr = buffer.parsePointer();
 
-	//04F246C to 04F45A7
-	public static SiroFile buildTrapTileSiro(BufferedDataHandler buffer, int offset) throws IOException {
-		SiroSegment head = new SiroSegment(offset);
-		buffer.seek(4);
-		buffer.seek(buffer.parsePointer().relativeTo(offset)); //04F45A0
-		Pointer p1 = buffer.parsePointer(); //04F247C, tiles
-		Pointer p2 = buffer.parsePointer(); //04F4520, palettes
+		//Parse footer
+		buffer.seek(footerPtr.relativeTo(offset));
+		Pointer tilePtr = buffer.parsePointer();
+		Pointer palettePtr = buffer.parsePointer();
 
-		//One int tile num (29 chunks * 9 tiles = 261)
-		//Then tile data
-		buffer.seek(p1.relativeTo(offset));
-		byte[] data = new byte[4 + 29*9*0x20];
+		byte[] data = new byte[palettePtr.getOffset() - tilePtr.getOffset()];
+		buffer.seek(tilePtr.relativeTo(offset));
 		buffer.read(data);
-		head.addChild("tiles", new SiroSegment(p1, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		head.addChild("tile", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
 
-		buffer.seek(p2.relativeTo(offset));
-		data = new byte[0x80];
+		data = new byte[footerPtr.getOffset() - palettePtr.getOffset()];
+		buffer.seek(palettePtr.relativeTo(offset));
 		buffer.read(data);
-		head.addChild("palettes", new SiroSegment(p1, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		head.addChild("palette", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
 
 		return new SiroFile(offset, head);
 	}

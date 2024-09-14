@@ -1,6 +1,7 @@
 package minerd.relic.file;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
@@ -61,6 +62,15 @@ public class SbinFile extends BufferedDataHandler {
 
 	public void updateSubfile(String filename, BufferedDataHandler data) throws IOException {
 		contents.put(filename, data);
+	}
+
+	public void buildSiroSubfile(String filename, String type) throws IOException {
+		try{
+			updateSubfile(filename,
+					(SiroFile) Class.forName("SiroFactory").getMethod(String.format("build%sSiro", type), BufferedDataHandler.class, int.class).invoke(getSubfile(filename), getOffset(filename)));
+		} catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
+			e.printStackTrace();
+		}
 	}
 
 	public BufferedDataHandler getSubfile(String name) {

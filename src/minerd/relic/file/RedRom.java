@@ -64,7 +64,7 @@ public class RedRom extends Rom {
 			//fontpal: non-siro palettes
 			//fontsp: non-siro, count=0x10, tiles
 			//fontsppa: non-siro palette
-			system.updateSubfile("itempara", SiroFactory.buildItemSiro(system.getSubfile("itempara"), system.getOffset("itempara")));
+			system.buildSiroSubfile("itempara", "Item");
 			//kanji_a: undocumented siro
 			//kanji_b: undocumented siro
 			int index = 1;
@@ -75,21 +75,25 @@ public class RedRom extends Rom {
 					break;
 				//system.updateSubfile(name, SiroFactory.buildCompressedSiro(lvmp, system.getOffset(name)));
 			}
-			system.updateSubfile("monspara", SiroFactory.buildPokemonSiro(system.getSubfile("monspara"), system.getOffset("monspara")));
-			system.updateSubfile("wazapara", SiroFactory.buildMoveSiro(system.getSubfile("wazapara"), system.getOffset("wazapara")));
+			system.buildSiroSubfile("monspara", "Pokemon");
+			system.buildSiroSubfile("wazapara", "Move");
 			sbinCache.put("system", system);
 		}
 		return system;
 	}
 
 	public SbinFile getDungeonSbin() throws IOException {
-		SbinFile dungeon = sbinCache.get("system");
+		SbinFile dungeon = sbinCache.get("dungeon");
 		if(dungeon==null){
 			file.position(0x3B0000);
 			ByteBuffer buffer = ByteBuffer.allocate(0x160000);
 			file.read(buffer);
 			dungeon = new SbinFile(buffer, "dungeon", 0x3B0000);
-			dungeon.updateSubfile("mapparam", SiroFactory.buildDungeonSiro(dungeon.getSubfile("mapparam"), dungeon.getOffset("mapparam")));
+			dungeon.buildSiroSubfile("mapparam", "Dungeon");
+			//talk0-talk42: siro string table
+			//talkp0-talkp42: siro string table
+			dungeon.buildSiroSubfile("trappat", "GraphicList");
+			dungeon.buildSiroSubfile("zmappat", "GraphicTable");
 		}
 		return dungeon;
 	}
