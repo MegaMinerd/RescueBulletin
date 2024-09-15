@@ -3,6 +3,8 @@ package minerd.relic.file;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import minerd.relic.file.SiroFile.SiroLayout;
+
 public class SiroFactory {
 	/**
 	 * Reads data of fixed entry length from a pointer table
@@ -138,7 +140,7 @@ public class SiroFactory {
 		head.addChild("items", items);
 		SiroSegment names = readStringList(buffer, offset + buffer.getFilePointer(), buffer.getFilePointer(), buffer.length(), true);
 		head.addChild("names", names);
-		return new SiroFile(offset, head);
+		return new SiroFile(offset, head, SiroLayout.ITEM);
 	}
 
 	//357B88 to 360BF4
@@ -164,7 +166,7 @@ public class SiroFactory {
 		head.addChild("pokemon", pokemon);
 		SiroSegment strings = readStringList(buffer, offset + buffer.getFilePointer(), buffer.getFilePointer(), buffer.length(), true);
 		head.addChild("strings", strings);
-		return new SiroFile(offset, head);
+		return new SiroFile(offset, head, SiroLayout.POKEMON);
 	}
 
 	//360BF4 to 37333F
@@ -215,7 +217,7 @@ public class SiroFactory {
 		SiroSegment strings = readStringList(buffer, offset + buffer.getFilePointer(), buffer.getFilePointer(), learnsetPtr.getOffset(), true);
 		head.addChild("strings", strings);
 
-		return new SiroFile(offset, head);
+		return new SiroFile(offset, head, SiroLayout.MOVE);
 	}
 
 	public static SiroFile buildDungeonSiro(BufferedDataHandler buffer, int offset) throws IOException {
@@ -238,7 +240,7 @@ public class SiroFactory {
 		head.addChild("spawn", populateFromTable(buffer, offset, 0x0347, spawnPtr));
 		head.addChild("trap", populateFromTable(buffer, offset, 0x94, trapPtr));
 
-		return new SiroFile(offset, head);
+		return new SiroFile(offset, head, SiroLayout.DUNGEON);
 	}
 
 	public static SiroFile buildGraphicListSiro(BufferedDataHandler buffer, int offset) throws IOException {
@@ -262,11 +264,36 @@ public class SiroFactory {
 		buffer.read(data);
 		head.addChild("palette", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
 
-		return new SiroFile(offset, head);
+		return new SiroFile(offset, head, SiroLayout.GRAPHIC_LIST);
+	}
+	
+	public static SiroFile buildGraphicTableSiro(BufferedDataHandler buffer, int offset, int childSize, int childNum) throws IOException {
+		SiroSegment head = new SiroSegment(offset);
+		//Parse header
+		buffer.seek(4);
+		Pointer footerPtr = buffer.parsePointer();
+
+		//Parse footer
+		buffer.seek(footerPtr.relativeTo(offset));
+		Pointer tilePtr = buffer.parsePointer();
+		Pointer palettePtr = buffer.parsePointer();
+
+		byte[] data = new byte[palettePtr.getOffset() - tilePtr.getOffset()];
+		buffer.seek(tilePtr.relativeTo(offset));
+		buffer.read(data);
+		head.addChild("tile", populateFromTable(buffer, offset, childSize, childNum, tilePtr));
+
+		data = new byte[footerPtr.getOffset() - palettePtr.getOffset()];
+		buffer.seek(palettePtr.relativeTo(offset));
+		buffer.read(data);
+		head.addChild("palette", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+
+		return new SiroFile(offset, head, SiroLayout.GRAPHIC_TABLE);
 	}
 
 	//1E76170 to 1E77297
 	//Nearly identical to pokemon sprite format
+	//REDO
 	public static SiroFile buildItemSpriteSiro(BufferedDataHandler buffer, int offset) throws IOException {
 		SiroSegment head = new SiroSegment(offset);
 		buffer.seek(4);
@@ -302,7 +329,7 @@ public class SiroFactory {
 			child.addChild("image", new SiroSegment(off, new BufferedDataHandler(ByteBuffer.wrap(img))));
 		}
 
-		return new SiroFile(offset, head);
+		return null;//new SiroFile(offset, head);
 	}
 
 	//Header pointing to footer

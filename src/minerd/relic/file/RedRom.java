@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import minerd.relic.file.SiroFile.SiroLayout;
+
 /**
  * Write a description of class RedRom here.
  *
@@ -64,7 +66,7 @@ public class RedRom extends Rom {
 			//fontpal: non-siro palettes
 			//fontsp: non-siro, count=0x10, tiles
 			//fontsppa: non-siro palette
-			system.buildSiroSubfile("itempara", "Item");
+			system.buildSiroSubfile("itempara", SiroLayout.ITEM);
 			//kanji_a: undocumented siro
 			//kanji_b: undocumented siro
 			int index = 1;
@@ -75,8 +77,8 @@ public class RedRom extends Rom {
 					break;
 				//system.updateSubfile(name, SiroFactory.buildCompressedSiro(lvmp, system.getOffset(name)));
 			}
-			system.buildSiroSubfile("monspara", "Pokemon");
-			system.buildSiroSubfile("wazapara", "Move");
+			system.buildSiroSubfile("monspara", SiroLayout.POKEMON);
+			system.buildSiroSubfile("wazapara", SiroLayout.MOVE);
 			sbinCache.put("system", system);
 		}
 		return system;
@@ -89,11 +91,11 @@ public class RedRom extends Rom {
 			ByteBuffer buffer = ByteBuffer.allocate(0x160000);
 			file.read(buffer);
 			dungeon = new SbinFile(buffer, "dungeon", 0x3B0000);
-			dungeon.buildSiroSubfile("mapparam", "Dungeon");
+			dungeon.buildSiroSubfile("mapparam", SiroLayout.DUNGEON);
 			//talk0-talk42: siro string table
 			//talkp0-talkp42: siro string table
-			dungeon.buildSiroSubfile("trappat", "GraphicList");
-			dungeon.buildSiroSubfile("zmappat", "GraphicTable");
+			dungeon.buildSiroSubfile("trappat", SiroLayout.GRAPHIC_LIST);
+			dungeon.buildSiroSubfile("zmappat", SiroLayout.GRAPHIC_TABLE, 0x40, 0x300);
 		}
 		return dungeon;
 	}

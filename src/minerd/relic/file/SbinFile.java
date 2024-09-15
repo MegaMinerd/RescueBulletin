@@ -64,13 +64,28 @@ public class SbinFile extends BufferedDataHandler {
 		contents.put(filename, data);
 	}
 
-	public void buildSiroSubfile(String filename, String type) throws IOException {
-		try{
-			updateSubfile(filename,
-					(SiroFile) Class.forName("SiroFactory").getMethod(String.format("build%sSiro", type), BufferedDataHandler.class, int.class).invoke(getSubfile(filename), getOffset(filename)));
-		} catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
-			e.printStackTrace();
+	public void buildSiroSubfile(String filename, SiroFile.SiroLayout layout, int ... args) throws IOException {
+		switch(layout) {
+			case ITEM:
+				SiroFactory.buildItemSiro(getSubfile(filename), getOffset(filename));
+				break;
+			case POKEMON:
+				SiroFactory.buildPokemonSiro(getSubfile(filename), getOffset(filename));
+				break;
+			case MOVE:
+				SiroFactory.buildMoveSiro(getSubfile(filename), getOffset(filename));
+				break;
+			case DUNGEON:
+				SiroFactory.buildDungeonSiro(getSubfile(filename), getOffset(filename));
+				break;
+			case GRAPHIC_LIST:
+				SiroFactory.buildGraphicListSiro(getSubfile(filename), getOffset(filename));
+				break;
+			case GRAPHIC_TABLE:
+				SiroFactory.buildGraphicTableSiro(getSubfile(filename), getOffset(filename), args[0], args[1]);
+				break;
 		}
+
 	}
 
 	public BufferedDataHandler getSubfile(String name) {
