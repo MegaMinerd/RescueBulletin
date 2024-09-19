@@ -62,7 +62,7 @@ public class LootList extends GameData {
 	}
 
 	@Override
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 	}
 
 	public String getName() {

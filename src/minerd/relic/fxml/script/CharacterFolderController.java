@@ -11,7 +11,7 @@ public class CharacterFolderController {
 	public Label data;
 
 	public CharacterFolderController load(Pointer pointer, int number) throws IOException {
-		BufferedDataHandler rom = Rom.getAll();
+		BufferedDataHandler rom = Rom.getInstance().getAll();
 		rom.seek(pointer);
 		data.setText("");
 		for(int i=0; i<number*2; i++) {

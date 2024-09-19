@@ -47,7 +47,7 @@ public class CharacterFolderTreeItem<T extends GameData> extends FolderTreeItem<
 
 			BufferedDataHandler rom;
 			try{
-				rom = Rom.getAll();
+				rom = Rom.getInstance().getAll();
 				rom.seek(pointer);
 				for(int i = 0; i<number; i++){
 					String name = Text.getText("Actors", rom.readByte() & 0xFF);

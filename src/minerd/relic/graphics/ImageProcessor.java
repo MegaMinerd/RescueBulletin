@@ -42,7 +42,7 @@ public class ImageProcessor {
 	static{
 		//Load palettes
 		try{
-			rom = Rom.getAll();
+			rom = Rom.getInstance().getAll();
 			rom.seek(0x016BD42C);
 			itemPalettes = new Palette[13];
 			for(int i = 0; i<13; i++)
@@ -77,7 +77,7 @@ public class ImageProcessor {
 	public static void importPortraits(File imgFile, int destOff, int faceFlags, boolean symmetrical) throws IOException {
 		Image image = new Image(imgFile.getPath());
 		PixelReader reader = image.getPixelReader();
-		BufferedDataHandler rom = Rom.getAll();
+		BufferedDataHandler rom = Rom.getInstance().getAll();
 		rom.seek(destOff + 16);
 		ArrayList<Integer> pointers = new ArrayList<Integer>();
 		//normal happy pain angry worried sad
@@ -104,7 +104,7 @@ public class ImageProcessor {
 		//SIRO
 		rom.writeInt(0x4F524953);
 		rom.writeInt(table);
-		Rom.saveAll(rom);
+		Rom.getInstance().saveAll(rom);
 	}
 
 	private static BufferedDataHandler[] convertPortrait(PixelReader reader, int startX, int startY) throws IOException {

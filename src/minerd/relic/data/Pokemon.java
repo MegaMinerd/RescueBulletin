@@ -9,87 +9,87 @@ import javafx.scene.layout.Region;
 import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
+import minerd.relic.file.SiroFile;
 import minerd.relic.fxml.PokemonController;
 import minerd.relic.util.CompressionHandler;
 import minerd.relic.util.RrtOffsetList;
 
 public class Pokemon extends GameData {
 	private String name, category;
-	private int offset, palette, bodySize, speed, type1, type2, movement, area, ability1, ability2;
+	private int palette, bodySize, speed, type1, type2, movement, area, ability1, ability2;
 	private int shadow, regen, sleepiness, baseHp, exp, baseAtk, baseSpa, baseDef, baseSpd, weight, size;
 	private int unk30, unk31, unk32, preId, evolveType, evolveParam, evolveAddition;
-	private int dexID, entityID, recruit, alphaID, parentID, faces;
+	private int pokemonId, dexID, entityID, recruit, alphaID, parentID, faces;
 	private boolean canWalk, toolbox;
 	private Learnset learnset;
 	private Levelmap lvmp;
 
 	public Pokemon(int index) {
+		pokemonId = index;
 		try{
-			BufferedDataHandler rom = Rom.getAll();
-			rom.seek(RrtOffsetList.pokemonOffset);
-			rom.skip(16 + index*0x48);
-			offset = rom.getFilePointer();
-			name = rom.readString(rom.parsePointer());
-			category = rom.readString(rom.parsePointer());
-			palette = rom.readUnsignedByte();
-			bodySize = rom.readByte();
-			rom.skip(2);
-			speed = rom.readInt();
-			faces = rom.readUnsignedShort();
-			rom.skip(1);
-			type1 = rom.readUnsignedByte();
-			type2 = rom.readUnsignedByte();
-			movement = rom.readUnsignedByte();
-			area = rom.readUnsignedByte();
-			ability1 = rom.readUnsignedByte();
-			ability2 = rom.readUnsignedByte();
-			shadow = rom.readUnsignedByte();
-			rom.skip(1);
-			regen = rom.readUnsignedByte();
-			canWalk = rom.readUnsignedByte()!=0;
-			sleepiness = rom.readUnsignedByte();
-			baseHp = rom.readShort();
-			exp = rom.readInt();
-			baseAtk = rom.readShort();
-			baseSpa = rom.readShort();
-			baseDef = rom.readShort();
-			baseSpd = rom.readShort();
-			weight = rom.readShort();
-			size = rom.readShort();
-			unk30 = rom.readUnsignedByte();
-			unk31 = rom.readUnsignedByte();
-			unk32 = rom.readUnsignedByte();
-			toolbox = rom.readUnsignedByte()!=0;
-			preId = rom.readShort();
-			evolveType = rom.readShort();
-			evolveParam = rom.readShort();
-			evolveAddition = rom.readShort();
-			dexID = rom.readShort();
-			entityID = rom.readShort();
-			recruit = rom.readShort();
-			alphaID = rom.readShort();
-			parentID = rom.readShort();
+			SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("monspara");
+			BufferedDataHandler entry = data.getSegment("pokemon/" + index).getData();
+			name = data.getSegment("strings/" + entry.parsePointer().getOffset()).getData().readString();
+			category = data.getSegment("strings/" + entry.parsePointer().getOffset()).getData().readString();
+			palette = entry.readUnsignedByte();
+			bodySize = entry.readByte();
+			entry.skip(2);
+			speed = entry.readInt();
+			faces = entry.readUnsignedShort();
+			entry.skip(1);
+			type1 = entry.readUnsignedByte();
+			type2 = entry.readUnsignedByte();
+			movement = entry.readUnsignedByte();
+			area = entry.readUnsignedByte();
+			ability1 = entry.readUnsignedByte();
+			ability2 = entry.readUnsignedByte();
+			shadow = entry.readUnsignedByte();
+			entry.skip(1);
+			regen = entry.readUnsignedByte();
+			canWalk = entry.readUnsignedByte()!=0;
+			sleepiness = entry.readUnsignedByte();
+			baseHp = entry.readShort();
+			exp = entry.readInt();
+			baseAtk = entry.readShort();
+			baseSpa = entry.readShort();
+			baseDef = entry.readShort();
+			baseSpd = entry.readShort();
+			weight = entry.readShort();
+			size = entry.readShort();
+			unk30 = entry.readUnsignedByte();
+			unk31 = entry.readUnsignedByte();
+			unk32 = entry.readUnsignedByte();
+			toolbox = entry.readUnsignedByte()!=0;
+			preId = entry.readShort();
+			evolveType = entry.readShort();
+			evolveParam = entry.readShort();
+			evolveAddition = entry.readShort();
+			dexID = entry.readShort();
+			entityID = entry.readShort();
+			recruit = entry.readShort();
+			alphaID = entry.readShort();
+			parentID = entry.readShort();
 			Cache.add("Pokemon", index, this);
 
 			//I don't know why
 			if(entityID>226)
-				entityID-=2;
-			
-			learnset = (Learnset)Cache.get("Learnset", index);
-			if(learnset==null) {
+				entityID -= 2;
+
+			learnset = (Learnset) Cache.get("Learnset", index);
+			if(learnset==null){
 				learnset = new Learnset(index);
 				Cache.add("Learnset", index, learnset);
 			}
-			
 
-			rom.seek(RrtOffsetList.levelmapOffset);
-			rom.skip(entityID*0x8+0x4);
-			rom.seek(rom.parsePointer());
-			rom.skip(16);
-			int start = rom.getFilePointer();
-			rom.skip(5);
-			byte temp[] = new byte[rom.readShort()];
-			rom.getBuffer().get(start, temp);
+			//TODO
+			entry.seek(RrtOffsetList.levelmapOffset);
+			entry.skip(entityID*0x8 + 0x4);
+			entry.seek(entry.parsePointer());
+			entry.skip(16);
+			int start = entry.getFilePointer();
+			entry.skip(5);
+			byte temp[] = new byte[entry.readShort()];
+			entry.getBuffer().get(start, temp);
 			lvmp = new Levelmap(CompressionHandler.decompress(new BufferedDataHandler(ByteBuffer.wrap(temp)), false), this);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
@@ -105,55 +105,57 @@ public class Pokemon extends GameData {
 		return dataPane;
 	}
 
-	public void save(BufferedDataHandler rom) {
-		try{	
+	public void save() {
+		try{
 
 			//I don't know why
 			if(entityID>226)
-				entityID+=2;
-			
-			rom.seek(offset);
-			//rom.writeString(name, rom.parsePointer());
-			//rom.writeString(category, rom.parsePointer());
-			rom.skip(8);;
-			rom.writeUnsignedByte(palette);
-			rom.writeByte((byte) bodySize);
-			rom.skip(2);
-			rom.writeInt(speed);
-			rom.writeUnsignedShort(faces);
-			rom.skip(1);
-			rom.writeUnsignedByte(type1);
-			rom.writeUnsignedByte(type2);
-			rom.writeUnsignedByte(movement);
-			rom.writeUnsignedByte(area);
-			rom.writeUnsignedByte(ability1);
-			rom.writeUnsignedByte(ability2);
-			rom.writeUnsignedByte(shadow);
-			rom.skip(1);
-			rom.writeUnsignedByte(regen);
-			rom.writeBoolean(canWalk);
-			rom.writeUnsignedByte(sleepiness);
-			rom.writeShort((short) baseHp);
-			rom.writeInt(exp);
-			rom.writeShort((short) baseAtk);
-			rom.writeShort((short) baseSpa);
-			rom.writeShort((short) baseDef);
-			rom.writeShort((short) baseSpd);
-			rom.writeShort((short) weight);
-			rom.writeShort((short) size);
-			rom.writeUnsignedByte(unk30);
-			rom.writeUnsignedByte(unk31);
-			rom.writeUnsignedByte(unk32);
-			rom.writeBoolean(toolbox);
-			rom.writeShort((short) preId);
-			rom.writeShort((short) evolveType);
-			rom.writeShort((short) evolveParam);
-			rom.writeShort((short) evolveAddition);
-			rom.writeShort((short) dexID);
-			rom.writeShort((short) entityID);
-			rom.writeShort((short) recruit);
-			rom.writeShort((short) alphaID);
-			rom.writeShort((short) parentID);
+				entityID += 2;
+
+			SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("monspara");
+			BufferedDataHandler entry = data.getSegment("pokemon/" + pokemonId).getData();
+			entry.skip(8);
+			//entry.writeString(name, entry.parsePointer());
+			//entry.writeString(category, entry.parsePointer());
+			entry.skip(8);
+			entry.writeUnsignedByte(palette);
+			entry.writeByte((byte) bodySize);
+			entry.skip(2);
+			entry.writeInt(speed);
+			entry.writeUnsignedShort(faces);
+			entry.skip(1);
+			entry.writeUnsignedByte(type1);
+			entry.writeUnsignedByte(type2);
+			entry.writeUnsignedByte(movement);
+			entry.writeUnsignedByte(area);
+			entry.writeUnsignedByte(ability1);
+			entry.writeUnsignedByte(ability2);
+			entry.writeUnsignedByte(shadow);
+			entry.skip(1);
+			entry.writeUnsignedByte(regen);
+			entry.writeBoolean(canWalk);
+			entry.writeUnsignedByte(sleepiness);
+			entry.writeShort((short) baseHp);
+			entry.writeInt(exp);
+			entry.writeShort((short) baseAtk);
+			entry.writeShort((short) baseSpa);
+			entry.writeShort((short) baseDef);
+			entry.writeShort((short) baseSpd);
+			entry.writeShort((short) weight);
+			entry.writeShort((short) size);
+			entry.writeUnsignedByte(unk30);
+			entry.writeUnsignedByte(unk31);
+			entry.writeUnsignedByte(unk32);
+			entry.writeBoolean(toolbox);
+			entry.writeShort((short) preId);
+			entry.writeShort((short) evolveType);
+			entry.writeShort((short) evolveParam);
+			entry.writeShort((short) evolveAddition);
+			entry.writeShort((short) dexID);
+			entry.writeShort((short) entityID);
+			entry.writeShort((short) recruit);
+			entry.writeShort((short) alphaID);
+			entry.writeShort((short) parentID);
 		} catch(IOException e){
 			e.printStackTrace();
 		}

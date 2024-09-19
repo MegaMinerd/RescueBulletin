@@ -28,14 +28,14 @@ public class RandomizerController {
 	public Button apply;
 
 	public void randomize() {
-		if(!Rom.isLoaded()){
+		if(Rom.getInstance()==null){
 			System.out.println("No Rom to randomize!");
 			return;
 		}
 
 		try{
 			long time = System.currentTimeMillis();
-			BufferedDataHandler rom = Rom.getAll();
+			Rom rom = Rom.getInstance();
 
 			apply.setDisable(true);
 
@@ -65,7 +65,7 @@ public class RandomizerController {
 					}
 					starters.setPartners(partners);
 				}
-				starters.save(rom);
+				starters.save();
 			}
 
 			if(pokeType.isSelected() || abilities.isSelected() || learnset.isSelected()){
@@ -94,7 +94,7 @@ public class RandomizerController {
 					//Done this way to reduce number of conditional checks
 					else if(!pokeType.isSelected())
 						continue;
-					pokemon.save(rom);
+					pokemon.save();
 				}
 			}
 
@@ -113,7 +113,7 @@ public class RandomizerController {
 						if(i==352)
 							continue;
 						move.setType((int) (Math.random()*17.0 + 1));
-						move.save(rom);
+						move.save();
 					}
 					if(learnset.isSelected()){
 						types[0].add(i);
@@ -159,28 +159,28 @@ public class RandomizerController {
 					learnsets[i].setLvMoves(lvMoves);
 					//learnsets[i].setTmMoves(tmMoves);
 				}
-				Pointer[] pointers = new Pointer[830];
-				rom.seek(0x360C06);
-				for(int i = 1; i<416; i++){
-					byte[] lvMoves = learnsets[i].saveLvMoves();
-					byte[] tmMoves = learnsets[i].saveTmMoves();
-					if((rom.getFilePointer()<0x003679A0)
-							&& ((rom.getFilePointer() + lvMoves.length + tmMoves.length)>RrtOffsetList.moveOffset)){
-						while(rom.getFilePointer()<RrtOffsetList.moveOffset)
-							rom.writeByte((byte) 0);
-						rom.seek(0x0373340);
-					}
-					pointers[2*i - 2] = Pointer.fromInt(rom.getFilePointer() + 0x08000000);
-					rom.write(lvMoves);
-					rom.writeByte((byte) 0);
-					pointers[2*i - 1] = Pointer.fromInt(rom.getFilePointer() + 0x08000000);
-					rom.write(tmMoves);
-					rom.writeByte((byte) 0);
-				}
-				rom.seek(0x0372600);
-				//TODO: There are actually 848 learnsets in data. I have decided to not care for the beta
-				for(int i = 0; i<830; i++)
-					rom.writePointer(pointers[i]);
+//				Pointer[] pointers = new Pointer[830];
+//				rom.seek(0x360C06);
+//				for(int i = 1; i<416; i++){
+//					byte[]  lvMoves = learnsets[i].saveLvMoves();
+//					byte[] tmMoves = learnsets[i].saveTmMoves();
+//					if((rom.getFilePointer()<0x003679A0)
+//							&& ((rom.getFilePointer() + lvMoves.length + tmMoves.length)>RrtOffsetList.moveOffset)){
+//						while(rom.getFilePointer()<RrtOffsetList.moveOffset)
+//							rom.writeByte((byte) 0);
+//						rom.seek(0x0373340);
+//					}
+//					pointers[2*i - 2] = Pointer.fromInt(rom.getFilePointer() + 0x08000000);
+//					rom.write(lvMoves);
+//					rom.writeByte((byte) 0);
+//					pointers[2*i - 1] = Pointer.fromInt(rom.getFilePointer() + 0x08000000);
+//					rom.write(tmMoves);
+//					rom.writeByte((byte) 0);
+//				}
+//				rom.seek(0x0372600);
+//				//TODO: There are actually 848 learnsets in data. I have decided to not care for the beta
+//				for(int i = 0; i<830; i++)
+//					rom.writePointer(pointers[i]);
 			}
 
 			if(tilesets.isSelected() || music.isSelected() || layout.isSelected() || weather.isSelected()
@@ -252,7 +252,7 @@ public class RandomizerController {
 					if(buried.isSelected()){
 						floor.setBuriedTableId((int) (Math.random()*178));
 					}
-					floor.save(rom);
+					floor.save();
 				}
 			}
 		    
@@ -260,29 +260,29 @@ public class RandomizerController {
 		                    160, 162, 277, 286, 294, 298, 338, 394, 411, 427,
 		                    442, 480, 726, 838};
 		
-			if(dunPoke.isSelected()){
-				for(int i = 0; i<839; i++){
-					if(Arrays.binarySearch(bosses, i)>=0){
-						//Randomizing this WILL cause a crash
-						continue;
-					}
-					rom.seek(RrtOffsetList.encountersOffset + 4*i);
-					rom.seek(rom.parsePointer());
-					EncounterList list = new EncounterList(rom);
-					//Can't be foreach. The last 2 must be skipped to avoid a crash.
-					for(int j=0; j<list.getEntries().size()-2; j++){
-						Encounter mon = list.getEntries().get(j);
-						mon.setId((int) (Math.random()*415.0+1));
-						if(Arrays.binarySearch(legendaries, mon.getId())>=0 && Math.random()>0.5f)
-							mon.setId((int) (Math.random()*415.0+1));
-					}
-					rom.seek(RrtOffsetList.encountersOffset + 4*i);
-					rom.seek(rom.parsePointer());
-					list.save(rom);
-				}
-			}
+//			if(dunPoke.isSelected()){
+//				for(int i = 0; i<839; i++){
+//					if(Arrays.binarySearch(bosses, i)>=0){
+//						//Randomizing this WILL cause a crash
+//						continue;
+//					}
+//					rom.seek(RrtOffsetList.encountersOffset + 4*i);
+//					rom.seek(rom.parsePointer());
+//					EncounterList list = new EncounterList(rom);
+//					//Can't be foreach. The last 2 must be skipped to avoid a crash.
+//					for(int j=0; j<list.getEntries().size()-2; j++){
+//						Encounter mon = list.getEntries().get(j);
+//						mon.setId((int) (Math.random()*415.0+1));
+//						if(Arrays.binarySearch(legendaries, mon.getId())>=0 && Math.random()>0.5f)
+//							mon.setId((int) (Math.random()*415.0+1));
+//					}
+//					rom.seek(RrtOffsetList.encountersOffset + 4*i);
+//					rom.seek(rom.parsePointer());
+//					list.save(rom);
+//				}
+//			}
 
-			Rom.saveAll(rom);
+			Rom.getInstance().saveAll(rom.getAll());
 
 			((Stage) apply.getScene().getWindow()).close();
 

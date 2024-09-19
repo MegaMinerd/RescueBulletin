@@ -7,6 +7,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
+import minerd.relic.file.SiroFile;
 import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.MoveController;
 import minerd.relic.util.RrtOffsetList;
@@ -15,37 +16,36 @@ public class Move extends GameData {
 	private String name, description, useMessage;
 	// TODO: update getters/setters
 	private int[] actualValues, aiValues;
-	private int offset, power, type, basePP, weight, accuracy1, accuracy2, condChance, hitNum, upgrades, crit;
+	private int moveId, power, type, basePP, weight, accuracy1, accuracy2, condChance, hitNum, upgrades, crit;
 	private boolean magicCoat, snatachable, usesMouth, cantHitFrozen, ignoresTaunted;
 
 	public Move(int index) {
+		moveId = index;
 		try{
-			BufferedDataHandler rom = Rom.getAll();
-			rom.seek(RrtOffsetList.moveOffset);
-			rom.skip(index*0x24);
-			offset = rom.getFilePointer();
-			name = rom.readString(rom.parsePointer());
-			power = rom.readShort();
-			type = rom.readUnsignedByte();
-			rom.skip(1);
-			actualValues = rom.readMask(2, 4, 4);
-			aiValues = rom.readMask(2, 4, 4, 4);
-			basePP = rom.readUnsignedByte();
-			weight = rom.readUnsignedByte();
-			accuracy1 = rom.readByte();
-			accuracy2 = rom.readByte();
-			condChance = rom.readByte();
-			hitNum = rom.readUnsignedByte();
-			upgrades = rom.readByte();
-			crit = rom.readByte();
-			magicCoat = rom.readByte()!=0;
-			snatachable = rom.readByte()!=0;
-			usesMouth = rom.readByte()!=0;
-			cantHitFrozen = rom.readByte()!=0;
-			ignoresTaunted = rom.readByte()!=0;
-			rom.skip(3);
-			description = rom.readString(rom.parsePointer()).replace("#n", "\n");
-			useMessage = rom.readString(rom.parsePointer());
+			SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("wazapara");
+			BufferedDataHandler entry = data.getSegment("moves/" + index).getData();
+			name = data.getSegment("strings/" + entry.parsePointer().getOffset()).getData().readString();
+			power = entry.readShort();
+			type = entry.readUnsignedByte();
+			entry.skip(1);
+			actualValues = entry.readMask(2, 4, 4);
+			aiValues = entry.readMask(2, 4, 4, 4);
+			basePP = entry.readUnsignedByte();
+			weight = entry.readUnsignedByte();
+			accuracy1 = entry.readByte();
+			accuracy2 = entry.readByte();
+			condChance = entry.readByte();
+			hitNum = entry.readUnsignedByte();
+			upgrades = entry.readByte();
+			crit = entry.readByte();
+			magicCoat = entry.readByte()!=0;
+			snatachable = entry.readByte()!=0;
+			usesMouth = entry.readByte()!=0;
+			cantHitFrozen = entry.readByte()!=0;
+			ignoresTaunted = entry.readByte()!=0;
+			entry.skip(3);
+			description = data.getSegment("strings/" + entry.parsePointer().getOffset()).getData().readString();
+			useMessage = data.getSegment("strings/" + entry.parsePointer().getOffset()).getData().readString();
 			Cache.add("Move", index, this);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
@@ -62,32 +62,33 @@ public class Move extends GameData {
 		return dataPane;
 	}
 
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 		try{
-			rom.seek(offset);
-			//rom.writeString(name, rom.parsePointer());
-			rom.skip(4);
-			rom.writeShort((short) power);
-			rom.writeUnsignedByte(type);
-			rom.skip(1);
-			rom.writeMask(actualValues, 2, 4, 4);
-			rom.writeMask(aiValues, 2, 4, 4, 4);
-			rom.writeUnsignedByte(basePP);
-			rom.writeUnsignedByte(weight);
-			rom.writeByte((byte) accuracy1);
-			rom.writeByte((byte) accuracy2);
-			rom.writeByte((byte) condChance);
-			rom.writeUnsignedByte(hitNum);
-			rom.writeByte((byte) upgrades);
-			rom.writeByte((byte) crit);
-			rom.writeByte((byte) (magicCoat ? 1 : 0));
-			rom.writeByte((byte) (snatachable ? 1 : 0));
-			rom.writeByte((byte) (usesMouth ? 1 : 0));
-			rom.writeByte((byte) (cantHitFrozen ? 1 : 0));
-			rom.writeByte((byte) (ignoresTaunted ? 1 : 0));
-			rom.skip(3);
-			//rom.writeString(description.replace("\n", "#n"), rom.parsePointer());
-			//rom.writeString(useMessage, rom.parsePointer());
+			SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("wazapara");
+			BufferedDataHandler entry = data.getSegment("moves/" + moveId).getData();
+			//entry.writeString(name, entry.parsePointer());
+			entry.skip(4);
+			entry.writeShort((short) power);
+			entry.writeUnsignedByte(type);
+			entry.skip(1);
+			entry.writeMask(actualValues, 2, 4, 4);
+			entry.writeMask(aiValues, 2, 4, 4, 4);
+			entry.writeUnsignedByte(basePP);
+			entry.writeUnsignedByte(weight);
+			entry.writeByte((byte) accuracy1);
+			entry.writeByte((byte) accuracy2);
+			entry.writeByte((byte) condChance);
+			entry.writeUnsignedByte(hitNum);
+			entry.writeByte((byte) upgrades);
+			entry.writeByte((byte) crit);
+			entry.writeByte((byte) (magicCoat ? 1 : 0));
+			entry.writeByte((byte) (snatachable ? 1 : 0));
+			entry.writeByte((byte) (usesMouth ? 1 : 0));
+			entry.writeByte((byte) (cantHitFrozen ? 1 : 0));
+			entry.writeByte((byte) (ignoresTaunted ? 1 : 0));
+			entry.skip(3);
+			//entry.writeString(description.replace("\n", "#n"), entry.parsePointer());
+			//entry.writeString(useMessage, entry.parsePointer());
 		} catch(IOException e){
 			e.printStackTrace();
 		}

@@ -12,7 +12,7 @@ public class MainScriptController {
 	public ScriptPane script;
 
 	public void load(Pointer ptr) throws IOException {
-		BufferedDataHandler rom = Rom.getAll(); 
+		BufferedDataHandler rom = Rom.getInstance().getAll();
 		rom.seek(ptr);
 		
 		offset1.setText(Integer.toHexString(rom.getFilePointer()));

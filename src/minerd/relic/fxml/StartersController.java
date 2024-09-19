@@ -49,7 +49,7 @@ public class StartersController {
 	public void applyChanges() {
 		BufferedDataHandler rom;
 		try{
-			rom = Rom.getAll();
+			rom = Rom.getInstance().getAll();
 		
 			Starters starters = new Starters(0);
 			int[] players = new int[26];
@@ -62,8 +62,8 @@ public class StartersController {
 				partners[i] = (int)partnerTable.getItems().get(i).getSpecies();
 			starters.setPartners(partners);
 		
-			starters.save(rom);
-			Rom.saveAll(rom);
+			starters.save();
+			Rom.getInstance().getAll();
 		} catch(IOException e){
 			e.printStackTrace();
 		}

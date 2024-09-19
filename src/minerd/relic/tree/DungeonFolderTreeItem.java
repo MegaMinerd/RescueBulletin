@@ -6,8 +6,8 @@ import javafx.beans.value.ObservableValue;
 import minerd.relic.data.Cache;
 import minerd.relic.data.Text;
 import minerd.relic.data.dungeon.Dungeon;
-import minerd.relic.file.Rom;
 import minerd.relic.file.BufferedDataHandler;
+import minerd.relic.file.Rom;
 import minerd.relic.util.RrtOffsetList;
 
 public class DungeonFolderTreeItem extends FolderTreeItem<Dungeon> {
@@ -20,7 +20,7 @@ public class DungeonFolderTreeItem extends FolderTreeItem<Dungeon> {
 		if(!loaded){
 			try{
 				getChildren().remove(0);
-				BufferedDataHandler rom = Rom.getAll();
+				BufferedDataHandler rom = Rom.getInstance().getAll();
 				rom.seek(RrtOffsetList.floorCountOffset);
 				int floorTotal = 0;
 

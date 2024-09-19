@@ -9,37 +9,37 @@ import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Text;
 import minerd.relic.file.Rom;
+import minerd.relic.file.SiroFile;
 import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.DungeonController;
 import minerd.relic.util.RrtOffsetList;
 
 public class Dungeon extends GameData {
 	private String name;
-	private int offset, rescuesAllowed, maxItemCount, maxPartySize, turnLimit, randWalkChance;
+	private int dungeonId, rescuesAllowed, maxItemCount, maxPartySize, turnLimit, randWalkChance;
 	private boolean stairsUp, evoOnKo, recruitable, resetLevel, resetMoney, leaderSwitchable, hasBreakpoint, saveRequired;
 	private int[] hmMask;
 
 	public Dungeon(int index) {
+		dungeonId = index;
 		try{
-			BufferedDataHandler rom = Rom.getAll();
-			rom.seek(RrtOffsetList.dungeonOffset);
-			rom.skip(index*0x10);
-			this.offset = rom.getFilePointer();
+			SiroFile data = (SiroFile) Rom.getInstance().getDungeonSbin().getSubfile("mapparam");
+			BufferedDataHandler entry = data.getSegment("main/" + index).getData();
 			name = Text.getText("Dungeons", index);
-			stairsUp = rom.readBoolean();
-			evoOnKo = rom.readBoolean();
-			recruitable = rom.readBoolean();
-			rescuesAllowed = rom.readByte();
-			maxItemCount = rom.readUnsignedByte();
-			maxPartySize = rom.readUnsignedByte();
-			resetLevel = rom.readBoolean();
-			resetMoney = !rom.readBoolean();
-			leaderSwitchable = rom.readBoolean();
-			hasBreakpoint = rom.readBoolean();
-			saveRequired = !rom.readBoolean();
-			hmMask = rom.readMask(1, 1, 1, 1, 1, 1);
-			turnLimit = rom.readUnsignedShort();
-			randWalkChance = rom.readUnsignedShort();
+			stairsUp = entry.readBoolean();
+			evoOnKo = entry.readBoolean();
+			recruitable = entry.readBoolean();
+			rescuesAllowed = entry.readByte();
+			maxItemCount = entry.readUnsignedByte();
+			maxPartySize = entry.readUnsignedByte();
+			resetLevel = entry.readBoolean();
+			resetMoney = !entry.readBoolean();
+			leaderSwitchable = entry.readBoolean();
+			hasBreakpoint = entry.readBoolean();
+			saveRequired = !entry.readBoolean();
+			hmMask = entry.readMask(1, 1, 1, 1, 1, 1);
+			turnLimit = entry.readUnsignedShort();
+			randWalkChance = entry.readUnsignedShort();
 			Cache.add("Dungeon", index, this);
 		} catch(IOException e){
 			e.printStackTrace();
@@ -56,23 +56,25 @@ public class Dungeon extends GameData {
 		return dataPane;
 	}
 
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 		try{
-			rom.seek(offset);
-			rom.writeBoolean(stairsUp);
-			rom.writeBoolean(evoOnKo);
-			rom.writeBoolean(recruitable);
-			rom.writeByte((byte) rescuesAllowed);
-			rom.writeUnsignedByte(maxItemCount);
-			rom.writeUnsignedByte(maxPartySize);
-			rom.writeBoolean(resetLevel);
-			rom.writeBoolean(!resetMoney);
-			rom.writeBoolean(leaderSwitchable);
-			rom.writeBoolean(hasBreakpoint);
-			rom.writeBoolean(!saveRequired);
-			rom.writeMask(hmMask, 1, 1, 1, 1, 1, 1);
-			rom.writeUnsignedShort(turnLimit);
-			rom.writeUnsignedShort(randWalkChance);
+			SiroFile data = (SiroFile) Rom.getInstance().getDungeonSbin().getSubfile("mapparam");
+			BufferedDataHandler entry = data.getSegment("main/" + dungeonId).getData();
+			entry.seek(dungeonId);
+			entry.writeBoolean(stairsUp);
+			entry.writeBoolean(evoOnKo);
+			entry.writeBoolean(recruitable);
+			entry.writeByte((byte) rescuesAllowed);
+			entry.writeUnsignedByte(maxItemCount);
+			entry.writeUnsignedByte(maxPartySize);
+			entry.writeBoolean(resetLevel);
+			entry.writeBoolean(!resetMoney);
+			entry.writeBoolean(leaderSwitchable);
+			entry.writeBoolean(hasBreakpoint);
+			entry.writeBoolean(!saveRequired);
+			entry.writeMask(hmMask, 1, 1, 1, 1, 1, 1);
+			entry.writeUnsignedShort(turnLimit);
+			entry.writeUnsignedShort(randWalkChance);
 		} catch(IOException e){
 			e.printStackTrace();
 		}

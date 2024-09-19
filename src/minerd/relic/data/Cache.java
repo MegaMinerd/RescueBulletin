@@ -49,16 +49,16 @@ public class Cache {
     }
 
 	public static void saveAll() throws IOException {
-		BufferedDataHandler rom = Rom.getAll();
+		BufferedDataHandler rom = Rom.getInstance().getAll();
 		for(String type : instance.getCache().keySet()) {
 			for(GameData data : instance.getCache().get(type)) {
 				if(data!=null) {
-					data.save(rom);
+					data.save();
 					System.out.println(data.getName());
 				}
 			}
 		}
-		Rom.saveAll(rom);
+		Rom.getInstance().saveAll(rom);
 	}
     
     //note to self: opening scene starts at 26dfe8

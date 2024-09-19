@@ -22,7 +22,7 @@ public class ScriptTreeItem extends DataTreeItem<GameData> {
 	public Node select() {
         script = new ScriptPane();
         try{
-        	BufferedDataHandler rom = Rom.getAll();
+        	BufferedDataHandler rom = Rom.getInstance().getAll();
         	rom.seek(offset);
 			script.load(rom);
 		} catch(IOException e){

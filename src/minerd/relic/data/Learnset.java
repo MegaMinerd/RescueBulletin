@@ -4,29 +4,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.scene.layout.Region;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
-import minerd.relic.file.BufferedDataHandler;
-import minerd.relic.util.RrtOffsetList;
+import minerd.relic.file.SiroFile;
 
 public class Learnset extends GameData {
 	private ArrayList<LevelMove> lvMoves;
 	private ArrayList<TmMove> tmMoves;
 
 	public Learnset(int index) throws IOException, InvalidPointerException {
-		BufferedDataHandler rom = Rom.getAll();
-		rom.seek(RrtOffsetList.learnsetOffset);
-		rom.skip(index*0x8);
-		rom.seek(rom.parsePointer());
+		SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("wazapara");
+		BufferedDataHandler lv = data.getSegment("learnsets/" + index + "/lv").getData();
 		lvMoves = new ArrayList<LevelMove>();
-		while(rom.peek()!=0){
-			lvMoves.add(new LevelMove(readMoveId(rom), rom.readUnsignedByte()));
+		while(lv.getFilePointer()<lv.length()){
+			lvMoves.add(new LevelMove(readMoveId(lv), lv.readUnsignedByte()));
 		}
-		// The while saw the null terminator, but now it needs to be skipped.
-		rom.skip(1);
+		BufferedDataHandler tm = data.getSegment("learnsets/" + index + "/tm").getData();
 		tmMoves = new ArrayList<TmMove>();
-		while(rom.peek()!=0){
-			tmMoves.add(new TmMove(readMoveId(rom)));
+		while(tm.getFilePointer()<lv.length()){
+			tmMoves.add(new TmMove(readMoveId(lv)));
 		}
 	}
 
@@ -49,7 +46,7 @@ public class Learnset extends GameData {
 		return null;
 	}
 
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 	}
 
 	public byte[] saveLvMoves() {

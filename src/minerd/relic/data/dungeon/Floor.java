@@ -29,7 +29,7 @@ public class Floor extends GameData {
 		this.relIndex = relIndex;
 		this.dungeonIndex = dunIndex;
 		try{
-			BufferedDataHandler rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getInstance().getAll();
 			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
 			rom.seek(rom.parsePointer());
 			rom.skip(16*relIndex+16);
@@ -114,8 +114,9 @@ public class Floor extends GameData {
 	}
 
 	@Override
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 		try{
+			BufferedDataHandler rom = Rom.getInstance().getAll();
 			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
 			rom.seek(rom.parsePointer());
 			rom.skip(16*relIndex+16);

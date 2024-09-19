@@ -26,7 +26,7 @@ public class TrapList extends GameData {
 	}
 
 	@Override
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 
 	}
 

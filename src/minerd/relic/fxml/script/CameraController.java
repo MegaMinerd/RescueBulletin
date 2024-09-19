@@ -12,7 +12,7 @@ public class CameraController {
 	public ScriptPane script;
 
 	public void load(Pointer pointer, int number) throws IOException {
-		BufferedDataHandler rom = Rom.getAll(); 
+		BufferedDataHandler rom = Rom.getInstance().getAll();
 		rom.seek(pointer);
 		
 		offset.setText(Integer.toHexString(rom.getFilePointer()));

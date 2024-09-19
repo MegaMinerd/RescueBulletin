@@ -77,7 +77,7 @@ public class Text extends GameData {
 
 		try{
 			String[] dunTracks = new String[75];
-			BufferedDataHandler rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getInstance().getAll();
 			rom.seek(0xF5668);
 			for(int i = 0; i<75; i++){
 				dunTracks[i] = getText("Tracks", rom.readUnsignedShort());
@@ -96,7 +96,7 @@ public class Text extends GameData {
 	public static String[] readTextTable(int tablePointer, int count, int gap) {
 		String[] texts = new String[count];
 		try{
-			BufferedDataHandler rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getInstance().getAll();
 			rom.seek(tablePointer);
 			for(int i = 0; i<count; i++){
 				Pointer p = rom.parsePointer();
@@ -114,7 +114,7 @@ public class Text extends GameData {
 	public static String[][] readTextList(int listPointer, int count, int interlaces) {
 		String[][] texts = new String[interlaces][count];
 		try{
-			BufferedDataHandler rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getInstance().getAll();
 			rom.seek(listPointer);
 			Stack<String> textStack = new Stack<String>();
 			for(int i = 0; i<count*interlaces; i++){
@@ -146,12 +146,12 @@ public class Text extends GameData {
 
 	@Override
 	public Control load() throws IOException {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 
 		return null;
 	}
 
 	@Override
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 		// TODO Auto-generated method stub
 
 	}

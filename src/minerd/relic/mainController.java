@@ -25,6 +25,7 @@ import minerd.relic.data.FriendArea;
 import minerd.relic.data.Item;
 import minerd.relic.data.Move;
 import minerd.relic.data.Pokemon;
+import minerd.relic.file.RedRom;
 import minerd.relic.file.Rom;
 import minerd.relic.tree.DataTreeItem;
 import minerd.relic.tree.DungeonFolderTreeItem;
@@ -58,7 +59,7 @@ public class mainController implements Initializable {
 	}
 
 	public void reloadAll() throws IOException {
-		if(Rom.getAll()!=null){
+		if(Rom.getInstance()!=null){
 			reloadTree();
 			// reload views and such
 		}
@@ -66,7 +67,7 @@ public class mainController implements Initializable {
 
 	@SuppressWarnings({ "rawtypes" , "unchecked" })
 	public void reloadTree() throws IOException {
-		root = new FolderTreeItem(Rom.getFilename(), "Select something to edit in the ROM from the tree on the left.");
+		root = new FolderTreeItem(Rom.getInstance().getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
 		root.getChildren().add(new ListsFolderTreeItem());
 		root.getChildren().add(new MapFolderTreeItem());
@@ -88,7 +89,7 @@ public class mainController implements Initializable {
 		File file = fc.showOpenDialog(dataTree.getScene().getWindow());
 		if(file!=null){
 			try{
-				Rom.load(file);
+				Rom.load(new RedRom(file));
 				reloadAll();
 			} catch(IOException fnfe){
 			}

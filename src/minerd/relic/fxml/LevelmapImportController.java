@@ -66,10 +66,10 @@ public class LevelmapImportController implements Initializable {
 			BufferedDataHandler comp = CompressionHandler.compress(data, false);
 			comp.seek(0);
 
-			BufferedDataHandler rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getInstance().getAll();
 			rom.seek(Integer.parseInt(offset.getText(), 16));
 			rom.write(comp, 0);
-			Rom.saveAll(rom);
+			Rom.getInstance().saveAll(rom);
 		} catch(IOException e){
 			e.printStackTrace();
 		}

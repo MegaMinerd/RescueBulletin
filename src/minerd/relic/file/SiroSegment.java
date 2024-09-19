@@ -1,5 +1,6 @@
 package minerd.relic.file;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class SiroSegment {
@@ -48,6 +49,11 @@ public class SiroSegment {
 	}
 
 	public BufferedDataHandler getData() {
+		try{
+			data.seek(0);
+		} catch(IOException e){
+			e.printStackTrace();
+		}
 		return data;
 	}
 

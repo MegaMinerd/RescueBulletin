@@ -34,30 +34,30 @@ public class EncounterList extends GameData {
 	}
 
 	@Override
-	public void save(BufferedDataHandler rom) {
-		try {
-		short lastProb = 0;
-		short lastHouseProb = 0;
-		for(Encounter mon : entries) {
-			int[] data = { mon.getId(), mon.getLevel() };
-			rom.writeMask(data, 2, 9, 7);
-			if(mon.getFloorProb()==0) {
-				rom.writeUnsignedShort(0);
-			} else {
-				lastProb += mon.getFloorProb();
-				rom.writeUnsignedShort(lastProb);
-			}
-			if(mon.getHouseProb()==0) {
-				rom.writeUnsignedShort(0);
-			} else {
-				lastHouseProb += mon.getHouseProb();
-				rom.writeUnsignedShort(lastHouseProb);
-			}
-			rom.writeUnsignedShort(0);
-		}
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
+	public void save() {
+//		try {
+//		short lastProb = 0;
+//		short lastHouseProb = 0;
+//		for(Encounter mon : entries) {
+//			int[] data = { mon.getId(), mon.getLevel() };
+//			rom.writeMask(data, 2, 9, 7);
+//			if(mon.getFloorProb()==0) {
+//				rom.writeUnsignedShort(0);
+//			} else {
+//				lastProb += mon.getFloorProb();
+//				rom.writeUnsignedShort(lastProb);
+//			}
+//			if(mon.getHouseProb()==0) {
+//				rom.writeUnsignedShort(0);
+//			} else {
+//				lastHouseProb += mon.getHouseProb();
+//				rom.writeUnsignedShort(lastHouseProb);
+//			}
+//			rom.writeUnsignedShort(0);
+//		}
+//		}catch(IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public String getName() {

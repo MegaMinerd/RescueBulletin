@@ -11,7 +11,7 @@ public class SceneFolderController {
 	public Label offset, callNum, callPointer, sceneNum;
 
 	public SceneFolderController load(Pointer pointer, int number) throws IOException {
-		BufferedDataHandler rom = Rom.getAll(); 
+		BufferedDataHandler rom = Rom.getInstance().getAll();
 		rom.seek(pointer);
 		for(int i=0; i<number; i++) {
 			offset.setText(offset.getText() + Integer.toHexString(rom.getFilePointer()) + "\n");

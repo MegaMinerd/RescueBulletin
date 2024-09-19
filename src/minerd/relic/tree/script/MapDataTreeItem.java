@@ -23,7 +23,7 @@ public class MapDataTreeItem extends FolderTreeItem<GameData> {
 		this.index = index;
 
 		try{
-			BufferedDataHandler rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getInstance().getAll();
 			rom.seek(RrtOffsetList.mapScriptOffset);
 			rom.skip(4*index);
 			this.headerPointer = rom.parsePointer();

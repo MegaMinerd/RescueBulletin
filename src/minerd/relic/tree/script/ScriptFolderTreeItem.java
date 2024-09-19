@@ -53,7 +53,7 @@ public class ScriptFolderTreeItem<T extends GameData> extends FolderTreeItem<T> 
 
 			BufferedDataHandler rom;
 			try{
-				rom = Rom.getAll();
+				rom = Rom.getInstance().getAll();
 				rom.seek(pointer);
 
 				if(!controller.s2.getText().equals("")){

@@ -28,7 +28,7 @@ public class MapFolderTreeItem extends FolderTreeItem<GameData> {
 			ArrayList<Integer> seen = new ArrayList<Integer>();
 
 			try{
-				BufferedDataHandler rom = Rom.getAll();
+				BufferedDataHandler rom = Rom.getInstance().getAll();
 				for(int i = 0; true; i++){
 					rom.seek(RrtOffsetList.mapScriptOffset);
 					rom.skip(4*i);

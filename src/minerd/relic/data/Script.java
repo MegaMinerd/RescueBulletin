@@ -13,7 +13,7 @@ public class Script extends GameData{
 	}
 
 	@Override
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 		// TODO Auto-generated method stub
 		
 	}

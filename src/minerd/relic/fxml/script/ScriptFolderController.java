@@ -22,7 +22,7 @@ public class ScriptFolderController {
 		}
 		cola.setText(a);
 		colb.setText(b);
-		BufferedDataHandler rom = Rom.getAll();
+		BufferedDataHandler rom = Rom.getInstance().getAll();
 		rom.seek(pointer);
 		data.setText("");
 		for(int i=0; i<number*(hasLine2?2:1); i++) {

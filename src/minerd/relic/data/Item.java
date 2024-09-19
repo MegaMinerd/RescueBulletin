@@ -5,42 +5,39 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
-import minerd.relic.file.BufferedDataHandler;
+import minerd.relic.file.SiroFile;
 import minerd.relic.fxml.ItemController;
-import minerd.relic.util.RrtOffsetList;
 
 public class Item extends GameData {
 	private String name, description;
-	private int itemId, offset, buyPrice, sellPrice, itemType, spriteId, moveId, order, minAmnt, maxAmnt, paletteId, actionType;
+	private int itemId, buyPrice, sellPrice, itemType, spriteId, moveId, order, minAmnt, maxAmnt, paletteId, actionType;
 	private boolean ai1, ai2, ai3;
 
 	public Item(int index) {
 		itemId = index;
 		try{
-			BufferedDataHandler rom = Rom.getAll();
-			rom.seek(RrtOffsetList.itemOffset + 4);
-			rom.seek(rom.parsePointer());
-			rom.skip(index*0x20);
-			offset = rom.getFilePointer();
-			name = rom.readString(rom.parsePointer());
-			buyPrice = rom.readInt();
-			sellPrice = rom.readInt();
-			itemType = rom.readUnsignedByte();
-			spriteId = rom.readUnsignedByte();
-			rom.skip(2);
-			description = rom.readString(rom.parsePointer()).replace("#n", "\n");
-			ai1 = rom.readByte()!=0;
-			ai2 = rom.readByte()!=0;
-			ai3 = rom.readByte()!=0;
-			rom.skip(1);
-			moveId = rom.readShort();
-			order = rom.readUnsignedByte();
-			minAmnt = rom.readUnsignedByte();
-			maxAmnt = rom.readUnsignedByte();
-			paletteId = rom.readUnsignedByte();
-			actionType = rom.readUnsignedByte();
+			SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("itempara");
+			BufferedDataHandler entry = data.getSegment("items/" + index).getData();
+			name = data.getSegment("names/" + entry.parsePointer().getOffset()).getData().readString();
+			buyPrice = entry.readInt();
+			sellPrice = entry.readInt();
+			itemType = entry.readUnsignedByte();
+			spriteId = entry.readUnsignedByte();
+			entry.skip(2);
+			description = data.getSegment("descs/" + entry.parsePointer().getOffset()).getData().readString().replace("#n", "\n");
+			ai1 = entry.readByte()!=0;
+			ai2 = entry.readByte()!=0;
+			ai3 = entry.readByte()!=0;
+			entry.skip(1);
+			moveId = entry.readShort();
+			order = entry.readUnsignedByte();
+			minAmnt = entry.readUnsignedByte();
+			maxAmnt = entry.readUnsignedByte();
+			paletteId = entry.readUnsignedByte();
+			actionType = entry.readUnsignedByte();
 			Cache.add("Item", index, this);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
@@ -57,26 +54,27 @@ public class Item extends GameData {
 		return dataPane;
 	}
 
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 		try{
-			rom.seek(offset);
-			rom.writeString(name, rom.parsePointer());
-			rom.writeInt(buyPrice);
-			rom.writeInt(sellPrice);
-			rom.writeUnsignedByte(itemType);
-			rom.writeUnsignedByte(spriteId);
-			rom.skip(2);
-			rom.writeString(description.replace("\n", "#n"), rom.parsePointer());
-			rom.writeByte((byte) (ai1 ? 1 : 0));
-			rom.writeByte((byte) (ai2 ? 1 : 0));
-			rom.writeByte((byte) (ai3 ? 1 : 0));
-			rom.skip(1);
-			rom.writeShort((short) moveId);
-			rom.writeUnsignedByte(order);
-			rom.writeUnsignedByte(minAmnt);
-			rom.writeUnsignedByte(maxAmnt);
-			rom.writeUnsignedByte(paletteId);
-			rom.writeUnsignedByte(actionType);
+			SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("itempara");
+			BufferedDataHandler entry = data.getSegment("items/" + itemId).getData();
+			data.getSegment("names/" + entry.parsePointer().getOffset()).getData().writeString(name);
+			entry.writeInt(buyPrice);
+			entry.writeInt(sellPrice);
+			entry.writeUnsignedByte(itemType);
+			entry.writeUnsignedByte(spriteId);
+			entry.skip(2);
+			data.getSegment("descs/" + entry.parsePointer().getOffset()).getData().writeString(description.replace("\n", "#n"));
+			entry.writeByte((byte) (ai1 ? 1 : 0));
+			entry.writeByte((byte) (ai2 ? 1 : 0));
+			entry.writeByte((byte) (ai3 ? 1 : 0));
+			entry.skip(1);
+			entry.writeShort((short) moveId);
+			entry.writeUnsignedByte(order);
+			entry.writeUnsignedByte(minAmnt);
+			entry.writeUnsignedByte(maxAmnt);
+			entry.writeUnsignedByte(paletteId);
+			entry.writeUnsignedByte(actionType);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}

@@ -22,7 +22,7 @@ public class FriendArea extends GameData {
 		// TODO: code seems inconsistent on whether GameData
 		// constructors catch or throw IOExceptions
 		try{
-			BufferedDataHandler rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getInstance().getAll();
 			rom.seek(RrtOffsetList.areaOffset);
 			rom.skip(index*0x8);
 			population = rom.readUnsignedShort();
@@ -44,8 +44,10 @@ public class FriendArea extends GameData {
 	}
 
 	@Override
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 		try{
+			BufferedDataHandler rom = Rom.getInstance().getAll();
+			
 			rom.seek(RrtOffsetList.areaOffset);
 			rom.skip(index*0x8);
 			rom.writeUnsignedShort(population);

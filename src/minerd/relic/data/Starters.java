@@ -16,7 +16,7 @@ public class Starters extends GameData {
 	public Starters(int index) {
 
 		try{
-			BufferedDataHandler rom = Rom.getAll();
+			BufferedDataHandler rom = Rom.getInstance().getAll();
 
 			rom.seek(RrtOffsetList.playersOffset);
 			players = new int[26];
@@ -42,8 +42,10 @@ public class Starters extends GameData {
 		return dataPane;
 	}
 
-	public void save(BufferedDataHandler rom) {
+	public void save() {
 		try{
+			BufferedDataHandler rom = Rom.getInstance().getAll();
+			
 			rom.seek(RrtOffsetList.playersOffset);
 			for(int i = 0; i<26; i++){
 				rom.writeShort((short) players[i]);
