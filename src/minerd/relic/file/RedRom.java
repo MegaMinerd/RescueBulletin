@@ -28,6 +28,7 @@ public class RedRom extends Rom {
 		options.add(StandardOpenOption.WRITE);
 		file = FileChannel.open(fileIn.toPath(), options);
 		filename = fileIn.getName();
+		sbinCache = new HashMap<String, SbinFile>();
 	}
 
 	public String getFilename() {

@@ -8,6 +8,7 @@ public class RomLoader {
 
 	public static Rom load(File fileIn) throws IOException {
 		instance = new RedRom(fileIn);
+		Rom.load(instance);
 		//TODO: BlueRom
 		return instance;
 	}

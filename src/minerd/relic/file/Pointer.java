@@ -27,7 +27,7 @@ public class Pointer {
 	}
 
 	public Pointer relativeTo(int off) {
-		return absolute ? new Pointer(offset - off, false) : this;
+		return absolute ? new Pointer(offset - off, true) : this;
 	}
 
 	public Pointer absoluteFrom(int off) {

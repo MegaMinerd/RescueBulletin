@@ -1,7 +1,6 @@
 package minerd.relic.file;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
@@ -16,6 +15,7 @@ public class SbinFile extends BufferedDataHandler {
 		super(bufferIn);
 		this.name = nameIn;
 		this.offset = offsetIn;
+		System.out.println(offset);
 
 		contents = new HashMap<String, BufferedDataHandler>();
 		offsets = new HashMap<String, Integer>();
@@ -23,37 +23,39 @@ public class SbinFile extends BufferedDataHandler {
 		try{
 			seek(8);
 			int count = (int) readUnsignedInt();
+			System.out.println(count + " files");
 			seek(24);
 			String[] names = new String[count];
 			Pointer[] pointers = new Pointer[count];
 			//Read the table of contents
 			for(int i = 0; i<count; i++){
-				names[i] = readString(parsePointer());
+				Pointer p = parsePointer().relativeTo(offset);
+				names[i] = readString(p);
 				pointers[i] = parsePointer();
 			}
 			//Build the content table in a separate loop
 			//Doing this as a single loop would be complicated due to referencing i+i
 			for(int i = 0; i<count - 1; i++)
-				addSubfile(names[i], pointers[i].getOffset(), pointers[i + 1].getOffset());
-			//addSubfile(names[count-1], pointers[count-1].getOffset(), length());
+				addSubfile(names[i], pointers[i], pointers[i + 1]);
+			addSubfile(names[count - 1], pointers[count - 1], Pointer.fromInt(length()));
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
 	}
 
 	//Helper function used by constructor to avoid code repetition
-	private void addSubfile(String filename, int start, int end) throws IOException {
-		if(end - start>0){
-			System.out.println(filename + ": " + start + " - " + end);
-			byte[] segment = new byte[end - start];
-			seek(start);
+	private void addSubfile(String filename, Pointer start, Pointer end) throws IOException {
+		if(end.getOffset() - start.getOffset()>0){
+			System.out.println(filename + ": " + start.relativeTo(offset).getOffset() + " - " + end.relativeTo(offset).getOffset());
+			byte[] segment = new byte[end.getOffset() - start.getOffset()];
+			seek(start.relativeTo(offset));
 			read(segment);
 			contents.put(filename, new BufferedDataHandler(ByteBuffer.wrap(segment)));
-			offsets.put(filename, start);
+			offsets.put(filename, start.getOffset());
 		} else{
 			//Check if it is a repeat file.
 			for(String othername : contents.keySet()){
-				if(start==offsets.get(othername)){
+				if(start.getOffset()==offsets.get(othername)){
 					aliases.put(filename, othername);
 				}
 			}
@@ -64,8 +66,8 @@ public class SbinFile extends BufferedDataHandler {
 		contents.put(filename, data);
 	}
 
-	public void buildSiroSubfile(String filename, SiroFile.SiroLayout layout, int ... args) throws IOException {
-		switch(layout) {
+	public void buildSiroSubfile(String filename, SiroFile.SiroLayout layout, int... args) throws IOException {
+		switch(layout){
 			case ITEM:
 				SiroFactory.buildItemSiro(getSubfile(filename), getOffset(filename));
 				break;
@@ -93,7 +95,10 @@ public class SbinFile extends BufferedDataHandler {
 	}
 
 	public int getOffset(String filename) {
-		return offsets.get(filename);
+		Integer off = offsets.get(filename);
+		if(off==null)
+			System.out.println(filename + " returned null offset");
+		return off;
 	}
 
 	public ByteBuffer save() throws IOException {
