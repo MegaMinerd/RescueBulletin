@@ -1,6 +1,6 @@
 package minerd.relic.file;
 
-public class Pointer {
+public class Pointer{
 	private final int offset;
 	private final boolean absolute;
 
@@ -32,5 +32,10 @@ public class Pointer {
 
 	public Pointer absoluteFrom(int off) {
 		return absolute ? this : new Pointer(offset - off, true);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return ((Pointer)o).getOffset()==offset && ((Pointer)o).isAbsolute()==absolute;
 	}
 }

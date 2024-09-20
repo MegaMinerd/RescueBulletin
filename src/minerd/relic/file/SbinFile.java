@@ -2,6 +2,7 @@ package minerd.relic.file;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SbinFile extends BufferedDataHandler {
@@ -25,19 +26,32 @@ public class SbinFile extends BufferedDataHandler {
 			int count = (int) readUnsignedInt();
 			System.out.println(count + " files");
 			seek(24);
-			String[] names = new String[count];
-			Pointer[] pointers = new Pointer[count];
+			ArrayList<String> names = new ArrayList<String>(count);
+			ArrayList<Pointer> pointers = new ArrayList<Pointer>(count);
 			//Read the table of contents
 			for(int i = 0; i<count; i++){
-				Pointer p = parsePointer().relativeTo(offset);
-				names[i] = readString(p);
-				pointers[i] = parsePointer();
+				names.add(readString(parsePointer().relativeTo(offset)));
+				pointers.add(parsePointer());
+			}
+			//Detect aliases
+			int i = 0;
+			while(i<pointers.size()){
+				Pointer p = pointers.get(i);
+				if(i==pointers.indexOf(p)){
+					//This is the first occurrence of this pointer, move on.
+					i++;
+				} else{
+					//This a repeat occurrence of this pointer, register an alias and remove it
+					aliases.put(names.get(i), names.get(pointers.indexOf(p)));
+					names.remove(i);
+					pointers.remove(i);
+				}
 			}
 			//Build the content table in a separate loop
-			//Doing this as a single loop would be complicated due to referencing i+i
-			for(int i = 0; i<count - 1; i++)
-				addSubfile(names[i], pointers[i], pointers[i + 1]);
-			addSubfile(names[count - 1], pointers[count - 1], Pointer.fromInt(length()));
+			for(i = 0; i<pointers.size() - 1; i++){
+				addSubfile(names.get(i), pointers.get(i), pointers.get(i + 1));
+			}
+			addSubfile(names.get(pointers.size() - 1), pointers.get(pointers.size() - 1), Pointer.fromInt(length()));
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
@@ -45,21 +59,13 @@ public class SbinFile extends BufferedDataHandler {
 
 	//Helper function used by constructor to avoid code repetition
 	private void addSubfile(String filename, Pointer start, Pointer end) throws IOException {
-		if(end.getOffset() - start.getOffset()>0){
 			System.out.println(filename + ": " + start.relativeTo(offset).getOffset() + " - " + end.relativeTo(offset).getOffset());
-			byte[] segment = new byte[end.getOffset() - start.getOffset()];
-			seek(start.relativeTo(offset));
-			read(segment);
-			contents.put(filename, new BufferedDataHandler(ByteBuffer.wrap(segment)));
-			offsets.put(filename, start.getOffset());
-		} else{
-			//Check if it is a repeat file.
-			for(String othername : contents.keySet()){
-				if(start.getOffset()==offsets.get(othername)){
-					aliases.put(filename, othername);
-				}
-			}
-		}
+				(end.relativeTo(offset).getOffset() - start.relativeTo(offset).getOffset())));
+		byte[] segment = new byte[end.relativeTo(offset).getOffset() - start.relativeTo(offset).getOffset()];
+		seek(start.relativeTo(offset));
+		read(segment);
+		contents.put(filename, new BufferedDataHandler(ByteBuffer.wrap(segment)));
+		offsets.put(filename, start.getOffset());
 	}
 
 	public void updateSubfile(String filename, BufferedDataHandler data) throws IOException {
@@ -69,22 +75,22 @@ public class SbinFile extends BufferedDataHandler {
 	public void buildSiroSubfile(String filename, SiroFile.SiroLayout layout, int... args) throws IOException {
 		switch(layout){
 			case ITEM:
-				SiroFactory.buildItemSiro(getSubfile(filename), getOffset(filename));
+				updateSubfile(filename, SiroFactory.buildItemSiro(getSubfile(filename), getOffset(filename)));
 				break;
 			case POKEMON:
-				SiroFactory.buildPokemonSiro(getSubfile(filename), getOffset(filename));
+				updateSubfile(filename, SiroFactory.buildPokemonSiro(getSubfile(filename), getOffset(filename)));
 				break;
 			case MOVE:
-				SiroFactory.buildMoveSiro(getSubfile(filename), getOffset(filename));
+				updateSubfile(filename, SiroFactory.buildMoveSiro(getSubfile(filename), getOffset(filename)));
 				break;
 			case DUNGEON:
-				SiroFactory.buildDungeonSiro(getSubfile(filename), getOffset(filename));
+				updateSubfile(filename, SiroFactory.buildDungeonSiro(getSubfile(filename), getOffset(filename)));
 				break;
 			case GRAPHIC_LIST:
-				SiroFactory.buildGraphicListSiro(getSubfile(filename), getOffset(filename));
+				updateSubfile(filename, SiroFactory.buildGraphicListSiro(getSubfile(filename), getOffset(filename)));
 				break;
 			case GRAPHIC_TABLE:
-				SiroFactory.buildGraphicTableSiro(getSubfile(filename), getOffset(filename), args[0], args[1]);
+				updateSubfile(filename, SiroFactory.buildGraphicTableSiro(getSubfile(filename), getOffset(filename), args[0], args[1]));
 				break;
 		}
 

@@ -99,7 +99,7 @@ public class SiroFactory {
 	}
 
 	private static SiroSegment readStringList(BufferedDataHandler buffer, int offset, int start, int end, boolean isPadded) throws IOException {
-		SiroSegment strings = new SiroSegment(start);
+		SiroSegment strings = new SiroSegment(start + offset);
 		buffer.seek(start);
 		while(buffer.getFilePointer()<end){
 			int off = buffer.getFilePointer() + offset;
@@ -119,9 +119,9 @@ public class SiroFactory {
 		buffer.seek(4);
 		int dataStart = buffer.parsePointer().relativeTo(offset).getOffset();
 		buffer.skip(8);
-		SiroSegment descs = readStringList(buffer, offset + 16, 16, dataStart, false);
+		SiroSegment descs = readStringList(buffer, offset, 16, dataStart, false);
 		head.addChild("descs", descs);
-		SiroSegment items = new SiroSegment(dataStart);
+		SiroSegment items = new SiroSegment(dataStart + offset);
 		int index = 0;
 		byte[] data = new byte[0x20];
 		while(true){
@@ -131,14 +131,14 @@ public class SiroFactory {
 			if(test==8 || test==9){
 				int off = buffer.getFilePointer();
 				buffer.read(data);
-				items.addChild(index + "", new SiroSegment(off, new BufferedDataHandler(ByteBuffer.wrap(data))));
+				items.addChild(index + "", new SiroSegment(off + offset, new BufferedDataHandler(ByteBuffer.wrap(data))));
 				index++;
 			} else{
 				break;
 			}
 		}
 		head.addChild("items", items);
-		SiroSegment names = readStringList(buffer, offset + buffer.getFilePointer(), buffer.getFilePointer(), buffer.length(), true);
+		SiroSegment names = readStringList(buffer, offset, buffer.getFilePointer(), buffer.length(), true);
 		head.addChild("names", names);
 		return new SiroFile(offset, head, SiroLayout.ITEM);
 	}
@@ -155,7 +155,7 @@ public class SiroFactory {
 			int test = buffer.readByte();
 			buffer.seek(buffer.getFilePointer() - 4);
 			if(test==8 || test==9){
-				int off = buffer.getFilePointer();
+				int off = buffer.getFilePointer() + offset;
 				buffer.read(data);
 				pokemon.addChild(index + "", new SiroSegment(off, new BufferedDataHandler(ByteBuffer.wrap(data))));
 				index++;
@@ -164,7 +164,7 @@ public class SiroFactory {
 			}
 		}
 		head.addChild("pokemon", pokemon);
-		SiroSegment strings = readStringList(buffer, offset + buffer.getFilePointer(), buffer.getFilePointer(), buffer.length(), true);
+		SiroSegment strings = readStringList(buffer, offset, buffer.getFilePointer(), buffer.length(), true);
 		head.addChild("strings", strings);
 		return new SiroFile(offset, head, SiroLayout.POKEMON);
 	}
@@ -186,19 +186,30 @@ public class SiroFactory {
 		SiroSegment learnsets = new SiroSegment(learnsetPtr.getOffset());
 		for(int i = 0; i<424; i++){
 			buffer.seek(learnsetPtr.relativeTo(offset).getOffset() + 8*i);
-			int off1 = buffer.parsePointer().getOffset();
-			int off2 = buffer.parsePointer().getOffset();
-			int off3 = buffer.parsePointer().getOffset();
+			Pointer p1 = buffer.parsePointer();
+			Pointer p2 = buffer.parsePointer();
+			Pointer p3 = buffer.parsePointer();
+			int off1 = p1==null ? 0 : p1.relativeTo(offset).getOffset();
+			int off2 = p2==null ? 0 : p2.relativeTo(offset).getOffset();
+			int off3 = p3==null ? 0 : p3.relativeTo(offset).getOffset();
 			SiroSegment learnset = new SiroSegment(off1, null);
-			buffer.seek(off1);
-			data = new byte[off2 - off1];
-			buffer.read(data);
-			learnset.addChild("lv", new SiroSegment(off1, new BufferedDataHandler(ByteBuffer.wrap(data))));
-			buffer.seek(off2);
-			data = new byte[off3 - off2];
-			buffer.read(data);
-			learnset.addChild("tm", new SiroSegment(off2, new BufferedDataHandler(ByteBuffer.wrap(data))));
-			learnsets.addChild(i + "", learnset);
+			if(p1==null){
+				learnset.addChild("lv", null);
+			} else{
+				buffer.seek(off1);
+				data = new byte[off2 - off1];
+				buffer.read(data);
+				learnset.addChild("lv", new SiroSegment(off1, new BufferedDataHandler(ByteBuffer.wrap(data))));
+			}
+			if(p2==null){
+				learnset.addChild("tm", null);
+			} else{
+				buffer.seek(off2);
+				data = new byte[off3 - off2];
+				buffer.read(data);
+				learnset.addChild("tm", new SiroSegment(off2, new BufferedDataHandler(ByteBuffer.wrap(data))));
+				learnsets.addChild(i + "", learnset);
+			}
 		}
 		head.addChild("learnsets", learnsets);
 
@@ -266,7 +277,7 @@ public class SiroFactory {
 
 		return new SiroFile(offset, head, SiroLayout.GRAPHIC_LIST);
 	}
-	
+
 	public static SiroFile buildGraphicTableSiro(BufferedDataHandler buffer, int offset, int childSize, int childNum) throws IOException {
 		SiroSegment head = new SiroSegment(offset);
 		//Parse header
