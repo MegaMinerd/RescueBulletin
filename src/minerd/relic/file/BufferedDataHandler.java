@@ -144,6 +144,8 @@ public class BufferedDataHandler implements DataHandler {
 		String output = "";
 		while(true){
 			try{
+				if(getFilePointer()==length())
+					break;
 				byte current = readByte();
 				if(current==0x00)
 					break;
