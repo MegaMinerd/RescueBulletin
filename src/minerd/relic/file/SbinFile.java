@@ -74,6 +74,9 @@ public class SbinFile extends BufferedDataHandler {
 
 	public void buildSiroSubfile(String filename, SiroFile.SiroLayout layout, int... args) throws IOException {
 		switch(layout){
+			case BASIC:
+				updateSubfile(filename, SiroFactory.buildBasicSiro(getSubfile(filename), getOffset(filename)));
+				break;
 			case ITEM:
 				updateSubfile(filename, SiroFactory.buildItemSiro(getSubfile(filename), getOffset(filename)));
 				break;

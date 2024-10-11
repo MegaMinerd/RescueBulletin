@@ -10,6 +10,7 @@ import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.SiroFile;
+import minerd.relic.file.SiroFile.SiroLayout;
 import minerd.relic.fxml.PokemonController;
 import minerd.relic.util.CompressionHandler;
 import minerd.relic.util.RrtOffsetList;
@@ -81,16 +82,11 @@ public class Pokemon extends GameData {
 				Cache.add("Learnset", index, learnset);
 			}
 
-			//TODO
-			entry.seek(RrtOffsetList.levelmapOffset);
-			entry.skip(entityID*0x8 + 0x4);
-			entry.seek(entry.parsePointer());
-			entry.skip(16);
-			int start = entry.getFilePointer();
-			entry.skip(5);
-			byte temp[] = new byte[entry.readShort()];
-			entry.getBuffer().get(start, temp);
-			lvmp = new Levelmap(CompressionHandler.decompress(new BufferedDataHandler(ByteBuffer.wrap(temp)), false), this);
+			String name = String.format("lvmp%03d", index);
+			System.out.println(name);
+			Rom.getInstance().getSystemSbin().buildSiroSubfile(name, SiroLayout.BASIC);
+			BufferedDataHandler lvmpdata = ((SiroFile) Rom.getInstance().getSystemSbin().getSubfile(name)).getSegment("data").getData();
+			lvmp = new Levelmap(CompressionHandler.decompress(lvmpdata, false), this);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}

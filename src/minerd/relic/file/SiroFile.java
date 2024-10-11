@@ -31,6 +31,7 @@ public class SiroFile extends BufferedDataHandler {
 	}
 	
 	public enum SiroLayout{
+		BASIC,
 		ITEM,
 		POKEMON,
 		MOVE,

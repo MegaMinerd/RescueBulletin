@@ -70,14 +70,7 @@ public class RedRom extends Rom {
 			system.buildSiroSubfile("itempara", SiroLayout.ITEM);
 			//kanji_a: undocumented siro
 			//kanji_b: undocumented siro
-			int index = 1;
-			while(true){
-				String name = String.format("lvmp&3d", index);
-				BufferedDataHandler lvmp = system.getSubfile(name);
-				if(lvmp==null)
-					break;
-				//system.updateSubfile(name, SiroFactory.buildCompressedSiro(lvmp, system.getOffset(name)));
-			}
+			//lvmp###: too many to do by default
 			system.buildSiroSubfile("monspara", SiroLayout.POKEMON);
 			system.buildSiroSubfile("wazapara", SiroLayout.MOVE);
 			sbinCache.put("system", system);

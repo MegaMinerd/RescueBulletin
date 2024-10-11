@@ -121,6 +121,21 @@ public class SiroFactory {
 		}
 		return strings;
 	}
+	
+	public static SiroFile buildBasicSiro(BufferedDataHandler buffer, int offset) throws IOException {
+		//Parse header
+		buffer.seek(4);
+		Pointer dataPtr = buffer.parsePointer();
+
+		buffer.seek(dataPtr.relativeTo(offset));
+		byte[] data = new byte[buffer.length()-0x10];
+		buffer.seek(dataPtr.relativeTo(offset));
+		buffer.read(data);
+		SiroSegment head = new SiroSegment(offset);
+		head.addChild("data", new SiroSegment(offset+0x10, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		
+		return new SiroFile(offset, head, SiroLayout.BASIC);
+	}
 
 	//0306570 to 030F66B
 	public static SiroFile buildItemSiro(BufferedDataHandler buffer, int offset) throws IOException {
