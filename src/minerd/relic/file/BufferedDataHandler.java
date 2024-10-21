@@ -387,4 +387,9 @@ public class BufferedDataHandler implements DataHandler {
 		}
 		return output;
 	}
+
+	//Overridden by subclasses
+	public BufferedDataHandler save() {
+		return this;
+	}
 }

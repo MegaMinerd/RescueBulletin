@@ -42,7 +42,7 @@ public class mainController implements Initializable {
 	TreeItem<String> root;
 
 	@Override
-	@SuppressWarnings({ "rawtypes" , "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void initialize(URL location, ResourceBundle resources) {
 		fc = new FileChooser();
 		fc.setTitle("Open Resource File");
@@ -61,11 +61,11 @@ public class mainController implements Initializable {
 	public void reloadAll() throws IOException {
 		if(Rom.getInstance()!=null){
 			reloadTree();
-			// reload views and such
+			//reload views and such
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes" , "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void reloadTree() throws IOException {
 		root = new FolderTreeItem(Rom.getInstance().getFilename(), "Select something to edit in the ROM from the tree on the left.");
 		dataTree.setRoot(root);
@@ -89,7 +89,10 @@ public class mainController implements Initializable {
 		File file = fc.showOpenDialog(dataTree.getScene().getWindow());
 		if(file!=null){
 			try{
+				//0xA0="POKE DUNGEONB24E01–"
 				Rom.load(new RedRom(file));
+				//0xA0="POKE DUNGEONB24P01–"
+				//TODO
 				reloadAll();
 			} catch(IOException fnfe){
 			}
@@ -110,12 +113,12 @@ public class mainController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void save() {
 		try{
 			Cache.saveAll();
 		} catch(IOException e){
-			// TODO Auto-generated catch block
+			//TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Saved");
@@ -132,11 +135,11 @@ public class mainController implements Initializable {
 
 			stage.show();
 		} catch(IOException e){
-			// TODO Auto-generated catch block
+			//TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void importPortraits() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/portraits.fxml"));
 		Parent importer;
@@ -148,11 +151,11 @@ public class mainController implements Initializable {
 
 			stage.show();
 		} catch(IOException e){
-			// TODO Auto-generated catch block
+			//TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void importLevelmap() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/levelmaps.fxml"));
 		Parent importer;
@@ -164,7 +167,7 @@ public class mainController implements Initializable {
 
 			stage.show();
 		} catch(IOException e){
-			// TODO Auto-generated catch block
+			//TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

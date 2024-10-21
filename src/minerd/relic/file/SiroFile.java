@@ -28,6 +28,11 @@ public class SiroFile extends BufferedDataHandler {
 		return offset;
 	}
 	
+	@Override
+	public BufferedDataHandler save() {
+		return SiroPacker.pack(this, layout);
+	}
+	
 	public enum SiroLayout{
 		BASIC,
 		ITEM,
