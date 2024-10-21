@@ -93,4 +93,9 @@ public class RedRom extends Rom {
 		}
 		return dungeon;
 	}
+
+	public BufferedDataHandler getDungeonData(int index) throws IOException {
+		int start = 0x109D30 + index*0x10;
+		return new BufferedDataHandler(get(start, start + 0x10));
+	}
 }

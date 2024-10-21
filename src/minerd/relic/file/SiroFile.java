@@ -1,7 +1,5 @@
 package minerd.relic.file;
 
-import java.io.IOException;
-
 public class SiroFile extends BufferedDataHandler {
 	private SiroSegment head;
 	private SiroLayout layout;
@@ -18,16 +16,16 @@ public class SiroFile extends BufferedDataHandler {
 		this.layout = layout;
 	}
 
+	public SiroSegment getSegment() {
+		return head;
+	}
+
 	public SiroSegment getSegment(String path) {
 		return head.getDescendant(path);
 	}
 
 	public int getOffset() {
 		return offset;
-	}
-
-	public SiroSegment getSegment() {
-		return head;
 	}
 	
 	public enum SiroLayout{

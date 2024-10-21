@@ -8,11 +8,10 @@ import javafx.scene.layout.Region;
 import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.data.Text;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.Rom;
 import minerd.relic.file.SiroFile;
-import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.DungeonController;
-import minerd.relic.util.RrtOffsetList;
 
 public class Dungeon extends GameData {
 	private String name;
@@ -23,9 +22,9 @@ public class Dungeon extends GameData {
 	public Dungeon(int index) {
 		dungeonId = index;
 		try{
-			SiroFile data = (SiroFile) Rom.getInstance().getDungeonSbin().getSubfile("mapparam");
-			BufferedDataHandler entry = data.getSegment("main/" + index).getData();
+			BufferedDataHandler entry = Rom.getInstance().getDungeonData(index);
 			name = Text.getText("Dungeons", index);
+			entry.seek(0);
 			stairsUp = entry.readBoolean();
 			evoOnKo = entry.readBoolean();
 			recruitable = entry.readBoolean();

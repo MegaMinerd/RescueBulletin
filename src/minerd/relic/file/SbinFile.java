@@ -16,7 +16,6 @@ public class SbinFile extends BufferedDataHandler {
 		super(bufferIn);
 		this.name = nameIn;
 		this.offset = offsetIn;
-		System.out.println(offset);
 
 		contents = new HashMap<String, BufferedDataHandler>();
 		offsets = new HashMap<String, Integer>();
@@ -24,7 +23,6 @@ public class SbinFile extends BufferedDataHandler {
 		try{
 			seek(8);
 			int count = (int) readUnsignedInt();
-			System.out.println(count + " files");
 			seek(24);
 			ArrayList<String> names = new ArrayList<String>(count);
 			ArrayList<Pointer> pointers = new ArrayList<Pointer>(count);
@@ -42,6 +40,7 @@ public class SbinFile extends BufferedDataHandler {
 					i++;
 				} else{
 					//This a repeat occurrence of this pointer, register an alias and remove it
+					//System.out.println(names.get(i) + " is an alias of " + names.get(pointers.indexOf(p)));
 					aliases.put(names.get(i), names.get(pointers.indexOf(p)));
 					names.remove(i);
 					pointers.remove(i);
@@ -59,8 +58,7 @@ public class SbinFile extends BufferedDataHandler {
 
 	//Helper function used by constructor to avoid code repetition
 	private void addSubfile(String filename, Pointer start, Pointer end) throws IOException {
-			System.out.println(filename + ": " + start.relativeTo(offset).getOffset() + " - " + end.relativeTo(offset).getOffset());
-				(end.relativeTo(offset).getOffset() - start.relativeTo(offset).getOffset())));
+		//System.out.println(String.format("%s: %x - %x = %x", filename, start.relativeTo(offset).getOffset(), end.relativeTo(offset).getOffset(), (end.relativeTo(offset).getOffset() - start.relativeTo(offset).getOffset())));
 		byte[] segment = new byte[end.relativeTo(offset).getOffset() - start.relativeTo(offset).getOffset()];
 		seek(start.relativeTo(offset));
 		read(segment);

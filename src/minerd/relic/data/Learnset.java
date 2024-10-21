@@ -24,8 +24,8 @@ public class Learnset extends GameData {
 		BufferedDataHandler tm = data.getSegment("learnsets/" + index + "/tm").getData();
 		tmMoves = new ArrayList<TmMove>();
 		while(tm.getFilePointer()<tm.length()){
-			tmMoves.add(new TmMove(readMoveId(tm)));
 			if(tm.peek() == 0) break;
+			tmMoves.add(new TmMove(readMoveId(tm)));
 		}
 	}
 

@@ -64,10 +64,9 @@ public class SiroFactory {
 		buffer.seek(list.relativeTo(offset));
 		for(int i = 0; i<childNum; i++){
 			byte[] data = new byte[childSize];
-			int dataOffset = list.getOffset() + 4*i;
+			int dataOffset = list.getOffset() + childSize*i;
 			buffer.seek((new Pointer(dataOffset, true)).relativeTo(offset));
-			Pointer dataPtr = buffer.parsePointer();
-			buffer.seek(dataPtr.relativeTo(offset));
+			int dataPtr = buffer.getFilePointer();
 			buffer.read(data);
 			parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
 		}
@@ -269,7 +268,7 @@ public class SiroFactory {
 		Pointer spawnPtr = buffer.parsePointer();
 		Pointer trapPtr = buffer.parsePointer();
 
-		head.addChild("main", populateFromTable(buffer, offset, 0x10, 0x0727, mainPtr));
+		head.addChild("main", populateFromTable(buffer, offset, 0x40, mainPtr));
 		head.addChild("layout", populateFromList(buffer, offset, 0x1C, 0x06E4, layoutPtr));
 		head.addChild("loot", populateFromTable(buffer, offset, 0xB2, lootPtr));
 		head.addChild("spawn", populateFromTable(buffer, offset, 0x0347, spawnPtr));
