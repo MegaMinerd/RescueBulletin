@@ -1,5 +1,7 @@
 package minerd.relic.file;
 
+import java.io.IOException;
+
 public class SiroFile extends BufferedDataHandler {
 	private SiroSegment head;
 	private SiroLayout layout;
@@ -30,7 +32,12 @@ public class SiroFile extends BufferedDataHandler {
 	
 	@Override
 	public BufferedDataHandler save() {
-		return SiroPacker.pack(this, layout);
+		try{
+			return SiroPacker.pack(this, layout);
+		} catch(IOException e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	public enum SiroLayout{
