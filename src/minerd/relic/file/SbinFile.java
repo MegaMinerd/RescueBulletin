@@ -49,8 +49,16 @@ public class SbinFile extends BufferedDataHandler {
 				Collections.sort(aliases.get(names.get(i)));
 			}
 			//Build the content table in a separate loop
-			for(int i = 0; i<pointers.size() - 1; i++){
-				addSubfile(names.get(i), pointers.get(i), pointers.get(i + 1));
+			buildtable: for(int i = 0; i<pointers.size() - 1; i++){
+				int j = 1;
+				while(pointers.get(i).getOffset()>=pointers.get(i + j).getOffset()){
+					j++;
+					if(i + j==pointers.size()){
+						addSubfile(names.get(pointers.size() - 1), pointers.get(pointers.size() - 1), Pointer.fromInt(length()));
+						continue buildtable;
+					}
+				}
+				addSubfile(names.get(i), pointers.get(i), pointers.get(i + j));
 			}
 			addSubfile(names.get(pointers.size() - 1), pointers.get(pointers.size() - 1), Pointer.fromInt(length()));
 		} catch(IOException | InvalidPointerException e){
