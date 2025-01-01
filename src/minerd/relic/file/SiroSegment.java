@@ -27,8 +27,16 @@ public class SiroSegment {
 		this.data = dataIn;
 	}
 
+	public int getOffset() {
+		return offset;
+	}
+
 	public void addChild(String name, SiroSegment child) {
 		children.put(name, child);
+	}
+
+	public void removeChild(String name) {
+		children.remove(name);
 	}
 
 	public void setData(BufferedDataHandler dataIn) {
