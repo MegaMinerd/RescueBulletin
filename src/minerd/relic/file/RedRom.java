@@ -68,14 +68,48 @@ public class RedRom extends Rom {
 			//fontsp: non-siro, count=0x10, tiles
 			//fontsppa: non-siro palette
 			system.buildSiroSubfile("itempara", SiroLayout.ITEM);
-			//kanji_a: undocumented siro
-			//kanji_b: undocumented siro
+			//kanji_a: undocumented basic siro
+			//kanji_b: undocumented basic siro
 			//lvmp###: too many to do by default
 			system.buildSiroSubfile("monspara", SiroLayout.POKEMON);
 			system.buildSiroSubfile("wazapara", SiroLayout.MOVE);
 			sbinCache.put("system", system);
 		}
 		return system;
+	}
+
+	public SbinFile getTitleMenuSbin() throws IOException {
+		SbinFile titlemenu = sbinCache.get("titlemenu");
+		if(titlemenu==null){
+			file.position(0x380000);
+			ByteBuffer buffer = ByteBuffer.allocate(0x030000);
+			file.read(buffer);
+			titlemenu = new SbinFile(buffer, "titlemenu", 0x380000);
+			titlemenu.buildSiroSubfile("clmkpat", SiroLayout.GRAPHIC_LIST);
+			//commun0:  non-siro compressed tiles
+			//commun0p: non-siro palette
+			//subdef:   non-siro compressed image
+			//subdefp:  non-siro palette
+			//titlen0:  non-siro compressed image
+			//titlen0p: non-siro palette
+			//titlen1:  non-siro compressed image
+			//titlen1p: non-siro palette
+			//titlen2:  non-siro compressed image
+			//titlen2p: non-siro palette
+			titlemenu.buildSiroSubfile("tmrkpat", SiroLayout.GRAPHIC_LIST);
+			titlemenu.buildSiroSubfile("wlicpat", SiroLayout.GRAPHIC_LIST);
+			//wmapcani: siro palette
+			//wmapfont: non-siro compressed image
+			//wmapmcc:  siro compressed tiling
+			//wmappal:  non-siro palette
+			//wmapspr:  non-siro unknown data
+			//wmp2cani: siro palette
+			//wmp2font: non-siro compressed image
+			//wmp2mcc:  siro compressed tiling
+			//wmp2pal:  non-siro palette
+			sbinCache.put("titlemenu", titlemenu);
+		}
+		return titlemenu;
 	}
 
 	public SbinFile getDungeonSbin() throws IOException {
@@ -92,6 +126,33 @@ public class RedRom extends Rom {
 			dungeon.buildSiroSubfile("zmappat", SiroLayout.GRAPHIC_TABLE, 0x40, 0x300);
 		}
 		return dungeon;
+	}
+	
+	public SbinFile getMonsterSbin() throws IOException {
+		SbinFile monster = sbinCache.get("monster");
+		if(monster==null){
+			file.position(0x510000);
+			ByteBuffer buffer = ByteBuffer.allocate(0x01230000);
+			file.read(buffer);
+			monster = new SbinFile(buffer, "monster", 0x510000);
+			//ax001-ax423:   siro sprite
+			//kao001-kao423: 73x siro palette and compressed images
+			//palet:         non-siro general use palettes
+		}
+		return monster;
+	}
+	
+	public SbinFile getEffectSbin() throws IOException {
+		SbinFile effect = sbinCache.get("effect");
+		if(effect==null){
+			file.position(0x01740000);
+			ByteBuffer buffer = ByteBuffer.allocate(0x150000);
+			file.read(buffer);
+			effect = new SbinFile(buffer, "effect", 0x01740000);
+			//efbg000-efbg007: siro full screen animation
+			//efob000-efob138: siro sprite
+		}
+		return effect;
 	}
 
 	public BufferedDataHandler getDungeonData(int index) throws IOException {
