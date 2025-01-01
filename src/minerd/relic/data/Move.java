@@ -5,12 +5,11 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.SiroFile;
-import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.MoveController;
-import minerd.relic.util.RrtOffsetList;
 
 public class Move extends GameData {
 	private String name, description, useMessage;

@@ -3,7 +3,6 @@ package minerd.relic.data;
 import java.io.IOException;
 
 import javafx.scene.layout.Region;
-import minerd.relic.file.BufferedDataHandler;
 
 public abstract class GameData {
     

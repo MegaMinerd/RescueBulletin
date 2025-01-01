@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import minerd.relic.data.GameData;
 import minerd.relic.file.Pointer;
-import minerd.relic.fxml.script.MainScriptController;
 import minerd.relic.fxml.script.SceneController;
 import minerd.relic.tree.FolderTreeItem;
 

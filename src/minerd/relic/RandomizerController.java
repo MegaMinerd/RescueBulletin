@@ -13,13 +13,8 @@ import minerd.relic.data.Learnset.LevelMove;
 import minerd.relic.data.Move;
 import minerd.relic.data.Pokemon;
 import minerd.relic.data.Starters;
-import minerd.relic.data.dungeon.Encounter;
-import minerd.relic.data.dungeon.EncounterList;
 import minerd.relic.data.dungeon.Floor;
-import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
-import minerd.relic.file.BufferedDataHandler;
-import minerd.relic.util.RrtOffsetList;
 
 public class RandomizerController {
 	public CheckBox player, partner, learnset, pokeType, abilities, moveType;
@@ -123,7 +118,7 @@ public class RandomizerController {
 			}
 
 			if(learnset.isSelected()){
-				//TODO: temporary quick and dirty implentation until the SIR0 util is done
+				//TODO: temporary quick and dirty implementation until the SIR0 util is done
 				//TODO: is this the correct number?
 				Learnset[] learnsets = new Learnset[416];
 				for(int i = 1; i<416; i++){

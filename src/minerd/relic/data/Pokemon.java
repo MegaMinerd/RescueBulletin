@@ -1,7 +1,6 @@
 package minerd.relic.data;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
@@ -13,7 +12,6 @@ import minerd.relic.file.SiroFile;
 import minerd.relic.file.SiroFile.SiroLayout;
 import minerd.relic.fxml.PokemonController;
 import minerd.relic.util.CompressionHandler;
-import minerd.relic.util.RrtOffsetList;
 
 public class Pokemon extends GameData {
 	private String name, category;

@@ -5,8 +5,8 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
-import minerd.relic.file.Rom;
 import minerd.relic.file.BufferedDataHandler;
+import minerd.relic.file.Rom;
 import minerd.relic.fxml.AreaController;
 import minerd.relic.util.RrtOffsetList;
 
@@ -19,8 +19,8 @@ public class FriendArea extends GameData {
 		this.index = index;
 		name = Text.getText("Friend Areas", index);
 
-		// TODO: code seems inconsistent on whether GameData
-		// constructors catch or throw IOExceptions
+		//TODO: code seems inconsistent on whether GameData
+		//constructors catch or throw IOExceptions
 		try{
 			BufferedDataHandler rom = Rom.getInstance().getAll();
 			rom.seek(RrtOffsetList.areaOffset);
@@ -47,7 +47,7 @@ public class FriendArea extends GameData {
 	public void save() {
 		try{
 			BufferedDataHandler rom = Rom.getInstance().getAll();
-			
+
 			rom.seek(RrtOffsetList.areaOffset);
 			rom.skip(index*0x8);
 			rom.writeUnsignedShort(population);

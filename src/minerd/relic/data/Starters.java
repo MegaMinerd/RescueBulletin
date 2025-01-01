@@ -5,8 +5,8 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
-import minerd.relic.file.Rom;
 import minerd.relic.file.BufferedDataHandler;
+import minerd.relic.file.Rom;
 import minerd.relic.fxml.StartersController;
 import minerd.relic.util.RrtOffsetList;
 
@@ -45,7 +45,7 @@ public class Starters extends GameData {
 	public void save() {
 		try{
 			BufferedDataHandler rom = Rom.getInstance().getAll();
-			
+
 			rom.seek(RrtOffsetList.playersOffset);
 			for(int i = 0; i<26; i++){
 				rom.writeShort((short) players[i]);

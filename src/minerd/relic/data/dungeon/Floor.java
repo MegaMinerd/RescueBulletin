@@ -8,9 +8,9 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Region;
 import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
-import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.fxml.FloorController;
 import minerd.relic.util.RrtOffsetList;
 
@@ -131,19 +131,19 @@ public class Floor extends GameData {
 			rom.seek(RrtOffsetList.layoutOffset + layoutId*0x1C);
 			saveLayout(rom);
 
-			// TODO
-			// encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId,
-			// RrtOffsetList.encountersOffset, rom, EncounterList.class);
-			// traps = (TrapList) loadSubdata("TrapList", trapListId,
-			// RrtOffsetList.trapsOffset, rom, TrapList.class);
-			// floorLoot = (LootList) loadSubdata("LootList", itemTableId,
-			// RrtOffsetList.lootsOffset, rom, LootList.class);
-			// shopLoot = (LootList) loadSubdata("LootList", shopTableId,
-			// RrtOffsetList.lootsOffset, rom, LootList.class);
-			// houseLoot = (LootList) loadSubdata("LootList", houseTableId,
-			// RrtOffsetList.lootsOffset, rom, LootList.class);
-			// buriedLoot = (LootList) loadSubdata("LootList", buriedTableId,
-			// RrtOffsetList.lootsOffset, rom, LootList.class);
+			//TODO
+			//encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId,
+			//RrtOffsetList.encountersOffset, rom, EncounterList.class);
+			//traps = (TrapList) loadSubdata("TrapList", trapListId,
+			//RrtOffsetList.trapsOffset, rom, TrapList.class);
+			//floorLoot = (LootList) loadSubdata("LootList", itemTableId,
+			//RrtOffsetList.lootsOffset, rom, LootList.class);
+			//shopLoot = (LootList) loadSubdata("LootList", shopTableId,
+			//RrtOffsetList.lootsOffset, rom, LootList.class);
+			//houseLoot = (LootList) loadSubdata("LootList", houseTableId,
+			//RrtOffsetList.lootsOffset, rom, LootList.class);
+			//buriedLoot = (LootList) loadSubdata("LootList", buriedTableId,
+			//RrtOffsetList.lootsOffset, rom, LootList.class);
 		} catch(IOException e){
 			e.printStackTrace();
 		}
