@@ -72,7 +72,7 @@ public class RedRom extends Rom {
 			//kanji_b: undocumented basic siro
 			//lvmp###: too many to do by default
 			system.buildSiroSubfile("monspara", SiroLayout.POKEMON);
-			system.buildSiroSubfile("wazapara", SiroLayout.MOVE);
+			//system.buildSiroSubfile("wazapara", SiroLayout.MOVE);
 			sbinCache.put("system", system);
 		}
 		return system;

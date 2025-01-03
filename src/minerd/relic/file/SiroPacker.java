@@ -91,26 +91,39 @@ public class SiroPacker {
 
 	private static BufferedDataHandler packItemSiro(SiroFile siroFile) throws IOException {
 		SiroSegment itemsseg = siroFile.getSegment("items");
-		int totalLength = siroFile.getOffset() + 0x10;
+		int absoff = siroFile.getOffset() + 0x10;
 
+		Pointer descptr = new Pointer(absoff, true);
 		SiroSegment descsseg = siroFile.getSegment("descs");
-		BufferedDataHandler descs = writeStringList(totalLength, descsseg, itemsseg, false, false, 0x10);
-		totalLength += descs.length() + itemsseg.getChildren().size()*0x20;
+		BufferedDataHandler descs = writeStringList(absoff, descsseg, itemsseg, false, false, 0x10);
+		absoff += descs.length() + itemsseg.getChildren().size()*0x20;
+		
 
+		Pointer namesptr = new Pointer(absoff, true);
 		SiroSegment namesseg = siroFile.getSegment("names");
-		BufferedDataHandler names = writeStringList(totalLength, namesseg, itemsseg, true, false, 0x10);
-		totalLength += names.length();
+		BufferedDataHandler names = writeStringList(absoff, namesseg, itemsseg, true, false, 0x10);
+		absoff += names.length();
 
-		BufferedDataHandler out = new BufferedDataHandler(totalLength);
+		BufferedDataHandler out = new BufferedDataHandler(absoff - siroFile.getOffset() + 0x08);
+		//Write header
+		out.seek(0);
+		out.writeString("SIRO");
+		out.writePointer(new Pointer(absoff, true));
+		out.seek(0x10);
+		//Write data
 		out.write(descs);
 		for(int i = 0; i<itemsseg.getChildren().size(); i++){
 			out.write(itemsseg.getChild("" + i).getData());
 		}
 		out.write(names);
+		//Write footer
+		out.writePointer(descptr);
+		out.writePointer(namesptr);
 
 		return out;
 	}
 
+	//TODO SIRO pointers
 	private static BufferedDataHandler packPokemonSiro(SiroFile siroFile) throws IOException {
 		SiroSegment pokemonseg = siroFile.getSegment("pokemon");
 		SiroSegment stringsseg = siroFile.getSegment("strings");
@@ -137,9 +150,25 @@ public class SiroPacker {
 		return null;
 	}
 
-	private static BufferedDataHandler packGraphicListSiro(SiroFile siroFile) {
-		//TODO Auto-generated method stub
-		return null;
+	private static BufferedDataHandler packGraphicListSiro(SiroFile siroFile) throws IOException {
+		SiroSegment tileseg = siroFile.getSegment("tile");
+		SiroSegment palseg = siroFile.getSegment("palette");
+		int absoff = siroFile.getOffset() + 0x10;
+		
+		BufferedDataHandler out = new BufferedDataHandler(tileseg.getData().length() + palseg.getData().length() + 0x18);
+		//Write header
+		out.seek(0);
+		out.writeString("SIRO");
+		out.writePointer(new Pointer(absoff + tileseg.getData().length() + palseg.getData().length(), true));
+		out.seek(0x10);
+		//Write data
+		out.write(tileseg.getData());
+		out.write(palseg.getData());
+		//Write footer
+		out.writePointer(new Pointer(absoff, true));
+		out.writePointer(new Pointer(absoff + tileseg.getData().length(), true));
+		
+		return out;
 	}
 
 	private static BufferedDataHandler packGraphicTableSiro(SiroFile siroFile) {
