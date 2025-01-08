@@ -246,10 +246,15 @@ public class BufferedDataHandler implements DataHandler {
 	}
 
 	public void writeString(String in) throws IOException {
+		writeString(in, true);
+	}
+	
+	public void writeString(String in, boolean pad) throws IOException {
 		for(char c : in.toCharArray())
 			buffer.putChar(c);
-		for(int i = 0; i<4 - (in.length()%4); i++)
-			buffer.put((byte) 0);
+		if(pad)
+			for(int i = 0; i<4 - (in.length()%4); i++)
+				buffer.put((byte) 0);
 	}
 
 	public void writeString(String in, Pointer pointer) throws IOException {
