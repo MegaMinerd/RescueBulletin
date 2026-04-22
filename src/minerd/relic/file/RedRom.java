@@ -69,8 +69,9 @@ public class RedRom extends Rom {
 			//fontsppa: non-siro palette
 			system.buildSiroSubfile("itempara", SiroLayout.ITEM);
 			//12x12 pixel tiles, undocumented footer metadata
-			system.buildSiroSubfile("kanji_a", SiroLayout.GRAPHIC_TABLE);
-			system.buildSiroSubfile("kanji_b", SiroLayout.GRAPHIC_TABLE);
+			//TODO: double check graphics tables
+			//system.buildSiroSubfile("kanji_a", SiroLayout.GRAPHIC_TABLE);
+			//system.buildSiroSubfile("kanji_b", SiroLayout.GRAPHIC_TABLE);
 			for(int i=1; i<=421; i++) {
 				String lvmp = String.format("lvmp%03d", i);
 				if(!system.isAlias(lvmp))
@@ -125,7 +126,33 @@ public class RedRom extends Rom {
 			ByteBuffer buffer = ByteBuffer.allocate(0x160000);
 			file.read(buffer);
 			dungeon = new SbinFile(buffer, "dungeon", 0x3B0000);
+			for(int i=0; i<76; i++) {
+				if(dungeon.getSubfile(String.format("b%02dcanm", i)) != null)
+					dungeon.buildSiroSubfile(String.format("b%02dcanm", i), SiroLayout.PALETTE_TABLE);
+				if(dungeon.getSubfile(String.format("b%02dcex", i)) != null)
+					dungeon.buildSiroSubfile(String.format("b%02dcex", i), SiroLayout.BASIC);
+				if(dungeon.getSubfile(String.format("b%02demap", i)) != null)
+					dungeon.buildSiroSubfile(String.format("b%02demap", i), SiroLayout.BASIC);
+			}
+			//siro unknown data
+			dungeon.buildSiroSubfile("banfont", SiroLayout.BASIC);
+			//banrpal: non-siro palette
+			//siro unknown data
+			dungeon.buildSiroSubfile("colvec", SiroLayout.BASIC);
+			//etcfont: non-siro dungeon ui images
+			//siro dungeon shadow/ripple images
+			dungeon.buildSiroSubfile("etcfonta", SiroLayout.BASIC);
+			//fixedmap
+			//hp5font
+			//itempat
+			//jyochu
+			//levfont
 			dungeon.buildSiroSubfile("mapparam", SiroLayout.DUNGEON);
+			
+			for(int i=0; i<43; i++) {
+				if(dungeon.getSubfile(String.format("b%dtalk", i)) != null)
+					dungeon.buildSiroSubfile(String.format("b%dtalk", i), SiroLayout.PALETTE_TABLE);
+			}
 			//talk0-talk42: siro string table
 			//talkp0-talkp42: siro string table
 			dungeon.buildSiroSubfile("trappat", SiroLayout.GRAPHIC_LIST);

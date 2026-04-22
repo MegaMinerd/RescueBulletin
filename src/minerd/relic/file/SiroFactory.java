@@ -88,11 +88,16 @@ public class SiroFactory {
 			int dataOffset = table.getOffset() + 4*i;
 			buffer.seek((new Pointer(dataOffset, true)).relativeTo(offset));
 			Pointer dataPtr = buffer.parsePointer();
-			Pointer endPtr = i==childNum - 1 ? table : buffer.parsePointer();
-			byte[] data = new byte[endPtr.getOffset() - dataPtr.getOffset()];
-			buffer.seek(dataPtr.relativeTo(offset));
-			buffer.read(data);
-			parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+			try {
+				Pointer endPtr = i==childNum - 1 ? table : buffer.parsePointer();
+				byte[] data = new byte[endPtr.getOffset() - dataPtr.getOffset()];
+				buffer.seek(dataPtr.relativeTo(offset));
+				buffer.read(data);
+				parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+			}catch(InvalidPointerException e) {
+				//Perhaps this file was followed by pksdir0
+				break;
+			}
 		}
 		return parent;
 	}
