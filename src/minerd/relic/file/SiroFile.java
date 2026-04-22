@@ -47,6 +47,7 @@ public class SiroFile extends BufferedDataHandler {
 		MOVE,
 		DUNGEON,
 		GRAPHIC_LIST,
-		GRAPHIC_TABLE;
+		GRAPHIC_TABLE, 
+		PALETTE_TABLE;
 	}
 }

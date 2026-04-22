@@ -68,11 +68,16 @@ public class RedRom extends Rom {
 			//fontsp: non-siro, count=0x10, tiles
 			//fontsppa: non-siro palette
 			system.buildSiroSubfile("itempara", SiroLayout.ITEM);
-			//kanji_a: undocumented basic siro
-			//kanji_b: undocumented basic siro
-			//lvmp###: too many to do by default
+			//12x12 pixel tiles, undocumented footer metadata
+			system.buildSiroSubfile("kanji_a", SiroLayout.GRAPHIC_TABLE);
+			system.buildSiroSubfile("kanji_b", SiroLayout.GRAPHIC_TABLE);
+			for(int i=1; i<=421; i++) {
+				String lvmp = String.format("lvmp%03d", i);
+				if(!system.isAlias(lvmp))
+					system.buildSiroSubfile(lvmp, SiroLayout.BASIC);
+			}	
 			system.buildSiroSubfile("monspara", SiroLayout.POKEMON);
-			//system.buildSiroSubfile("wazapara", SiroLayout.MOVE);
+			system.buildSiroSubfile("wazapara", SiroLayout.MOVE);
 			sbinCache.put("system", system);
 		}
 		return system;
@@ -98,9 +103,10 @@ public class RedRom extends Rom {
 			//titlen2p: non-siro palette
 			titlemenu.buildSiroSubfile("tmrkpat", SiroLayout.GRAPHIC_LIST);
 			titlemenu.buildSiroSubfile("wlicpat", SiroLayout.GRAPHIC_LIST);
-			//wmapcani: siro palette
+			titlemenu.buildSiroSubfile("wmapcani", SiroLayout.PALETTE_TABLE);
 			//wmapfont: non-siro compressed image
-			//wmapmcc:  siro compressed tiling
+			//compressed tiling
+			titlemenu.buildSiroSubfile("wmapmcc", SiroLayout.BASIC);
 			//wmappal:  non-siro palette
 			//wmapspr:  non-siro unknown data
 			//wmp2cani: siro palette

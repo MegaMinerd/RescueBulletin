@@ -327,17 +327,30 @@ public class SiroFactory {
 		Pointer tilePtr = buffer.parsePointer();
 		Pointer palettePtr = buffer.parsePointer();
 
-		byte[] data = new byte[palettePtr.getOffset() - tilePtr.getOffset()];
-		buffer.seek(tilePtr.relativeTo(offset));
-		buffer.read(data);
 		head.addChild("tile", populateFromTable(buffer, offset, childSize, childNum, tilePtr));
 
-		data = new byte[footerPtr.getOffset() - palettePtr.getOffset()];
+		byte[] data = new byte[footerPtr.getOffset() - palettePtr.getOffset()];
 		buffer.seek(palettePtr.relativeTo(offset));
 		buffer.read(data);
 		head.addChild("palette", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
 
 		return new SiroFile(offset, head, SiroLayout.GRAPHIC_TABLE);
+	}
+
+	public static BufferedDataHandler buildPaletteTableSiro(BufferedDataHandler buffer, int offset) throws IOException {
+		SiroSegment head = new SiroSegment(offset);
+		//Parse header
+		buffer.seek(4);
+		Pointer footerPtr = buffer.parsePointer();
+		int footer = footerPtr.relativeTo(offset).getOffset();
+
+		//Parse footer
+		buffer.seek(footer);
+
+		head.addChild("palette", populateFromTable(buffer, offset, (buffer.length()-footer)/4, footerPtr));
+	
+
+		return new SiroFile(offset, head, SiroLayout.PALETTE_TABLE);	
 	}
 
 	//1E76170 to 1E77297

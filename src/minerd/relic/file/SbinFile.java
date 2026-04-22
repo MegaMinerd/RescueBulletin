@@ -103,12 +103,19 @@ public class SbinFile extends BufferedDataHandler {
 			case GRAPHIC_TABLE:
 				updateSubfile(filename, SiroFactory.buildGraphicTableSiro(getSubfile(filename), getOffset(filename), args[0], args[1]));
 				break;
+			case PALETTE_TABLE:
+				updateSubfile(filename, SiroFactory.buildPaletteTableSiro(getSubfile(filename), getOffset(filename)));
+				break;
 		}
 
 	}
 
 	public BufferedDataHandler getSubfile(String name) {
-		return contents.get(name);
+		return contents.get(isAlias(name) ? aliases.get(name).get(0) : name);
+	}
+	
+	public boolean isAlias(String name) {
+		return aliases.keySet().contains(name) && aliases.get(name).indexOf(name)!=0;
 	}
 
 	public int getOffset(String filename) {
