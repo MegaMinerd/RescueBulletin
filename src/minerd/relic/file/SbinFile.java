@@ -12,6 +12,7 @@ public class SbinFile extends BufferedDataHandler {
 	private int offset; //The offset of this sbin within the full rom
 	private HashMap<String, BufferedDataHandler> contents;
 	private HashMap<String, Integer> offsets;
+	//TODO: Each entry has 2 copies of its first value
 	private HashMap<String, ArrayList<String>> aliases;
 
 	public SbinFile(ByteBuffer bufferIn, String nameIn, int offsetIn) {
@@ -174,5 +175,37 @@ public class SbinFile extends BufferedDataHandler {
 			writeByte((byte) -1);
 
 		return buffer;
+	}
+	
+	public void printTree() {
+		System.out.println(name + ":");
+		if(!contents.isEmpty()) {
+			ArrayList<String> names = new ArrayList<String>();
+			names.addAll(contents.keySet());
+			names.sort(null);
+			for(String contentname : names) {
+				System.out.println(String.format("\t%s (0x%h)", contentname, offsets.get(contentname)));
+				//ArrayList<String> aliaslist = aliases.get(name);
+				//if(aliaslist!=null) {
+				//	String alias = aliaslist.get(0);
+				//	if(!alias.equals(name)) {
+				//		System.out.println("\t\t\talias of" + alias);
+				//	}
+				//}
+				if(contents.get(contentname) instanceof SiroFile) {
+					((SiroFile)contents.get(contentname)).printTree();
+				}
+			}
+			
+			//System.out.println("\taliases:");
+			//for(String name : aliases.keySet()) {
+			//	if(aliases.get(name).size()>2) {
+			//		System.out.println(String.format("\t\t%s", name) + ": " + aliases.get(name).size());
+			//		for(String alias : aliases.get(name)) {
+			//			System.out.println("\t\t\t" + alias);
+			//		}
+			//	}
+			//}
+		}
 	}
 }

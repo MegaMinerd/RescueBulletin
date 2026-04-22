@@ -1,6 +1,7 @@
 package minerd.relic.file;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SiroSegment {
@@ -66,5 +67,20 @@ public class SiroSegment {
 	}
 
 	public void load(BufferedDataHandler rom) {
+	}
+	
+	public void printTree(int tablevel, String name) {
+		for(int i=0; i<tablevel; i++)
+			System.out.print("\t");
+		System.out.println(String.format("%s (0x%h):", name, offset));
+		
+		if(!children.isEmpty()) {
+			ArrayList<String> names = new ArrayList<String>();
+			names.addAll(children.keySet());
+			names.sort(null);
+			for(String childname : names) {
+				children.get(childname).printTree(tablevel+1, childname);
+			}
+		}
 	}
 }

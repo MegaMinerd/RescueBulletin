@@ -1,6 +1,7 @@
 package minerd.relic.file;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class SiroFile extends BufferedDataHandler {
 	private SiroSegment head;
@@ -40,14 +41,28 @@ public class SiroFile extends BufferedDataHandler {
 		}
 	}
 	
+	public void printTree() {
+		System.out.println("\t\tSiro format:" + layout);
+		if(head != null) {	
+			head.printTree(2, "children"); 
+		}
+	}
+	
 	public enum SiroLayout{
-		BASIC,
-		ITEM,
-		POKEMON,
-		MOVE,
-		DUNGEON,
-		GRAPHIC_LIST,
-		GRAPHIC_TABLE, 
-		PALETTE_TABLE;
+		BASIC("basic"),
+		ITEM("item"),
+		POKEMON("pokemon"),
+		MOVE("move"),
+		DUNGEON("dugeon"),
+		GRAPHIC_LIST("graphic list"),
+		GRAPHIC_TABLE("graphic table"), 
+		PALETTE_TABLE("palette table");
+		
+
+		public final String name;
+		
+	    private SiroLayout(String name) {
+	        this.name = name;
+	    }
 	}
 }
