@@ -104,7 +104,7 @@ public class SiroFactory {
 	 * @param offset   The offset of the SIRO file
 	 * @param start    The start of the string data
 	 * @param end      The end of the string data
-	 * @param isPadded Whether each string is padded to align to
+	 * @param isPadded Whether each string is padded to align to 4 bytes
 	 **/
 	private static SiroSegment readStringList(BufferedDataHandler buffer, int offset, int start, int end, boolean isPadded) throws IOException {
 		SiroSegment strings = new SiroSegment(start + offset);
@@ -142,10 +142,14 @@ public class SiroFactory {
 		buffer.seek(4);
 		int dataStart = buffer.parsePointer().relativeTo(offset).getOffset();
 		buffer.skip(8);
+		//Read description section of the file
 		SiroSegment descs = readStringList(buffer, offset, 16, dataStart, false);
 		head.addChild("descs", descs);
 		SiroSegment items = new SiroSegment(dataStart + offset);
 		int index = 0;
+		//Detect end of data by testing if the next 4 bytes match pointer format.
+		//There should be a 0x08 or 0x09 iff it is a pointer, since the following data is strings.
+		//If there is a pointer, read data for an item. Otherwise, move on to the names section.
 		while(true){
 			byte[] data = new byte[0x20];
 			buffer.skip(3);
@@ -161,6 +165,7 @@ public class SiroFactory {
 			}
 		}
 		head.addChild("items", items);
+		//Read names section of the file
 		SiroSegment names = readStringList(buffer, offset, buffer.getFilePointer(), buffer.length(), true);
 		head.addChild("names", names);
 		return new SiroFile(offset, head, SiroLayout.ITEM);
@@ -172,6 +177,9 @@ public class SiroFactory {
 		buffer.seek(16);
 		SiroSegment pokemon = new SiroSegment(offset + 16);
 		int index = 0;
+		//Detect end of data by testing if the next 4 bytes match pointer format.
+		//There should be a 0x08 or 0x09 iff it is a pointer, since the following data is strings.
+		//If there is a pointer, read data for a pokemon. Otherwise, move on to the names section.
 		while(true){
 			byte[] data = new byte[0x48];
 			buffer.skip(3);
@@ -187,6 +195,8 @@ public class SiroFactory {
 			}
 		}
 		head.addChild("pokemon", pokemon);
+		//Read strings section of the file
+		//TODO: figure out how to handle duplicates
 		SiroSegment strings = readStringList(buffer, offset, buffer.getFilePointer(), buffer.length(), true);
 		head.addChild("strings", strings);
 		return new SiroFile(offset, head, SiroLayout.POKEMON);
@@ -209,8 +219,13 @@ public class SiroFactory {
 		SiroSegment learnsets = new SiroSegment(learnsetPtr.getOffset());
 		for(int i = 0; i<424; i++){
 			buffer.seek(learnsetPtr.relativeTo(offset).getOffset() + 8*i);
+			//Start of levelup moves
 			Pointer p1 = buffer.parsePointer();
+			//End of levelup moves
+			//Start of tm moves
 			Pointer p2 = buffer.parsePointer();
+			//End of tm moves
+			//For last entry, will be a pointer to a move data entry, but that still shows the end of this entry.
 			Pointer p3 = buffer.parsePointer();
 			int off1 = p1==null ? 0 : p1.relativeTo(offset).getOffset();
 			int off2 = p2==null ? 0 : p2.relativeTo(offset).getOffset();
