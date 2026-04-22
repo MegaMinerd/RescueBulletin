@@ -11,22 +11,84 @@ public class CodeConverter {
 		switch((int)(data[0]&0xFF)) {
 			case 0x01:
 				return "Warp to:\n "
-						+ "s=time, i1=map (2/5)";
+						+ "s=time, i0=map (2/5)";
 			case 0x02:
 				return "Warp to dungeon: \n"
-						+ "s=time i1=id (2/5)";
+						+ "s=time i0=id (2/5)";
 			case 0x03:
 				return "Warp to friend area: \n"
-						+ "s=time i1=id (2/5)";
+						+ "s=time i0=id (2/5)";
 			case 0x04:
 				return "Warp to dungeon /w map: \n"
-						+ "s=time i1=id (2/5)";
+						+ "s=time i0=id (2/5)";
+			case 0x08:
+				return "SELECT_MAP: \n"
+						+ "i0=id";
+			case 0x09:
+				return "SELECT_GROUND: \n"
+						+ "i0=id";
+			case 0x0B:
+				return "SELECT_WEATHER: \n"
+						+ "i0=id";
+			case 0x0C:
+				return "SELECT_ENTITIES: \n"
+						+ "b=id, s=group";
 			case 0x0D:
-				return "Call next characters: \n"
-						+ "b=id s=unk (3/5)";
+				return "SELECT_LIVES: \n"
+						+ "b=sector, s=group";
+			case 0x0E:
+				return "SELECT_OBJECTS: \n"
+						+ "b=sector, s=group";
+			case 0x0F:
+				return "SELECT_EFFECTS: \n"
+						+ "b=sector, s=group";
+			case 0x10:
+				return "SELECT_EVENTS: \n"
+						+ "b=sector, s=group";
+			case 0x11:
+				return "CANCEL_ENTITIES: \n"
+						+ "b=sector, s=group";
+			case 0x12:
+				return "CANCEL_LIVES: \n"
+						+ "b=sector, s=group";
+			case 0x13:
+				return "CANCEL_OBJECTS: \n"
+						+ "b=sector, s=group";
+			case 0x14:
+				return "CANCEL_EFFECTS: \n"
+						+ "b=sector, s=group";
+			case 0x15:
+				return "CANCEL_EVENTS: \n"
+						+ "b=sector, s=group";
+			case 0x16:
+				return "CANCEL_OFFSCREEN_LIVES \n";
+			case 0x17:
+				return "CANCEL_OFFSCREEN_OBJECTS \n";
+			case 0x18:
+				return "CANCEL_OFFSCREEN_EFFECTS \n";
+			case 0x19:
+				return "SPAWN_OBJECT: \n"
+						+ "b=unk, s=unk, i0=unk, i1=unk";//TODO
+			case 0x1A:
+				return "SPAWN_EFFECT: \n"
+						+ "b=unk, s=unk, i0=unk, i1=unk";//TODO
 			case 0x1B:
-				return "Play a cutscene: \n"
-						+ "s=id (4/5)";
+				return "EXECUTE_FUNCTION (Play a cutscene): \n"
+						+ "s=id";
+			case 0x1C:
+				return "EXECUTE_SUBROUTINE: \n"
+						+ "s=id";
+			case 0x1D:
+				return "EXECUTE_STATION: \n"
+						+ "b=sector, s=group, i0=map";
+			case 0x1E:
+				return "EXECUTE_SUBSTATION: \n"
+						+ "b=sector, s=group, i0=map";
+			case 0x1F:
+				return "RESCUE_SELECT \n";
+			case 0x22:
+				return "TEXTBOX_AUTO_PRESS: \n"
+						+ "i0=unk, i1=unk";//TODO
 			case 0x23:
 				return "Fade screen: \n"
 						+ "b=unk s=time i1=unk (3/5)";
@@ -40,11 +102,10 @@ public class CodeConverter {
 				return "Load data to variables: \n"
 						+ "b=type s=char i1=source (3/5)";
 			case 0x2E:
-				return "Change portait: \n"
-						+ "b=loc s=char i1=face (5/5)";
+				return "PORTRAIT (Change portait): \n"
+						+ "b=loc s=char i1=face";
 			case 0x30:
-				return "Close text box: \n"
-						+ "(5/5)";
+				return "TEXTBOX_CLEAR (Close text box) \n";
 			case 0x3D:
 				return "Rename pokemon: \n"
 						+ "i1=id (4/5)";
@@ -136,6 +197,8 @@ public class CodeConverter {
 			case 0xF4:
 				return "Label: \n"
 						+ "s=id (5/5)";
+			case 0xF6:
+				return "DEBUGINFO: \n";
 			default:
 				return "Unknown \n";
 		}
