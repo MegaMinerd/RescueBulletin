@@ -41,8 +41,8 @@ public class SiroFile extends BufferedDataHandler {
 		}
 	}
 	
-	public void printTree() {
-		System.out.println("\t\tSiro format:" + layout);
+	public void printTree() throws IOException {
+		System.out.println("\t\tSiro format: " + layout);
 		if(head != null) {	
 			head.printTree(2, "children"); 
 		}

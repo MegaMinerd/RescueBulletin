@@ -7,6 +7,8 @@ import java.util.HashMap;
 public class SiroSegment {
 	private int offset;
 	private BufferedDataHandler data;
+	//Mainly used for debug for now, may be useful later
+	private DataType type;
 	private HashMap<String, SiroSegment> children;
 
 	public SiroSegment(Pointer p) {
@@ -14,18 +16,32 @@ public class SiroSegment {
 	}
 
 	public SiroSegment(int offsetIn) {
-		this.offset = offsetIn;
-		this.children = new HashMap<String, SiroSegment>();
+		this(offsetIn, DataType.UNKNOWN);
 	}
 
 	public SiroSegment(Pointer p, BufferedDataHandler dataIn) {
-		this(p.getOffset(), dataIn);
+		this(p.getOffset(), dataIn, DataType.UNKNOWN);
 	}
 
 	public SiroSegment(int offsetIn, BufferedDataHandler dataIn) {
+		this(offsetIn, dataIn, DataType.UNKNOWN);
+	}
+	
+	public SiroSegment(int offsetIn, DataType typeIn) {
+		this.offset = offsetIn;
+		this.children = new HashMap<String, SiroSegment>();
+		this.type = typeIn;
+	}
+
+	public SiroSegment(Pointer p, BufferedDataHandler dataIn, DataType typeIn) {
+		this(p.getOffset(), dataIn, typeIn);
+	}
+
+	public SiroSegment(int offsetIn, BufferedDataHandler dataIn, DataType typeIn) {
 		this.offset = offsetIn;
 		this.children = new HashMap<String, SiroSegment>();
 		this.data = dataIn;
+		this.type = typeIn;
 	}
 
 	public int getOffset() {
@@ -69,10 +85,13 @@ public class SiroSegment {
 	public void load(BufferedDataHandler rom) {
 	}
 	
-	public void printTree(int tablevel, String name) {
+	public void printTree(int tablevel, String name) throws IOException {
 		for(int i=0; i<tablevel; i++)
 			System.out.print("\t");
-		System.out.println(String.format("%s (0x%h):", name, offset));
+		if(data==null)
+			System.out.println(String.format("%s (0x%h): ", name, offset));
+		else
+			System.out.println(String.format("%s (0x%h): %d bytes (%s)", name, offset, data.length(), type));
 		
 		if(!children.isEmpty()) {
 			ArrayList<String> names = new ArrayList<String>();
@@ -82,5 +101,25 @@ public class SiroSegment {
 				children.get(childname).printTree(tablevel+1, childname);
 			}
 		}
+	}
+	
+	public void setType(DataType typeIn) {
+		this.type = typeIn;
+	}
+	
+	public enum DataType{
+		GENERIC,
+		
+		PALETTE,
+		GRAPHICS,
+		ARRANGEMENT,
+		
+		DUNGEON_MAIN,
+		FLOOR_LAYOUT,
+		LOOT_TABLE,
+		SPAWN_TABLE,
+		TRAP_LIST,
+		
+		UNKNOWN;
 	}
 }

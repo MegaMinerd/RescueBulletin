@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import minerd.relic.file.SiroFile.SiroLayout;
+import minerd.relic.file.SiroSegment.DataType;
 
 /**
  * Write a description of class RedRom here.
@@ -135,13 +136,15 @@ public class RedRom extends Rom {
 					dungeon.buildSiroSubfile(String.format("b%02demap", i), SiroLayout.BASIC);
 			}
 			//siro unknown data
-			dungeon.buildSiroSubfile("banfont", SiroLayout.BASIC);
+			//TODO: this data is not basic.
+			//dungeon.buildSiroSubfile("banfont", SiroLayout.BASIC);
 			//banrpal: non-siro palette
 			//siro unknown data
 			dungeon.buildSiroSubfile("colvec", SiroLayout.BASIC);
 			//etcfont: non-siro dungeon ui images
 			//siro dungeon shadow/ripple images
 			dungeon.buildSiroSubfile("etcfonta", SiroLayout.BASIC);
+			((SiroFile)dungeon.getSubfile("etcfonta")).getSegment("data").setType(DataType.GRAPHICS);
 			//fixedmap
 			//hp5font
 			//itempat

@@ -177,14 +177,14 @@ public class SbinFile extends BufferedDataHandler {
 		return buffer;
 	}
 	
-	public void printTree() {
+	public void printTree() throws IOException {
 		System.out.println(name + ":");
 		if(!contents.isEmpty()) {
 			ArrayList<String> names = new ArrayList<String>();
 			names.addAll(contents.keySet());
 			names.sort(null);
 			for(String contentname : names) {
-				System.out.println(String.format("\t%s (0x%h)", contentname, offsets.get(contentname)));
+				BufferedDataHandler child = contents.get(contentname);
 				//ArrayList<String> aliaslist = aliases.get(name);
 				//if(aliaslist!=null) {
 				//	String alias = aliaslist.get(0);
@@ -193,8 +193,11 @@ public class SbinFile extends BufferedDataHandler {
 				//	}
 				//}
 				if(contents.get(contentname) instanceof SiroFile) {
+					System.out.println(String.format("\t%s (0x%h)", contentname, offsets.get(contentname)));
 					((SiroFile)contents.get(contentname)).printTree();
-				}
+				}// else {
+				//	System.out.println(String.format("\t%s (0x%h): %d bytes (%s)", contentname, offsets.get(contentname), child.length(), child));
+				//}
 			}
 			
 			//System.out.println("\taliases:");

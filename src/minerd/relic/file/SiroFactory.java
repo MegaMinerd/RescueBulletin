@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import minerd.relic.file.SiroFile.SiroLayout;
+import minerd.relic.file.SiroSegment.DataType;
 
 public class SiroFactory {
 	/**
@@ -59,16 +60,17 @@ public class SiroFactory {
 	 * @param childNum  The number of entries
 	 * @param Pointer   A pointer to the list
 	 **/
-	private static SiroSegment populateFromList(BufferedDataHandler buffer, int offset, int childSize, int childNum, Pointer list) throws IOException {
+	//TODO: Resulting offsets are not absolute
+	private static SiroSegment populateFromList(BufferedDataHandler buffer, int offset, int childSize, int childNum, Pointer list, DataType type) throws IOException {
 		SiroSegment parent = new SiroSegment(list);
 		buffer.seek(list.relativeTo(offset));
 		for(int i = 0; i<childNum; i++){
 			byte[] data = new byte[childSize];
 			int dataOffset = list.getOffset() + childSize*i;
 			buffer.seek((new Pointer(dataOffset, true)).relativeTo(offset));
-			int dataPtr = buffer.getFilePointer();
+			int dataPtr = buffer.getFilePointer() + offset;
 			buffer.read(data);
-			parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+			parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data)), type));
 		}
 		return parent;
 	}
@@ -81,7 +83,7 @@ public class SiroFactory {
 	 * @param childNum The number of entries
 	 * @param Pointer  A pointer to the table, assumed to be immediately after the data
 	 **/
-	private static SiroSegment populateFromTable(BufferedDataHandler buffer, int offset, int childNum, Pointer table) throws IOException {
+	private static SiroSegment populateFromTable(BufferedDataHandler buffer, int offset, int childNum, Pointer table, DataType type) throws IOException {
 		SiroSegment parent = new SiroSegment(table);
 		buffer.seek(table.relativeTo(offset));
 		for(int i = 0; i<childNum; i++){
@@ -93,7 +95,7 @@ public class SiroFactory {
 				byte[] data = new byte[endPtr.getOffset() - dataPtr.getOffset()];
 				buffer.seek(dataPtr.relativeTo(offset));
 				buffer.read(data);
-				parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+				parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data)), type));
 			}catch(InvalidPointerException e) {
 				//Perhaps this file was followed by pksdir0
 				break;
@@ -127,6 +129,10 @@ public class SiroFactory {
 	}
 	
 	public static SiroFile buildBasicSiro(BufferedDataHandler buffer, int offset) throws IOException {
+		return buildBasicSiro( buffer, offset, DataType.UNKNOWN);		
+	}
+	
+	public static SiroFile buildBasicSiro(BufferedDataHandler buffer, int offset, DataType type) throws IOException {
 		//Parse header
 		buffer.seek(4);
 		Pointer dataPtr = buffer.parsePointer();
@@ -235,7 +241,7 @@ public class SiroFactory {
 			int off1 = p1==null ? 0 : p1.relativeTo(offset).getOffset();
 			int off2 = p2==null ? 0 : p2.relativeTo(offset).getOffset();
 			int off3 = p3==null ? 0 : p3.relativeTo(offset).getOffset();
-			SiroSegment learnset = new SiroSegment(off1, null);
+			SiroSegment learnset = new SiroSegment(off1, null, DataType.UNKNOWN);
 			if(p1==null){
 				learnset.addChild("lv", null);
 			} else{
@@ -288,11 +294,11 @@ public class SiroFactory {
 		Pointer spawnPtr = buffer.parsePointer();
 		Pointer trapPtr = buffer.parsePointer();
 
-		head.addChild("main", populateFromTable(buffer, offset, 0x40, mainPtr));
-		head.addChild("layout", populateFromList(buffer, offset, 0x1C, 0x06E4, layoutPtr));
-		head.addChild("loot", populateFromTable(buffer, offset, 0xB2, lootPtr));
-		head.addChild("spawn", populateFromTable(buffer, offset, 0x0347, spawnPtr));
-		head.addChild("trap", populateFromTable(buffer, offset, 0x94, trapPtr));
+		head.addChild("main", populateFromTable(buffer, offset, 0x40, mainPtr, DataType.DUNGEON_MAIN));
+		head.addChild("layout", populateFromList(buffer, offset, 0x1C, 0x06E4, layoutPtr, DataType.FLOOR_LAYOUT));
+		head.addChild("loot", populateFromTable(buffer, offset, 0xB2, lootPtr, DataType.LOOT_TABLE));
+		head.addChild("spawn", populateFromTable(buffer, offset, 0x0347, spawnPtr, DataType.SPAWN_TABLE));
+		head.addChild("trap", populateFromTable(buffer, offset, 0x94, trapPtr, DataType.TRAP_LIST));
 
 		return new SiroFile(offset, head, SiroLayout.DUNGEON);
 	}
@@ -311,12 +317,12 @@ public class SiroFactory {
 		byte[] data = new byte[palettePtr.getOffset() - tilePtr.getOffset()];
 		buffer.seek(tilePtr.relativeTo(offset));
 		buffer.read(data);
-		head.addChild("tile", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		head.addChild("tile", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.GRAPHICS));
 
 		data = new byte[footerPtr.getOffset() - palettePtr.getOffset()];
 		buffer.seek(palettePtr.relativeTo(offset));
 		buffer.read(data);
-		head.addChild("palette", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		head.addChild("palette", new SiroSegment(palettePtr, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.PALETTE));
 
 		return new SiroFile(offset, head, SiroLayout.GRAPHIC_LIST);
 	}
@@ -352,7 +358,7 @@ public class SiroFactory {
 		//Parse footer
 		buffer.seek(footer);
 
-		head.addChild("palette", populateFromTable(buffer, offset, (buffer.length()-footer)/4, footerPtr));
+		head.addChild("palette", populateFromTable(buffer, offset, (buffer.length()-footer)/4, footerPtr, DataType.PALETTE));
 	
 
 		return new SiroFile(offset, head, SiroLayout.PALETTE_TABLE);	
