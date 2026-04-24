@@ -90,8 +90,14 @@ public class SiroSegment {
 			System.out.print("\t");
 		if(data==null)
 			System.out.println(String.format("%s (0x%h): ", name, offset));
-		else
+		else {
 			System.out.println(String.format("%s (0x%h): %d bytes (%s)", name, offset, data.length(), type));
+			if(type.equals(DataType.STRING)) {
+				for(int i=0; i<=tablevel; i++)
+					System.out.print("\t");
+				System.out.println((new BufferedDataHandler(data.getBuffer())).readString());
+			}
+		}
 		
 		if(!children.isEmpty()) {
 			ArrayList<String> names = new ArrayList<String>();
@@ -109,10 +115,18 @@ public class SiroSegment {
 	
 	public enum DataType{
 		GENERIC,
+		STRING,
 		
 		PALETTE,
 		GRAPHICS,
 		ARRANGEMENT,
+		GLYPH,
+		
+		ITEM,
+		LEVELMAP,
+		POKEMON,
+		LEARNSET,
+		MOVE,
 		
 		DUNGEON_MAIN,
 		FLOOR_LAYOUT,
@@ -120,6 +134,7 @@ public class SiroSegment {
 		SPAWN_TABLE,
 		TRAP_LIST,
 		
+		METADATA,
 		UNKNOWN;
 	}
 }

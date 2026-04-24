@@ -104,6 +104,9 @@ public class SbinFile extends BufferedDataHandler {
 			case GRAPHIC_TABLE:
 				updateSubfile(filename, SiroFactory.buildGraphicTableSiro(getSubfile(filename), getOffset(filename), args[0], args[1]));
 				break;
+			case GLYPH_TABLE:
+				updateSubfile(filename, SiroFactory.buildGlyphTableSiro(getSubfile(filename), getOffset(filename)));
+				break;
 			case PALETTE_TABLE:
 				updateSubfile(filename, SiroFactory.buildPaletteTableSiro(getSubfile(filename), getOffset(filename)));
 				break;
@@ -195,9 +198,9 @@ public class SbinFile extends BufferedDataHandler {
 				if(contents.get(contentname) instanceof SiroFile) {
 					System.out.println(String.format("\t%s (0x%h)", contentname, offsets.get(contentname)));
 					((SiroFile)contents.get(contentname)).printTree();
-				}// else {
-				//	System.out.println(String.format("\t%s (0x%h): %d bytes (%s)", contentname, offsets.get(contentname), child.length(), child));
-				//}
+				} else {
+					System.out.println(String.format("\t%s (0x%h): %d bytes", contentname, offsets.get(contentname), child.length()));
+				}
 			}
 			
 			//System.out.println("\taliases:");
