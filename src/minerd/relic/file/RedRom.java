@@ -111,7 +111,8 @@ public class RedRom extends Rom {
 			titlemenu.buildSiroSubfile("wmapmcc", SiroLayout.BASIC);
 			((SiroFile)titlemenu.getSubfile("wmapmcc")).getSegment("data").setType(DataType.ARRANGEMENT);
 			//wmappal:  non-siro palette
-			//wmapspr:  non-siro unknown data
+			//TODO
+			//wmapspr:  siro unknown data
 			titlemenu.buildSiroSubfile("wmp2cani", SiroLayout.PALETTE_TABLE);
 			//wmp2font: non-siro compressed image
 			titlemenu.buildSiroSubfile("wmp2mcc", SiroLayout.BASIC);
@@ -138,8 +139,7 @@ public class RedRom extends Rom {
 					dungeon.buildSiroSubfile(String.format("b%02demap", i), SiroLayout.BASIC);
 			}
 			//siro unknown data
-			//TODO: this data is not basic.
-			//dungeon.buildSiroSubfile("banfont", SiroLayout.BASIC);
+			dungeon.buildSiroSubfile("banfont", SiroLayout.BANFONT_TABLE);
 			//banrpal: non-siro palette
 			//siro unknown data
 			dungeon.buildSiroSubfile("colvec", SiroLayout.BASIC);

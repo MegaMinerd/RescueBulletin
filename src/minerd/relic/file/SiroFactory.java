@@ -431,6 +431,36 @@ public class SiroFactory {
 		return new SiroFile(offset, head, SiroLayout.GLYPH_TABLE);
 	}
 
+	//I have no idea what this file is supposed to be. It's almost identical to the glyph tables but has different metadata and irregular entry length.
+	public static BufferedDataHandler buildBanfontTableSiro(BufferedDataHandler buffer, int offset) throws IOException {
+		SiroSegment head = new SiroSegment(offset);
+		buffer.seek(4);
+		buffer.seek(buffer.parsePointer().relativeTo(offset));
+		Pointer tablePtr = buffer.parsePointer();
+		int count = buffer.readInt();
+		buffer.seek(tablePtr.relativeTo(offset));
+
+		for(int i=0; i<count; i++) {
+			//Read metadata
+			buffer.seek(tablePtr.relativeTo(offset).getOffset() + i * 8);
+			Pointer dataPtr = buffer.parsePointer();
+			buffer.seek(buffer.getFilePointer()-4);
+			byte[] meta = new byte[8];
+			buffer.read(meta);
+			SiroSegment metaSeg = new SiroSegment(buffer.getFilePointer()+offset-8, new BufferedDataHandler(ByteBuffer.wrap(meta)),DataType.METADATA);
+			
+			//Read data
+			byte[] data = new byte[(i==(count-1) ? tablePtr.getOffset() : buffer.parsePointer().getOffset())-dataPtr.getOffset()];
+			buffer.seek(dataPtr.relativeTo(offset));
+			buffer.read(data);
+			SiroSegment dataSeg = new SiroSegment(buffer.getFilePointer()+offset-data.length, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.UNKNOWN);
+			metaSeg.addChild("data", dataSeg);
+			head.addChild("" + i, metaSeg);
+		}
+		
+		return new SiroFile(offset, head, SiroLayout.BANFONT_TABLE);
+	}
+
 	//Header pointing to footer
 	//A: Frame data
 	//B: Animation data

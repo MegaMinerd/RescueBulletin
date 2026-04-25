@@ -110,6 +110,9 @@ public class SbinFile extends BufferedDataHandler {
 			case PALETTE_TABLE:
 				updateSubfile(filename, SiroFactory.buildPaletteTableSiro(getSubfile(filename), getOffset(filename)));
 				break;
+			case BANFONT_TABLE:
+				updateSubfile(filename, SiroFactory.buildBanfontTableSiro(getSubfile(filename), getOffset(filename)));
+				break;
 		}
 
 	}

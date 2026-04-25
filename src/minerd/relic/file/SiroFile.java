@@ -57,7 +57,9 @@ public class SiroFile extends BufferedDataHandler {
 		GRAPHIC_LIST("graphic list"),
 		GRAPHIC_TABLE("graphic table"),
 		GLYPH_TABLE("glyph table"),
-		PALETTE_TABLE("palette table");
+		PALETTE_TABLE("palette table"),
+		
+		BANFONT_TABLE("banfont unknown data");
 		
 
 		public final String name;
