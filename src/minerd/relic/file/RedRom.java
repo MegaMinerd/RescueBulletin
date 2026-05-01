@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import minerd.relic.file.SiroFile.SiroLayout;
-import minerd.relic.file.SiroSegment.DataType;
 
 /**
  * Write a description of class RedRom here.
@@ -75,8 +74,7 @@ public class RedRom extends Rom {
 			for(int i=1; i<=421; i++) {
 				String lvmp = String.format("lvmp%03d", i);
 				if(!system.isAlias(lvmp))
-					system.buildSiroSubfile(lvmp, SiroLayout.BASIC);
-				((SiroFile)system.getSubfile(String.format("lvmp%03d", i))).getSegment("data").setType(DataType.LEVELMAP);
+					system.buildSiroSubfile(lvmp, SiroLayout.BASIC, "LEVELMAP");
 			}	
 			system.buildSiroSubfile("monspara", SiroLayout.POKEMON);
 			system.buildSiroSubfile("wazapara", SiroLayout.MOVE);
@@ -108,15 +106,12 @@ public class RedRom extends Rom {
 			titlemenu.buildSiroSubfile("wmapcani", SiroLayout.PALETTE_TABLE);
 			//wmapfont: non-siro compressed image
 			//compressed tiling
-			titlemenu.buildSiroSubfile("wmapmcc", SiroLayout.BASIC);
-			((SiroFile)titlemenu.getSubfile("wmapmcc")).getSegment("data").setType(DataType.ARRANGEMENT);
+			titlemenu.buildSiroSubfile("wmapmcc", SiroLayout.BASIC, "ARRANGEMENT");
 			//wmappal:  non-siro palette
-			//TODO
-			//wmapspr:  siro unknown data
+			titlemenu.buildSiroSubfile("wmapspr", SiroLayout.SIMPLE_SPRITE);
 			titlemenu.buildSiroSubfile("wmp2cani", SiroLayout.PALETTE_TABLE);
 			//wmp2font: non-siro compressed image
-			titlemenu.buildSiroSubfile("wmp2mcc", SiroLayout.BASIC);
-			((SiroFile)titlemenu.getSubfile("wmp2mcc")).getSegment("data").setType(DataType.ARRANGEMENT);
+			titlemenu.buildSiroSubfile("wmp2mcc", SiroLayout.BASIC, "ARRANGEMENT");
 			//wmp2pal:  non-siro palette
 			sbinCache.put("titlemenu", titlemenu);
 		}
@@ -134,24 +129,25 @@ public class RedRom extends Rom {
 				if(dungeon.getSubfile(String.format("b%02dcanm", i)) != null)
 					dungeon.buildSiroSubfile(String.format("b%02dcanm", i), SiroLayout.PALETTE_TABLE);
 				if(dungeon.getSubfile(String.format("b%02dcex", i)) != null)
-					dungeon.buildSiroSubfile(String.format("b%02dcex", i), SiroLayout.BASIC);
+					dungeon.buildSiroSubfile(String.format("b%02dcex", i), SiroLayout.BASIC, "UNKNOWN");
 				if(dungeon.getSubfile(String.format("b%02demap", i)) != null)
-					dungeon.buildSiroSubfile(String.format("b%02demap", i), SiroLayout.BASIC);
+					dungeon.buildSiroSubfile(String.format("b%02demap", i), SiroLayout.BASIC, "UNKNOWN");
 			}
 			//siro unknown data
 			dungeon.buildSiroSubfile("banfont", SiroLayout.BANFONT_TABLE);
 			//banrpal: non-siro palette
 			//siro unknown data
-			dungeon.buildSiroSubfile("colvec", SiroLayout.BASIC);
+			dungeon.buildSiroSubfile("colvec", SiroLayout.BASIC, "UNKNOWN");
 			//etcfont: non-siro dungeon ui images
 			//siro dungeon shadow/ripple images
-			dungeon.buildSiroSubfile("etcfonta", SiroLayout.BASIC);
-			((SiroFile)dungeon.getSubfile("etcfonta")).getSegment("data").setType(DataType.GRAPHICS);
-			//fixedmap
-			//hp5font
-			//itempat
-			//jyochu
-			//levfont
+			dungeon.buildSiroSubfile("etcfonta", SiroLayout.BASIC, "GRAPHICS");
+			dungeon.buildSiroSubfile("fixedmap", SiroLayout.VARIABLE_LENGTH_TABLE, "UNKNOWN");
+			//hp5font: non-siro int count and tiles 
+			//item icons; null palette
+			dungeon.buildSiroSubfile("itempat", SiroLayout.GRAPHIC_LIST, "0C00", "1");
+			dungeon.buildSiroSubfile("jyochu", SiroLayout.SIMPLE_SPRITE);
+			//floor number font
+			dungeon.buildSiroSubfile("levfont", SiroLayout.BASIC, "GRAPHICS");
 			dungeon.buildSiroSubfile("mapparam", SiroLayout.DUNGEON);
 			
 			for(int i=0; i<43; i++) {
@@ -161,7 +157,7 @@ public class RedRom extends Rom {
 			//talk0-talk42: siro string table
 			//talkp0-talkp42: siro string table
 			dungeon.buildSiroSubfile("trappat", SiroLayout.GRAPHIC_LIST);
-			dungeon.buildSiroSubfile("zmappat", SiroLayout.GRAPHIC_TABLE, 0x40, 0x300);
+			dungeon.buildSiroSubfile("zmappat", SiroLayout.GRAPHIC_TABLE, "40", "300");
 		}
 		return dungeon;
 	}
@@ -173,7 +169,13 @@ public class RedRom extends Rom {
 			ByteBuffer buffer = ByteBuffer.allocate(0x01230000);
 			file.read(buffer);
 			monster = new SbinFile(buffer, "monster", 0x510000);
-			//ax001-ax423:   siro sprite
+			//ax001-ax423: siro sprites
+			for(int i=1; i<424; i++) {
+				//TODO: Figure out why this indices is broken
+				if(i==146 || i==232 || i==375)
+					continue;
+				monster.buildSiroSubfile(String.format("ax%03d", i), SiroLayout.COMPOSITE_SPRITE);
+			}
 			//kao001-kao423: 73x siro palette and compressed images
 			//palet:         non-siro general use palettes
 		}

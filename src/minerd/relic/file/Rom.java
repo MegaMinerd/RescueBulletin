@@ -25,6 +25,8 @@ public abstract class Rom {
 	public abstract SbinFile getTitleMenuSbin() throws IOException;
 	
 	public abstract SbinFile getDungeonSbin() throws IOException;
+	
+	public abstract SbinFile getMonsterSbin() throws IOException;
 
 	public abstract BufferedDataHandler getDungeonData(int index) throws IOException;
 

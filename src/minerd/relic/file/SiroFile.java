@@ -50,14 +50,19 @@ public class SiroFile extends BufferedDataHandler {
 	
 	public enum SiroLayout{
 		BASIC("basic"),
+		VARIABLE_LENGTH_TABLE("variable length table"),
+		
 		ITEM("item"),
 		POKEMON("pokemon"),
 		MOVE("move"),
 		DUNGEON("dugeon"),
+		
 		GRAPHIC_LIST("graphic list"),
 		GRAPHIC_TABLE("graphic table"),
 		GLYPH_TABLE("glyph table"),
 		PALETTE_TABLE("palette table"),
+		SIMPLE_SPRITE("simple sprite"),
+		COMPOSITE_SPRITE("composite sprite"),
 		
 		BANFONT_TABLE("banfont unknown data");
 		

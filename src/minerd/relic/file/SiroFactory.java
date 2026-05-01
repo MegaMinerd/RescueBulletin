@@ -36,7 +36,7 @@ public class SiroFactory {
 	 * @param childNum  The number of entries
 	 * @param Pointer   A pointer to the table
 	 **/
-	private static SiroSegment populateFromTable(BufferedDataHandler buffer, int offset, int childSize, int childNum, Pointer table) throws IOException {
+	private static SiroSegment populateFromTable(BufferedDataHandler buffer, int offset, int childSize, int childNum, Pointer table, DataType type) throws IOException {
 		SiroSegment parent = new SiroSegment(table);
 		buffer.seek(table.relativeTo(offset));
 		for(int i = 0; i<childNum; i++){
@@ -46,7 +46,7 @@ public class SiroFactory {
 			Pointer dataPtr = buffer.parsePointer();
 			buffer.seek(dataPtr.relativeTo(offset));
 			buffer.read(data);
-			parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+			parent.addChild(i + "", new SiroSegment(dataPtr, new BufferedDataHandler(ByteBuffer.wrap(data)), type));
 		}
 		return parent;
 	}
@@ -128,11 +128,9 @@ public class SiroFactory {
 		return strings;
 	}
 	
-	public static SiroFile buildBasicSiro(BufferedDataHandler buffer, int offset) throws IOException {
-		return buildBasicSiro( buffer, offset, DataType.UNKNOWN);		
-	}
-	
-	public static SiroFile buildBasicSiro(BufferedDataHandler buffer, int offset, DataType type) throws IOException {
+	public static SiroFile buildBasicSiro(BufferedDataHandler buffer, int offset, String typeName) throws IOException {
+		DataType type = DataType.valueOf(typeName);
+		
 		//Parse header
 		buffer.seek(4);
 		Pointer dataPtr = buffer.parsePointer();
@@ -142,9 +140,21 @@ public class SiroFactory {
 		buffer.seek(dataPtr.relativeTo(offset));
 		buffer.read(data);
 		SiroSegment head = new SiroSegment(offset);
-		head.addChild("data", new SiroSegment(offset+0x10, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		head.addChild("data", new SiroSegment(offset+0x10, new BufferedDataHandler(ByteBuffer.wrap(data)), type));
 		
 		return new SiroFile(offset, head, SiroLayout.BASIC);
+	}
+	
+	public static SiroFile buildVarTableSiro(BufferedDataHandler buffer, int offset, String typeName) throws IOException {
+		DataType type = DataType.valueOf(typeName);
+		
+		//Parse header
+		buffer.seek(4);
+		Pointer tablePtr = buffer.parsePointer();
+
+		SiroSegment head = populateFromTable(buffer, offset, (buffer.length() - tablePtr.relativeTo(offset).getOffset())/4, tablePtr, type);
+		
+		return new SiroFile(offset, head, SiroLayout.VARIABLE_LENGTH_TABLE);
 	}
 
 	//0306570 to 030F66B
@@ -314,20 +324,25 @@ public class SiroFactory {
 		Pointer tilePtr = buffer.parsePointer();
 		Pointer palettePtr = buffer.parsePointer();
 
-		byte[] data = new byte[palettePtr.getOffset() - tilePtr.getOffset()];
+		byte[] data = new byte[(palettePtr==null ? footerPtr.getOffset() : palettePtr.getOffset()) - tilePtr.getOffset()];
 		buffer.seek(tilePtr.relativeTo(offset));
 		buffer.read(data);
 		head.addChild("tile", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.GRAPHICS));
 
-		data = new byte[footerPtr.getOffset() - palettePtr.getOffset()];
-		buffer.seek(palettePtr.relativeTo(offset));
-		buffer.read(data);
-		head.addChild("palette", new SiroSegment(palettePtr, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.PALETTE));
+		if(palettePtr!=null) {
+			data = new byte[footerPtr.getOffset() - palettePtr.getOffset()];
+			buffer.seek(palettePtr.relativeTo(offset));
+			buffer.read(data);
+			head.addChild("palette", new SiroSegment(palettePtr, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.PALETTE));
+		}
 
 		return new SiroFile(offset, head, SiroLayout.GRAPHIC_LIST);
 	}
 
-	public static SiroFile buildGraphicTableSiro(BufferedDataHandler buffer, int offset, int childSize, int childNum) throws IOException {
+	public static SiroFile buildGraphicTableSiro(BufferedDataHandler buffer, int offset, String childSizeStr, String childNumStr) throws IOException {
+		int childSize = Integer.parseInt(childSizeStr, 16);
+		int childNum = Integer.parseInt(childNumStr, 16);
+		
 		SiroSegment head = new SiroSegment(offset);
 		//Parse header
 		buffer.seek(4);
@@ -338,12 +353,14 @@ public class SiroFactory {
 		Pointer tilePtr = buffer.parsePointer();
 		Pointer palettePtr = buffer.parsePointer();
 
-		head.addChild("tile", populateFromTable(buffer, offset, childSize, childNum, tilePtr));
+		head.addChild("tile", populateFromTable(buffer, offset, childSize, childNum, tilePtr, DataType.GRAPHICS));
 
-		byte[] data = new byte[footerPtr.getOffset() - palettePtr.getOffset()];
-		buffer.seek(palettePtr.relativeTo(offset));
-		buffer.read(data);
-		head.addChild("palette", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data))));
+		if(palettePtr!=null) {
+			byte[] data = new byte[footerPtr.getOffset() - palettePtr.getOffset()];
+			buffer.seek(palettePtr.relativeTo(offset));
+			buffer.read(data);
+			head.addChild("palette", new SiroSegment(tilePtr, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.PALETTE));
+		}
 
 		return new SiroFile(offset, head, SiroLayout.GRAPHIC_TABLE);
 	}
@@ -367,6 +384,7 @@ public class SiroFactory {
 	//1E76170 to 1E77297
 	//Nearly identical to pokemon sprite format
 	//REDO
+	@Deprecated
 	public static SiroFile buildItemSpriteSiro(BufferedDataHandler buffer, int offset) throws IOException {
 		SiroSegment head = new SiroSegment(offset);
 		buffer.seek(4);
@@ -461,20 +479,144 @@ public class SiroFactory {
 		return new SiroFile(offset, head, SiroLayout.BANFONT_TABLE);
 	}
 
-	//Header pointing to footer
-	//A: Frame data
-	//B: Animation data
-	//C: Tile data
-	//D: A*
-	//E: Body part displacement data
-	//F: B*
-	//G: F* (facing directions)
-	//H: C*
-	//Footer:
-	//D*
-	//G*
-	//int F.length/8
-	//H*
-	//E*
-	//TODO: public static SpriteSiro(){}
+	//Simple Sprite                 Composite Sprite
+	//Header pointing to footer     Header pointing to footer
+	//A: Frame data                 A: Frame data                       Metadata about a frame of animation; ends with extra u32 in Simple; followed by FF row
+	//                                                                  u16: FF/ID, u16: always 0000?, u8: ?, u8: ?, u8: ?, u8: ?, u8: ?, u8: ?
+	//B: Animation data             B: Animation data                   Animation data
+	//C: Tile Data                  C: Tile Data                        Main graphic tile data
+	//D: Palette                    D: -                                Single palette
+	//E: A*                         E: A*                               A pointer to each entry of the frame data
+	//F: -                          F: Body part displacement data		Instructions on where the component is in the frame. Used for sprites that aren't square
+	//G: B*                         G: B*                               8 pointers to an entry in animation data, 1 per facing direction
+	//H: G*                         H: G*						        A pointer to each entry of the direction data
+	//I: -                          I: C*                               A pointer to each entry of the tile data
+	//Footer:						Footer:
+	//E*                            E*
+	//H*                            H*
+	//H count                       H count
+	//null                          I*
+	//null                          F*
+	//C*                            -
+	//D*                            -
+	public static BufferedDataHandler buildSpriteSiro(BufferedDataHandler buffer, int offset, String version) throws IOException {
+		SiroSegment head = new SiroSegment(offset);
+		
+		//Parse header and footer
+		buffer.seek(4);
+		Pointer footerPtr = buffer.parsePointer();
+		buffer.seek(footerPtr.relativeTo(offset));
+		Pointer frameTblPtr = buffer.parsePointer();
+		Pointer animDirTblPtr = buffer.parsePointer();
+		int spriteDirCount = buffer.readInt();
+		if(version.equals("Simple"))
+			buffer.skip(8);
+		//This will be the 6th value for simple or the 4th value for composite, but always the tile data. (extra table in composite to be dealt with later)
+		Pointer spritePtr = buffer.parsePointer();
+		//Read a 7th value if it is simple
+		Pointer palPtr = version.equals("Simple") ? buffer.parsePointer() : null;
+		//If this is composite, the previous line did not advance in the data, therefore, it is pointing at the 5th value in the footer
+		Pointer layoutPtr = version.equals("Simple") ? null : buffer.parsePointer();
+		
+		//Parse E, A
+		buffer.seek(frameTblPtr.relativeTo(offset));
+		int frameCount = version.equals("Simple") ? (footerPtr.getOffset() - frameTblPtr.getOffset() - spriteDirCount * 36)/4 : (layoutPtr.getOffset() - frameTblPtr.getOffset())/4;;
+		SiroSegment frameSeg = populateFromTable(buffer, offset, 20, frameCount, frameTblPtr, DataType.METADATA);
+		if(version.equals("Simple")) {
+			byte[] num = new byte[4];
+			buffer.read(num);
+			frameSeg.addChild("unkInt", new SiroSegment(buffer.getFilePointer()-4+offset, new BufferedDataHandler(ByteBuffer.wrap(num))));
+		}
+		head.addChild("frames", frameSeg);
+		
+		//Parse H, G, B
+		SiroSegment sequenceSeg = new SiroSegment(animDirTblPtr.getOffset(), DataType.GENERIC);
+		for(int h=0; h<spriteDirCount; h++) {
+			buffer.seek(animDirTblPtr.relativeTo(offset).getOffset() + h*4);
+			Pointer animDirPtr = buffer.parsePointer();
+			SiroSegment animSeg = new SiroSegment(animDirPtr.getOffset(), DataType.GENERIC);
+			for(int g=0; g<8; g++) {
+				buffer.seek(animDirPtr.relativeTo(offset).getOffset() + g*4);
+				Pointer animPtr = buffer.parsePointer();
+				buffer.seek(animPtr.relativeTo(offset));
+				byte[] data = new byte[12];
+				buffer.read(data);
+				frameSeg.addChild("unkInt", new SiroSegment(buffer.getFilePointer()-4+offset, new BufferedDataHandler(ByteBuffer.wrap(data))));
+				SiroSegment dataSeg = new SiroSegment(buffer.getFilePointer()-12+offset, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.METADATA);
+				animSeg.addChild("dir" + g, dataSeg);
+			}
+			sequenceSeg.addChild("anim" + h, animSeg);
+		}
+		head.addChild("sequences", sequenceSeg);
+		
+		if(version.equals("Simple")) {
+			//Parse C
+			byte[] data = new byte[palPtr.getOffset()-spritePtr.getOffset()];
+			buffer.seek(spritePtr.relativeTo(offset));
+			buffer.read(data);
+			SiroSegment tileSeg = new SiroSegment(spritePtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.GRAPHICS);
+			head.addChild("tiles", tileSeg);
+			
+			//Parse D
+			data = new byte[64];
+			buffer.seek(palPtr.relativeTo(offset));
+			buffer.read(data);
+			SiroSegment palSeg = new SiroSegment(palPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.PALETTE);
+			head.addChild("palette", palSeg);
+		} else {
+			//Parse I, C
+			int spriteCount = (footerPtr.getOffset()-spritePtr.getOffset())/4;
+			SiroSegment spriteSeg = new SiroSegment(spritePtr.getOffset(), DataType.GENERIC);
+			for(int i=0; i<spriteCount; i++) {
+				buffer.seek(spritePtr.relativeTo(offset).getOffset() + i*4);
+				Pointer metaPtr = buffer.parsePointer();
+				buffer.seek(metaPtr.relativeTo(offset));
+				Pointer dataPtr = buffer.parsePointer();
+				int metaSize;
+				if(dataPtr==null) {
+					//This is a composite image
+					
+					//Skip the rest of this entry
+					buffer.skip(4);
+					metaSize=8;
+					while(true) {
+						Pointer tempPtr = buffer.parsePointer();
+						int tempInt = buffer.readInt();
+						//There is another meta entry, so count it.
+						metaSize+=8;
+						if(tempPtr!=null) {
+							if(dataPtr==null) 
+								//The first section of graphics is found, note it.
+								dataPtr = tempPtr;
+						} else if(tempInt==0)
+							//Terminated by null entry
+							break;
+					}
+				} else {
+					//This is a simple image
+					metaSize=16;
+				}
+				byte[] meta = new byte[metaSize];
+				buffer.seek(buffer.getFilePointer()-4);
+				buffer.read(meta);
+				byte[] data = new byte[metaPtr.getOffset() - dataPtr.getOffset()];
+				buffer.seek(dataPtr.relativeTo(offset));
+				buffer.read(data);
+				SiroSegment metaSeg = new SiroSegment(metaPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(meta)), DataType.METADATA);
+				SiroSegment dataSeg = new SiroSegment(dataPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.GRAPHICS);
+				metaSeg.addChild("data", dataSeg);
+				spriteSeg.addChild("sprite"+i, metaSeg);
+			}
+			head.addChild("sprites", spriteSeg);
+			
+			//Parse F
+			byte[] data = new byte[head.getDescendant("sequences/anim0").getOffset() - layoutPtr.getOffset()];
+			buffer.seek(layoutPtr.relativeTo(offset));
+			buffer.read(data);
+			SiroSegment layoutSeg = new SiroSegment(layoutPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.METADATA);
+			head.addChild("arrangements", layoutSeg);
+		}
+		
+		return new SiroFile(offset, head, version.equals("Simple") ? SiroLayout.SIMPLE_SPRITE : SiroLayout.COMPOSITE_SPRITE);
+	}
 }

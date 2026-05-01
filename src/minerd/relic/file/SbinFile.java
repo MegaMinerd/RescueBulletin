@@ -81,10 +81,13 @@ public class SbinFile extends BufferedDataHandler {
 		contents.put(filename, data);
 	}
 
-	public void buildSiroSubfile(String filename, SiroFile.SiroLayout layout, int... args) throws IOException {
+	public void buildSiroSubfile(String filename, SiroFile.SiroLayout layout, String... args) throws IOException {
 		switch(layout){
 			case BASIC:
-				updateSubfile(filename, SiroFactory.buildBasicSiro(getSubfile(filename), getOffset(filename)));
+				updateSubfile(filename, SiroFactory.buildBasicSiro(getSubfile(filename), getOffset(filename), args[0]));
+				break;
+			case VARIABLE_LENGTH_TABLE:
+				updateSubfile(filename, SiroFactory.buildVarTableSiro(getSubfile(filename), getOffset(filename), args[0]));
 				break;
 			case ITEM:
 				updateSubfile(filename, SiroFactory.buildItemSiro(getSubfile(filename), getOffset(filename)));
@@ -109,6 +112,12 @@ public class SbinFile extends BufferedDataHandler {
 				break;
 			case PALETTE_TABLE:
 				updateSubfile(filename, SiroFactory.buildPaletteTableSiro(getSubfile(filename), getOffset(filename)));
+				break;
+			case SIMPLE_SPRITE:
+				updateSubfile(filename, SiroFactory.buildSpriteSiro(getSubfile(filename), getOffset(filename), "Simple"));
+				break;
+			case COMPOSITE_SPRITE:
+				updateSubfile(filename, SiroFactory.buildSpriteSiro(getSubfile(filename), getOffset(filename), "Composite"));
 				break;
 			case BANFONT_TABLE:
 				updateSubfile(filename, SiroFactory.buildBanfontTableSiro(getSubfile(filename), getOffset(filename)));

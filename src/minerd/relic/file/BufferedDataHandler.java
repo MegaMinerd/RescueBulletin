@@ -130,7 +130,7 @@ public class BufferedDataHandler implements DataHandler {
 	/**
 	 * Reads a pointer
 	 * 
-	 * @return The integer offset represented by the pointer
+	 * @return A Pointer as defined by the next int in memory, or null if it is 0
 	 * @throws InvalidPointerException If the bytes read are not a valid pointer
 	 */
 	public Pointer parsePointer() throws IOException, InvalidPointerException {
