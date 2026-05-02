@@ -599,12 +599,15 @@ public class SiroFactory {
 				byte[] meta = new byte[metaSize];
 				buffer.seek(buffer.getFilePointer()-4);
 				buffer.read(meta);
-				byte[] data = new byte[metaPtr.getOffset() - dataPtr.getOffset()];
-				buffer.seek(dataPtr.relativeTo(offset));
-				buffer.read(data);
 				SiroSegment metaSeg = new SiroSegment(metaPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(meta)), DataType.METADATA);
-				SiroSegment dataSeg = new SiroSegment(dataPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.GRAPHICS);
-				metaSeg.addChild("data", dataSeg);
+				if(dataPtr!=null) {
+					//Moltres, Gligar, and Milotic have metadata segments that don't point to any graphics.
+					byte[] data = new byte[metaPtr.getOffset() - dataPtr.getOffset()];
+					buffer.seek(dataPtr.relativeTo(offset));
+					buffer.read(data);
+					SiroSegment dataSeg = new SiroSegment(dataPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.GRAPHICS);
+					metaSeg.addChild("data", dataSeg);
+				}
 				spriteSeg.addChild("sprite"+i, metaSeg);
 			}
 			head.addChild("sprites", spriteSeg);

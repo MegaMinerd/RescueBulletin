@@ -171,9 +171,6 @@ public class RedRom extends Rom {
 			monster = new SbinFile(buffer, "monster", 0x510000);
 			//ax001-ax423: siro sprites
 			for(int i=1; i<424; i++) {
-				//TODO: Figure out why this indices is broken
-				if(i==146 || i==232 || i==375)
-					continue;
 				monster.buildSiroSubfile(String.format("ax%03d", i), SiroLayout.COMPOSITE_SPRITE);
 			}
 			//kao001-kao423: 73x siro palette and compressed images
