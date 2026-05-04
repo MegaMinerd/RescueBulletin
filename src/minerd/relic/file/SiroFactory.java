@@ -622,4 +622,35 @@ public class SiroFactory {
 		
 		return new SiroFile(offset, head, version.equals("Simple") ? SiroLayout.SIMPLE_SPRITE : SiroLayout.COMPOSITE_SPRITE);
 	}
+
+	public static BufferedDataHandler buildPortraitTableSiro(BufferedDataHandler buffer, int offset) throws IOException {
+		SiroSegment head = new SiroSegment(offset);
+		//Parse header
+		buffer.seek(4);
+		Pointer footerPtr = buffer.parsePointer();
+		int footer = footerPtr.relativeTo(offset).getOffset();
+		int count = (buffer.length() - footer)/8;
+
+		try {
+		for(int i=0; i<count; i++) {
+			buffer.seek(footer + i*8);
+			Pointer palPtr = buffer.parsePointer();
+			byte[] pal = new byte[64];
+			buffer.seek(palPtr.relativeTo(offset));
+			buffer.read(pal);
+			head.addChild("pal"+i, new SiroSegment(palPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(pal)), DataType.PALETTE));	
+
+			buffer.seek(footer + i*8 + 4);
+			Pointer imgPtr = buffer.parsePointer();
+			byte[] img = new byte[(i==count-1 ? footer : buffer.parsePointer().relativeTo(offset).getOffset()) - imgPtr.relativeTo(offset).getOffset()];
+			buffer.seek(imgPtr.relativeTo(offset));
+			buffer.read(img);
+			head.addChild("img"+i, new SiroSegment(imgPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(img)), DataType.GRAPHICS));	
+		}
+		} catch (Exception e) {
+			//TODO: find out which files trigger this and why
+		}
+
+		return new SiroFile(offset, head, SiroLayout.PORTRAIT);
+	}
 }

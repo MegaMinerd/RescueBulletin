@@ -170,11 +170,13 @@ public class RedRom extends Rom {
 			file.read(buffer);
 			monster = new SbinFile(buffer, "monster", 0x510000);
 			//ax001-ax423: siro sprites
-			for(int i=1; i<424; i++) {
+			for(int i=1; i<424; i++)
 				monster.buildSiroSubfile(String.format("ax%03d", i), SiroLayout.COMPOSITE_SPRITE);
-			}
-			//kao001-kao423: 73x siro palette and compressed images
-			//palet:         non-siro general use palettes
+			//73 siro palettes and compressed images
+			for(int i=1; i<424; i++)
+				if(monster.getSubfile(String.format("kao%03d", i))!=null)
+					monster.buildSiroSubfile(String.format("kao%03d", i), SiroLayout.PORTRAIT);
+			//palet: non-siro general use palettes
 		}
 		return monster;
 	}

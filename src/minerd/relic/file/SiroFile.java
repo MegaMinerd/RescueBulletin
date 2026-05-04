@@ -63,6 +63,7 @@ public class SiroFile extends BufferedDataHandler {
 		PALETTE_TABLE("palette table"),
 		SIMPLE_SPRITE("simple sprite"),
 		COMPOSITE_SPRITE("composite sprite"),
+		PORTRAIT("portrait"),
 		
 		BANFONT_TABLE("banfont unknown data");
 		
