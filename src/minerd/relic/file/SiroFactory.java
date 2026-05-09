@@ -509,20 +509,20 @@ public class SiroFactory {
 		Pointer frameTblPtr = buffer.parsePointer();
 		Pointer animDirTblPtr = buffer.parsePointer();
 		int spriteDirCount = buffer.readInt();
-		if(version.equals("Simple"))
+		if(version.startsWith("Simple"))
 			buffer.skip(8);
 		//This will be the 6th value for simple or the 4th value for composite, but always the tile data. (extra table in composite to be dealt with later)
 		Pointer spritePtr = buffer.parsePointer();
 		//Read a 7th value if it is simple
-		Pointer palPtr = version.equals("Simple") ? buffer.parsePointer() : null;
+		Pointer palPtr = version.startsWith("Simple") ? buffer.parsePointer() : null;
 		//If this is composite, the previous line did not advance in the data, therefore, it is pointing at the 5th value in the footer
-		Pointer layoutPtr = version.equals("Simple") ? null : buffer.parsePointer();
+		Pointer layoutPtr = version.startsWith("Simple") ? null : buffer.parsePointer();
 		
 		//Parse E, A
 		buffer.seek(frameTblPtr.relativeTo(offset));
-		int frameCount = version.equals("Simple") ? (footerPtr.getOffset() - frameTblPtr.getOffset() - spriteDirCount * 36)/4 : (layoutPtr.getOffset() - frameTblPtr.getOffset())/4;;
+		int frameCount = version.startsWith("Simple") ? (footerPtr.getOffset() - frameTblPtr.getOffset() - spriteDirCount * 36)/4 : (layoutPtr.getOffset() - frameTblPtr.getOffset())/4;;
 		SiroSegment frameSeg = populateFromTable(buffer, offset, 20, frameCount, frameTblPtr, DataType.METADATA);
-		if(version.equals("Simple")) {
+		if(version.startsWith("Simple")) {
 			byte[] num = new byte[4];
 			buffer.read(num);
 			frameSeg.addChild("unkInt", new SiroSegment(buffer.getFilePointer()-4+offset, new BufferedDataHandler(ByteBuffer.wrap(num))));
@@ -549,7 +549,7 @@ public class SiroFactory {
 		}
 		head.addChild("sequences", sequenceSeg);
 		
-		if(version.equals("Simple")) {
+		if(version.startsWith("Simple")) {
 			//Parse C
 			byte[] data = new byte[palPtr.getOffset()-spritePtr.getOffset()];
 			buffer.seek(spritePtr.relativeTo(offset));
@@ -620,7 +620,7 @@ public class SiroFactory {
 			head.addChild("arrangements", layoutSeg);
 		}
 		
-		return new SiroFile(offset, head, version.equals("Simple") ? SiroLayout.SIMPLE_SPRITE : SiroLayout.COMPOSITE_SPRITE);
+		return new SiroFile(offset, head, version.startsWith("Simple") ? SiroLayout.SIMPLE_SPRITE : SiroLayout.COMPOSITE_SPRITE);
 	}
 
 	public static BufferedDataHandler buildPortraitTableSiro(BufferedDataHandler buffer, int offset) throws IOException {
@@ -629,26 +629,35 @@ public class SiroFactory {
 		buffer.seek(4);
 		Pointer footerPtr = buffer.parsePointer();
 		int footer = footerPtr.relativeTo(offset).getOffset();
-		int count = (buffer.length() - footer)/8;
 
-		try {
-		for(int i=0; i<count; i++) {
+		for(int i=0; i<13; i++) {
 			buffer.seek(footer + i*8);
 			Pointer palPtr = buffer.parsePointer();
-			byte[] pal = new byte[64];
-			buffer.seek(palPtr.relativeTo(offset));
-			buffer.read(pal);
-			head.addChild("pal"+i, new SiroSegment(palPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(pal)), DataType.PALETTE));	
+			if(palPtr!=null) {
+				byte[] pal = new byte[64];
+				buffer.seek(palPtr.relativeTo(offset));
+				buffer.read(pal);
+				head.addChild("pal"+i, new SiroSegment(palPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(pal)), DataType.PALETTE));
+			}
 
 			buffer.seek(footer + i*8 + 4);
 			Pointer imgPtr = buffer.parsePointer();
-			byte[] img = new byte[(i==count-1 ? footer : buffer.parsePointer().relativeTo(offset).getOffset()) - imgPtr.relativeTo(offset).getOffset()];
-			buffer.seek(imgPtr.relativeTo(offset));
-			buffer.read(img);
-			head.addChild("img"+i, new SiroSegment(imgPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(img)), DataType.GRAPHICS));	
-		}
-		} catch (Exception e) {
-			//TODO: find out which files trigger this and why
+			if(imgPtr!=null) {
+				byte[] img;
+				
+				if(i==12)
+					img = new byte[footer - imgPtr.relativeTo(offset).getOffset()];
+				else{
+					Pointer end = buffer.parsePointer();
+					if(end==null)
+						img = new byte[footer - imgPtr.relativeTo(offset).getOffset()];
+					else
+						img = new byte[end.relativeTo(offset).getOffset() - imgPtr.relativeTo(offset).getOffset()];
+				}
+				buffer.seek(imgPtr.relativeTo(offset));
+				buffer.read(img);
+				head.addChild("img"+i, new SiroSegment(imgPtr.getOffset(), new BufferedDataHandler(ByteBuffer.wrap(img)), DataType.GRAPHICS));
+			}
 		}
 
 		return new SiroFile(offset, head, SiroLayout.PORTRAIT);

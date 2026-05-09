@@ -108,7 +108,7 @@ public class RedRom extends Rom {
 			//compressed tiling
 			titlemenu.buildSiroSubfile("wmapmcc", SiroLayout.BASIC, "ARRANGEMENT");
 			//wmappal:  non-siro palette
-			titlemenu.buildSiroSubfile("wmapspr", SiroLayout.SIMPLE_SPRITE);
+			titlemenu.buildSiroSubfile("wmapspr", SiroLayout.SIMPLE_SPRITE, "A");
 			titlemenu.buildSiroSubfile("wmp2cani", SiroLayout.PALETTE_TABLE);
 			//wmp2font: non-siro compressed image
 			titlemenu.buildSiroSubfile("wmp2mcc", SiroLayout.BASIC, "ARRANGEMENT");
@@ -145,7 +145,7 @@ public class RedRom extends Rom {
 			//hp5font: non-siro int count and tiles 
 			//item icons; null palette
 			dungeon.buildSiroSubfile("itempat", SiroLayout.GRAPHIC_LIST, "0C00", "1");
-			dungeon.buildSiroSubfile("jyochu", SiroLayout.SIMPLE_SPRITE);
+			dungeon.buildSiroSubfile("jyochu", SiroLayout.SIMPLE_SPRITE, "A");
 			//floor number font
 			dungeon.buildSiroSubfile("levfont", SiroLayout.BASIC, "GRAPHICS");
 			dungeon.buildSiroSubfile("mapparam", SiroLayout.DUNGEON);
@@ -171,7 +171,7 @@ public class RedRom extends Rom {
 			monster = new SbinFile(buffer, "monster", 0x510000);
 			//ax001-ax423: siro sprites
 			for(int i=1; i<424; i++)
-				monster.buildSiroSubfile(String.format("ax%03d", i), SiroLayout.COMPOSITE_SPRITE);
+				monster.buildSiroSubfile(String.format("ax%03d", i), SiroLayout.COMPOSITE_SPRITE, "A");
 			//73 siro palettes and compressed images
 			for(int i=1; i<424; i++)
 				if(monster.getSubfile(String.format("kao%03d", i))!=null)
@@ -189,9 +189,28 @@ public class RedRom extends Rom {
 			file.read(buffer);
 			effect = new SbinFile(buffer, "effect", 0x01740000);
 			//efbg000-efbg007: siro full screen animation
-			//efob000-efob138: siro sprite
+			//efob000-efob138: siro sprites
+			for(int i=1; i<139; i++)
+				//TODO: This format is slightly different, with an extra int at the end of the footer
+				effect.buildSiroSubfile(String.format("efob%03d", i), SiroLayout.SIMPLE_SPRITE, "A");
 		}
 		return effect;
+	}
+	
+	public SbinFile getOrnamentSbin() throws IOException {
+		SbinFile ornament = sbinCache.get("ornament");
+		if(ornament==null){
+			file.position(0x01740000);
+			ByteBuffer buffer = ByteBuffer.allocate(0x150000);
+			file.read(buffer);
+			ornament = new SbinFile(buffer, "ornament", 0x01740000);
+			//flag00c-flag16c: palettes
+			//flag00p-flag16p: siro sprites
+			//for(int i=9; i<17; i++)
+				//TODO: This format is slightly different, the palette pointer in the footer is null
+				//ornament.buildSiroSubfile(String.format("flag%02dp", i), SiroLayout.COMPOSITE_SPRITE, "B");
+		}
+		return ornament;
 	}
 
 	public BufferedDataHandler getDungeonData(int index) throws IOException {

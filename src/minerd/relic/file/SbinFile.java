@@ -114,10 +114,10 @@ public class SbinFile extends BufferedDataHandler {
 				updateSubfile(filename, SiroFactory.buildPaletteTableSiro(getSubfile(filename), getOffset(filename)));
 				break;
 			case SIMPLE_SPRITE:
-				updateSubfile(filename, SiroFactory.buildSpriteSiro(getSubfile(filename), getOffset(filename), "Simple"));
+				updateSubfile(filename, SiroFactory.buildSpriteSiro(getSubfile(filename), getOffset(filename), "Simple " + args[0]));
 				break;
 			case COMPOSITE_SPRITE:
-				updateSubfile(filename, SiroFactory.buildSpriteSiro(getSubfile(filename), getOffset(filename), "Composite"));
+				updateSubfile(filename, SiroFactory.buildSpriteSiro(getSubfile(filename), getOffset(filename), "Composite " + args[0]));
 				break;
 			case PORTRAIT:
 				updateSubfile(filename, SiroFactory.buildPortraitTableSiro(getSubfile(filename), getOffset(filename)));
