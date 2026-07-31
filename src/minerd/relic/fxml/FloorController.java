@@ -40,6 +40,7 @@ public class FloorController {
 
 	//Chances tab
 	public Slider shopChance, houseChance, mazeChance, stickyChance;
+	public Label shopNum, houseNum, mazeNum, stickyNum;
 
 	//Pokemon spawns tab
 	public Label encounterTableId;
@@ -94,7 +95,8 @@ public class FloorController {
 	public void loadLayout(Floor floor) {
 		dungeonName.setText(Text.getText("Dungeons", floor.getDungeonIndex()));
 		layoutType.getItems().addAll(Text.getTextList("Generators"));
-		layoutType.getSelectionModel().select(floor.getLayoutType()-1);
+		System.out.println("Layout " + floor.getLayoutType());
+		layoutType.getSelectionModel().select(floor.getLayoutType());
 		roomDensity.setText(floor.getRoomDensity() + "");
 		tileset.getSelectionModel().select(floor.getTileset());
 		music.getItems().addAll(Text.getTextList("Dungeon Music"));
@@ -104,10 +106,10 @@ public class FloorController {
 		weather.getSelectionModel().select(floor.getWeather());
 		connectivity.setText(floor.getConnectivity() + "");
 		pokemonDensity.setText(floor.getPokemonDensity() + "");
-		shopChance.setValue(floor.getShopChance()/100.0);
-		houseChance.setValue(floor.getHouseChance()/100.0);
-		mazeChance.setValue(floor.getMazeChance()/100.0);
-		stickyChance.setValue(floor.getStickyChance()/100.0);
+		shopChance.setValue(floor.getShopChance());
+		houseChance.setValue(floor.getHouseChance());
+		mazeChance.setValue(floor.getMazeChance());
+		stickyChance.setValue(floor.getStickyChance());
 		hasDeadEnds.setSelected(floor.getHasDeadEnds());
 		hasPonds.setSelected(floor.geHasPonds());
 		hasExtraTiles.setSelected(floor.getHasExtraTiles());
@@ -122,6 +124,16 @@ public class FloorController {
 		visibility.getSelectionModel().select(floor.getVisibility());
 		maxCoinAmnt.setText(floor.getMaxCoinAmnt()*5 + "");
 		buriedDensity.setText(floor.getBuriedDensity() + "");
+		
+		shopNum.setText(shopChance.getValue()+"%");
+		houseNum.setText(houseChance.getValue()+"%");
+		mazeNum.setText(mazeChance.getValue()+"%");
+		stickyNum.setText(stickyChance.getValue()+"%");
+		
+		shopChance.valueProperty().addListener((observable, oldValue, newValue) -> {	shopNum.setText(Math.floor(newValue.doubleValue())+"%");		});
+		houseChance.valueProperty().addListener((observable, oldValue, newValue) -> {	houseNum.setText(Math.floor(newValue.doubleValue())+"%");		});
+		mazeChance.valueProperty().addListener((observable, oldValue, newValue) -> {	mazeNum.setText(Math.floor(newValue.doubleValue())+"%");		});
+		stickyChance.valueProperty().addListener((observable, oldValue, newValue) -> {	stickyNum.setText(Math.floor(newValue.doubleValue())+"%");		});
 	}
 
 	public void loadEncounters(Floor floor) {

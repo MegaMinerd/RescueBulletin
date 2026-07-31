@@ -331,6 +331,7 @@
                                             <columnConstraints>
                                               <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
                                               <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                             </columnConstraints>
                                             <rowConstraints>
                                               <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
@@ -366,6 +367,10 @@
                                                 <Slider fx:id="houseChance" blockIncrement="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <Slider fx:id="mazeChance" blockIncrement="1.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                 <Slider fx:id="stickyChance" blockIncrement="1.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <Label fx:id="shopNum" text="0" GridPane.columnIndex="2" />
+                                                <Label fx:id="houseNum" text="0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <Label fx:id="mazeNum" text="0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                <Label fx:id="stickyNum" text="0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                              </children>
                                           </GridPane>
                                        </children>

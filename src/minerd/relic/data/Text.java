@@ -56,9 +56,9 @@ public class Text extends GameData {
 		textLists.put("Actors", actors);
 				
 		String[] generators = {
-				"1/2 Width Standard",   "Single Monster House", "Dense Middle Rooms",   "Dense Middle Halls",   
-				"Double Monster House", "Line of Five Rooms",   "Rooms in a Cross",     "Full Width Standard",  
-				"Big Middle Room",      "Rooms in a Circle",    "3/4 Width Standard"
+				"Full Width Standard",  "1/2 Width Standard",   "Single Monster House", "Dense Middle Rooms",   
+				"Dense Middle Halls",   "Double Monster House", "Line of Five Rooms",   "Rooms in a Cross",     
+				"Full Width Standard",  "Big Middle Room",      "Rooms in a Circle",    "3/4 Width Standard"
 		};
 
 		textLists.put("Generators", generators);
