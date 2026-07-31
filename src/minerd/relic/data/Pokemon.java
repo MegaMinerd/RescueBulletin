@@ -82,7 +82,6 @@ public class Pokemon extends GameData {
 
 			String name = String.format("lvmp%03d", index);
 			System.out.println(name);
-			Rom.getInstance().getSystemSbin().buildSiroSubfile(name, SiroLayout.BASIC);
 			BufferedDataHandler lvmpdata = ((SiroFile) Rom.getInstance().getSystemSbin().getSubfile(name)).getSegment("data").getData();
 			lvmp = new Levelmap(CompressionHandler.decompress(lvmpdata, false), this);
 		} catch(IOException | InvalidPointerException e){

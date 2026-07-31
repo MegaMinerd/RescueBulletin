@@ -1,7 +1,6 @@
 package minerd.relic.data.dungeon;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
@@ -9,8 +8,8 @@ import javafx.scene.layout.Region;
 import minerd.relic.data.Cache;
 import minerd.relic.data.GameData;
 import minerd.relic.file.BufferedDataHandler;
-import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
+import minerd.relic.file.SiroFile;
 import minerd.relic.fxml.FloorController;
 import minerd.relic.util.RrtOffsetList;
 
@@ -29,50 +28,30 @@ public class Floor extends GameData {
 		this.relIndex = relIndex;
 		this.dungeonIndex = dunIndex;
 		try{
-			BufferedDataHandler rom = Rom.getInstance().getAll();
-			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
-			rom.seek(rom.parsePointer());
-			rom.skip(16*relIndex+16);
-			layoutId = rom.readUnsignedShort();
-			pokemonTableId = rom.readUnsignedShort();
-			trapListId = rom.readUnsignedShort();
-			itemTableId = rom.readUnsignedShort();
-			shopTableId = rom.readUnsignedShort();
-			houseTableId = rom.readUnsignedShort();
-			buriedTableId = rom.readUnsignedShort();
+			SiroFile mapparam = (SiroFile) Rom.getInstance().getDungeonSbin().getSubfile("mapparam");
+			BufferedDataHandler dunMain = mapparam.getSegment("main/" + dunIndex).getData();
+			dunMain.seek(16*relIndex+16);
+			layoutId = dunMain.readUnsignedShort();
+			pokemonTableId = dunMain.readUnsignedShort();
+			trapListId = dunMain.readUnsignedShort();
+			itemTableId = dunMain.readUnsignedShort();
+			shopTableId = dunMain.readUnsignedShort();
+			houseTableId = dunMain.readUnsignedShort();
+			buriedTableId = dunMain.readUnsignedShort();
 
-			rom.seek(RrtOffsetList.layoutOffset + layoutId*0x1C);
-			loadLayout(rom);
+			loadLayout(mapparam.getSegment("layout/" + layoutId).getData());
 
-			encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId, RrtOffsetList.encountersOffset, rom, EncounterList.class);
-			traps = (TrapList) loadSubdata("TrapList", trapListId, RrtOffsetList.trapsOffset, rom, TrapList.class);
-			floorLoot = (LootList) loadSubdata("LootList", itemTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
-			shopLoot = (LootList) loadSubdata("LootList", shopTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
-			houseLoot = (LootList) loadSubdata("LootList", houseTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
-			buriedLoot = (LootList) loadSubdata("LootList", buriedTableId, RrtOffsetList.lootsOffset, rom, LootList.class);
+			encounters = new EncounterList(mapparam.getSegment("spawn/" + pokemonTableId).getData());
+			traps = new TrapList(mapparam.getSegment("trap/" + trapListId).getData());
+			floorLoot = new LootList(mapparam.getSegment("loot/" + itemTableId).getData());
+			shopLoot = new LootList(mapparam.getSegment("loot/" + shopTableId).getData());
+			houseLoot = new LootList(mapparam.getSegment("loot/" + houseTableId).getData());
+			buriedLoot = new LootList(mapparam.getSegment("loot/" + buriedTableId).getData());
 			
 			Cache.add("Floor", absIndex, this);
 		} catch(IOException e){
 			e.printStackTrace();
 		}
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private GameData loadSubdata(String cacheListName, int index, int offset, BufferedDataHandler rom, Class cacheClass)
-			throws IOException, InvalidPointerException {
-		GameData data = Cache.get(cacheListName, index);
-		if(data==null){
-			rom.seek(offset + index*0x4);
-			rom.seek(rom.parsePointer());
-			try{
-				data = (GameData) cacheClass.getConstructor(BufferedDataHandler.class).newInstance(rom);
-			} catch(InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException | NoSuchMethodException | SecurityException e){
-				e.printStackTrace();
-			}
-			Cache.add(cacheListName, index, data);
-		}
-		return data;
 	}
 
 	@Override
@@ -116,65 +95,56 @@ public class Floor extends GameData {
 	@Override
 	public void save() {
 		try{
-			BufferedDataHandler rom = Rom.getInstance().getAll();
-			rom.seek(RrtOffsetList.floorOffset + 4*dungeonIndex);
-			rom.seek(rom.parsePointer());
-			rom.skip(16*relIndex+16);
-			rom.writeUnsignedShort(layoutId);
-			rom.writeUnsignedShort(pokemonTableId);
-			rom.writeUnsignedShort(trapListId);
-			rom.writeUnsignedShort(itemTableId);
-			rom.writeUnsignedShort(shopTableId);
-			rom.writeUnsignedShort(houseTableId);
-			rom.writeUnsignedShort(buriedTableId);
+			SiroFile mapparam = (SiroFile) Rom.getInstance().getDungeonSbin().getSubfile("mapparam");
+			BufferedDataHandler dunMain = mapparam.getSegment("main/" + dungeonIndex).getData();
+			dunMain.seek(16*relIndex+16);
+			dunMain.writeUnsignedShort(layoutId);
+			dunMain.writeUnsignedShort(pokemonTableId);
+			dunMain.writeUnsignedShort(trapListId);
+			dunMain.writeUnsignedShort(itemTableId);
+			dunMain.writeUnsignedShort(shopTableId);
+			dunMain.writeUnsignedShort(houseTableId);
+			dunMain.writeUnsignedShort(buriedTableId);
 
-			rom.seek(RrtOffsetList.layoutOffset + layoutId*0x1C);
-			saveLayout(rom);
+			saveLayout(mapparam.getSegment("layout/" + layoutId).getData());
 
-			//TODO
-			//encounters = (EncounterList) loadSubdata("EncounterList", pokemonTableId,
-			//RrtOffsetList.encountersOffset, rom, EncounterList.class);
-			//traps = (TrapList) loadSubdata("TrapList", trapListId,
-			//RrtOffsetList.trapsOffset, rom, TrapList.class);
-			//floorLoot = (LootList) loadSubdata("LootList", itemTableId,
-			//RrtOffsetList.lootsOffset, rom, LootList.class);
-			//shopLoot = (LootList) loadSubdata("LootList", shopTableId,
-			//RrtOffsetList.lootsOffset, rom, LootList.class);
-			//houseLoot = (LootList) loadSubdata("LootList", houseTableId,
-			//RrtOffsetList.lootsOffset, rom, LootList.class);
-			//buriedLoot = (LootList) loadSubdata("LootList", buriedTableId,
-			//RrtOffsetList.lootsOffset, rom, LootList.class);
+			encounters.save();
+			traps.save();
+			floorLoot.save();
+			shopLoot.save();
+			houseLoot.save();
+			buriedLoot.save();
 		} catch(IOException e){
 			e.printStackTrace();
 		}
 	}
 
-	private void saveLayout(BufferedDataHandler rom) throws IOException {
-		rom.writeUnsignedByte(layoutType);
-		rom.writeUnsignedByte(roomDensity);
-		rom.writeUnsignedByte(tileset);
-		rom.writeUnsignedByte(music);
-		rom.writeUnsignedByte(weather);
-		rom.writeUnsignedByte(connectivity);
-		rom.writeUnsignedByte(pokemonDensity);
-		rom.writeUnsignedByte(shopChance);
-		rom.writeUnsignedByte(houseChance);
-		rom.writeUnsignedByte(mazeChance);
-		rom.writeUnsignedByte(stickyChance);
-		rom.writeBoolean(hasDeadEnds);
-		rom.writeBoolean(hasPonds);
-		rom.writeBoolean(hasExtraTiles);
-		rom.skip(1);
-		rom.writeUnsignedByte(itemDensity);
-		rom.writeUnsignedByte(trapDensity);
-		rom.writeUnsignedByte(floorNum);
-		rom.writeUnsignedByte(fixedRoom);
-		rom.writeUnsignedByte(hallDensity);
-		rom.writeUnsignedByte(terrainRooms);
-		rom.writeUnsignedByte(waterDensity);
-		rom.writeUnsignedByte(visibility);
-		rom.writeUnsignedByte(maxCoinAmnt);
-		rom.writeUnsignedByte(buriedDensity);
+	private void saveLayout(BufferedDataHandler layout) throws IOException {
+		layout.writeUnsignedByte(layoutType);
+		layout.writeUnsignedByte(roomDensity);
+		layout.writeUnsignedByte(tileset);
+		layout.writeUnsignedByte(music);
+		layout.writeUnsignedByte(weather);
+		layout.writeUnsignedByte(connectivity);
+		layout.writeUnsignedByte(pokemonDensity);
+		layout.writeUnsignedByte(shopChance);
+		layout.writeUnsignedByte(houseChance);
+		layout.writeUnsignedByte(mazeChance);
+		layout.writeUnsignedByte(stickyChance);
+		layout.writeBoolean(hasDeadEnds);
+		layout.writeBoolean(hasPonds);
+		layout.writeBoolean(hasExtraTiles);
+		layout.skip(1);
+		layout.writeUnsignedByte(itemDensity);
+		layout.writeUnsignedByte(trapDensity);
+		layout.writeUnsignedByte(floorNum);
+		layout.writeUnsignedByte(fixedRoom);
+		layout.writeUnsignedByte(hallDensity);
+		layout.writeUnsignedByte(terrainRooms);
+		layout.writeUnsignedByte(waterDensity);
+		layout.writeUnsignedByte(visibility);
+		layout.writeUnsignedByte(maxCoinAmnt);
+		layout.writeUnsignedByte(buriedDensity);
 	}
 
 	public int getDungeonIndex() {
