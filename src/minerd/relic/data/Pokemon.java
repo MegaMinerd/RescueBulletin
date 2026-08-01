@@ -9,7 +9,6 @@ import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.SiroFile;
-import minerd.relic.file.SiroFile.SiroLayout;
 import minerd.relic.fxml.PokemonController;
 import minerd.relic.util.CompressionHandler;
 
@@ -68,25 +67,38 @@ public class Pokemon extends GameData {
 			recruit = entry.readShort();
 			alphaID = entry.readShort();
 			parentID = entry.readShort();
-			Cache.add("Pokemon", index, this);
 
 			//I don't know why
 			if(entityID>226)
 				entityID -= 2;
 
-			learnset = (Learnset) Cache.get("Learnset", index);
-			if(learnset==null){
-				learnset = new Learnset(index);
-				Cache.add("Learnset", index, learnset);
-			}
+			//learnset = (Learnset) Cache.get("Learnset", index);
+			//if(learnset==null){
+			//	learnset = new Learnset(index);
+			//	Cache.add("Learnset", index, learnset);
+			//}
 
-			String name = String.format("lvmp%03d", index);
-			System.out.println(name);
-			BufferedDataHandler lvmpdata = ((SiroFile) Rom.getInstance().getSystemSbin().getSubfile(name)).getSegment("data").getData();
-			lvmp = new Levelmap(CompressionHandler.decompress(lvmpdata, false), this);
+			//String name = String.format("lvmp%03d", index);
+			//System.out.println(name);
+			//BufferedDataHandler lvmpdata = ((SiroFile) Rom.getInstance().getSystemSbin().getSubfile(name)).getSegment("data").getData();
+			//lvmp = new Levelmap(CompressionHandler.decompress(lvmpdata, false), this);
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public static Pokemon getPokemon(int index) {
+		Pokemon pokeData = (Pokemon) Cache.get("Pokemon", index);
+		if(pokeData==null){
+			// Read the data from the ROM to store as cache
+			try{
+				pokeData = new Pokemon(index);
+				Cache.add("Pokemon", index, pokeData);
+			} catch(IllegalArgumentException | SecurityException e){
+				e.printStackTrace();
+			}
+		}
+		return pokeData;
 	}
 
 	public Region load() throws IOException {

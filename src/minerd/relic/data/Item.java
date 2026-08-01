@@ -43,6 +43,20 @@ public class Item extends GameData {
 			e.printStackTrace();
 		}
 	}
+	
+	public static Item getItem(int index) {
+		Item itemData = (Item) Cache.get("Item", index);
+		if(itemData==null){
+			// Read the data from the ROM to store as cache
+			try{
+				itemData = new Item(index);
+				Cache.add("Item", index, itemData);
+			} catch(IllegalArgumentException | SecurityException e){
+				e.printStackTrace();
+			}
+		}
+		return itemData;
+	}
 
 	@Override
 	public Region load() throws IOException {

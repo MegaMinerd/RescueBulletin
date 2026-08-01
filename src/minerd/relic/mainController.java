@@ -27,6 +27,7 @@ import minerd.relic.data.Move;
 import minerd.relic.data.Pokemon;
 import minerd.relic.file.RedRom;
 import minerd.relic.file.Rom;
+import minerd.relic.file.SiroFile;
 import minerd.relic.tree.DataTreeItem;
 import minerd.relic.tree.DungeonFolderTreeItem;
 import minerd.relic.tree.FolderTreeItem;
@@ -71,10 +72,16 @@ public class mainController implements Initializable {
 		dataTree.setRoot(root);
 		root.getChildren().add(new ListsFolderTreeItem());
 		root.getChildren().add(new MapFolderTreeItem());
-		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, 424));
-		Cache.alloc("Learnset", 424);
-		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, 240));
-		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, 413));
+		//Default 424
+		int pokeNum = ((SiroFile) Rom.getInstance().getSystemSbin().getSubfile("monspara")).getSegment("pokemon").getChildren().keySet().size();
+		root.getChildren().add(new FolderTreeItem<Pokemon>("Pokemon", "This section lets you edit data for Pokemon in the game.", Pokemon.class, pokeNum));
+		Cache.alloc("Learnset", pokeNum);
+		//Default 240
+		int itemNum = ((SiroFile) Rom.getInstance().getSystemSbin().getSubfile("itempara")).getSegment("items").getChildren().keySet().size();
+		root.getChildren().add(new FolderTreeItem<Item>("Items", "This section lets you edit data for items in the game.", Item.class, itemNum));
+		//Default 413
+		int moveNum = ((SiroFile) Rom.getInstance().getSystemSbin().getSubfile("wazapara")).getSegment("moves").getChildren().keySet().size();
+		root.getChildren().add(new FolderTreeItem<Move>("Moves", "This section lets you edit settings related to moves.", Move.class, moveNum));
 		//root.getChildren().add(new FolderTreeItem<Map>("Map Backgrounds", "This section lets you edit map backgrounds.", Map.class, -1));
 		//root.getChildren().add(new FolderTreeItem<Sprite>("Object Sprites", "This section lets you import and export object sprites.", Sprite.class, -1));
 		//root.getChildren().add(new FolderTreeItem<Background>("Backgrounds", "This section lets you edit backgrounds.", Background.class, -1));

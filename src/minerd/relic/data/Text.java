@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import javafx.scene.control.Control;
+import minerd.relic.data.dungeon.Floor;
+import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Pointer;
 import minerd.relic.file.Rom;
-import minerd.relic.file.BufferedDataHandler;
+import minerd.relic.file.SiroFile;
+import minerd.relic.file.SiroSegment;
 
 public class Text extends GameData {
 	public static ArrayList<String> pokemon = new ArrayList<String>();
@@ -32,6 +35,7 @@ public class Text extends GameData {
 		};
 		textLists.put("Item Types", itemTypes);
 		
+		//TODO: Generate this somehow
 		String[] actors = {
 				"Player",       "Unknown 01",   "Unknown 02",   "Unknown 03",   "Unknown 04",   "Unknown 05",   "Unknown 06",   "Unknown 07",
 				"Unknown 08",   "Unknown 09",   "Teammate 2",   "Teammate 3",   "Unknown 0C",   "Unknown 0D",   "Inhabitant 0", "Inhabitant 1",
@@ -60,29 +64,66 @@ public class Text extends GameData {
 				"Dense Middle Halls",   "Double Monster House", "Line of Five Rooms",   "Rooms in a Cross",     
 				"Full Width Standard",  "Big Middle Room",      "Rooms in a Circle",    "3/4 Width Standard"
 		};
-
 		textLists.put("Generators", generators);
-
+		
+		String[] weather = {
+				"Clear",		"Sunny",		"Sandstorm",	
+				"Cloudy",		"Rain",			"Hail", 		
+				"Fog", 			"Snow", 		"Random"
+		};
+		textLists.put("Weather", weather);
+		
+				
+		
 		textLists.put("Traps", readTextTable(0x0F91F0, 20));
-		textLists.put("Weather", readTextTable(0x0F9A54, 8));
+		//textLists.put("Weather", readTextTable(0x0F9A54, 8));
 		textLists.put("Types", readTextTable(0x10AD4C, 18));
 		textLists.put("Abilities", readTextTable(0x10B4C8, 77));
 		textLists.put("Dungeons", readTextTable(0x111A28, 98, 4));
 		textLists.put("Friend Areas", readTextTable(0x1139D0, 58));
-		textLists.put("Items", readTextTable(0x30CC28, 240, 28));
-		textLists.put("Pokemon", readTextTable(0x357B98, 424, 68));
-		textLists.put("Categories", readTextTable(0x357B9C, 424, 68));
-		textLists.put("Moves", readTextTable(0x3679A0, 413, 32));
 		textLists.put("Tracks", readTextTable(0x1E80054, 940, 4));
+		
+		
 
 		try{
+			Rom rom = Rom.getInstance();
+			
+			int itemNum = ((SiroFile) rom.getSystemSbin().getSubfile("itempara")).getSegment("items").getChildren().keySet().size();
+			String[] items = new String[itemNum];
+			for(int i = 0; i<itemNum; i++){
+				Item itemData = Item.getItem(i);
+				items[i] = itemData.getName();
+			}
+			textLists.put("Items", items);
+		
+			int pokeNum = ((SiroFile) rom.getSystemSbin().getSubfile("monspara")).getSegment("pokemon").getChildren().keySet().size();
+			String[] pokemon = new String[pokeNum];
+			String[] categories = new String[pokeNum];
+			for(int i = 0; i<pokeNum; i++){
+				Pokemon pokeData = Pokemon.getPokemon(i);
+				pokemon[i] = pokeData.getName();
+				categories[i] = pokeData.getCategory();
+			}
+			textLists.put("Pokemon", pokemon);
+			textLists.put("Categories", categories);
+
+			int moveNum = ((SiroFile) rom.getSystemSbin().getSubfile("wazapara")).getSegment("moves").getChildren().keySet().size();
+			String[] moves = new String[pokeNum];
+			for(int i = 0; i<moveNum; i++){				
+				Move moveData = Move.getMove(i);
+				moves[i] = moveData.getName();
+			}
+			textLists.put("Moves", moves);
+			
+
+			BufferedDataHandler romData = Rom.getInstance().getAll();
 			String[] dunTracks = new String[75];
-			BufferedDataHandler rom = Rom.getInstance().getAll();
-			rom.seek(0xF5668);
+			romData.seek(0xF5668);
 			for(int i = 0; i<75; i++){
-				dunTracks[i] = getText("Tracks", rom.readUnsignedShort());
+				dunTracks[i] = getText("Tracks", romData.readUnsignedShort());
 			}
 			textLists.put("Dungeon Music", dunTracks);
+			
 		} catch(IOException e){
 			e.printStackTrace();
 		}

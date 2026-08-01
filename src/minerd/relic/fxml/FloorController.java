@@ -95,7 +95,6 @@ public class FloorController {
 	public void loadLayout(Floor floor) {
 		dungeonName.setText(Text.getText("Dungeons", floor.getDungeonIndex()));
 		layoutType.getItems().addAll(Text.getTextList("Generators"));
-		System.out.println("Layout " + floor.getLayoutType());
 		layoutType.getSelectionModel().select(floor.getLayoutType());
 		roomDensity.setText(floor.getRoomDensity() + "");
 		tileset.getSelectionModel().select(floor.getTileset());

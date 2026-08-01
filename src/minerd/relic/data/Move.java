@@ -9,6 +9,7 @@ import minerd.relic.file.BufferedDataHandler;
 import minerd.relic.file.InvalidPointerException;
 import minerd.relic.file.Rom;
 import minerd.relic.file.SiroFile;
+import minerd.relic.file.SiroSegment;
 import minerd.relic.fxml.MoveController;
 
 public class Move extends GameData {
@@ -23,7 +24,12 @@ public class Move extends GameData {
 		try{
 			SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("wazapara");
 			BufferedDataHandler entry = data.getSegment("moves/" + index).getData();
-			name = data.getSegment("strings/" + entry.parsePointer().getOffset()).getData().readString();
+			int off = entry.parsePointer().getOffset();
+			SiroSegment nameSeg = data.getSegment("strings/" + off);
+			//This move's name might be stored as a pokemon's category
+			if(nameSeg==null)
+				nameSeg=((SiroFile) Rom.getInstance().getSystemSbin().getSubfile("monspara")).getSegment("strings/" + off);
+			name = nameSeg.getData().readString();
 			power = entry.readShort();
 			type = entry.readUnsignedByte();
 			entry.skip(1);
@@ -49,6 +55,20 @@ public class Move extends GameData {
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public static Move getMove(int index) {
+		Move moveData = (Move) Cache.get("Move", index);
+		if(moveData==null){
+			// Read the data from the ROM to store as cache
+			try{
+				moveData = new Move(index);
+				Cache.add("Move", index, moveData);
+			} catch(IllegalArgumentException | SecurityException e){
+				e.printStackTrace();
+			}
+		}
+		return moveData;
 	}
 
 	@Override
