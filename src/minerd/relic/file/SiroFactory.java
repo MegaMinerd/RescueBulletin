@@ -251,14 +251,14 @@ public class SiroFactory {
 			int off1 = p1==null ? 0 : p1.relativeTo(offset).getOffset();
 			int off2 = p2==null ? 0 : p2.relativeTo(offset).getOffset();
 			int off3 = p3==null ? 0 : p3.relativeTo(offset).getOffset();
-			SiroSegment learnset = new SiroSegment(off1, null, DataType.UNKNOWN);
+			SiroSegment learnset = new SiroSegment(off1 + offset, null, DataType.UNKNOWN);
 			if(p1==null){
 				learnset.addChild("lv", null);
 			} else{
 				buffer.seek(off1);
 				data = new byte[off2 - off1];
 				buffer.read(data);
-				learnset.addChild("lv", new SiroSegment(off1, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.LEARNSET));
+				learnset.addChild("lv", new SiroSegment(off1 + offset, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.LEARNSET));
 			}
 			if(p2==null){
 				learnset.addChild("tm", null);
@@ -266,7 +266,7 @@ public class SiroFactory {
 				buffer.seek(off2);
 				data = new byte[off3 - off2];
 				buffer.read(data);
-				learnset.addChild("tm", new SiroSegment(off2, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.LEARNSET));
+				learnset.addChild("tm", new SiroSegment(off2 + offset, new BufferedDataHandler(ByteBuffer.wrap(data)), DataType.LEARNSET));
 				learnsets.addChild(i + "", learnset);
 			}
 		}
