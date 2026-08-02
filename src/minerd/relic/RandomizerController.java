@@ -1,11 +1,16 @@
 package minerd.relic;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import minerd.relic.data.Cache;
 import minerd.relic.data.Learnset;
@@ -13,15 +18,89 @@ import minerd.relic.data.Learnset.LevelMove;
 import minerd.relic.data.Move;
 import minerd.relic.data.Pokemon;
 import minerd.relic.data.Starters;
+import minerd.relic.data.Text;
 import minerd.relic.data.dungeon.Floor;
 import minerd.relic.file.Rom;
 
-public class RandomizerController {
+public class RandomizerController implements Initializable {
+	//Pokemon tab
+	public CheckBox typeBox, abilityBox, mobilityBox, levelupBox, tmsetBox, damageBox, scaleBox;
+	public ChoiceBox<String> biasChoice;
+	public VBox moveWhitelist, abilityWhitelist;
+	public CheckBox[] moveWhitelistBoxes, abilityWhitelistBoxes;
+	
+	//Pokemon tab
+	public CheckBox layoutBox, roomBox, pathBox, deadendBox, enemiesBox, trapBox, itemBox, pondBox;
+	public CheckBox shopBox, houseBox, stickyBox, moneyBox, weatherBox, tileBox, musicBox;
+	public ChoiceBox<String> enemyChoice, trapChoice, floorChoice, houseChoice, shopChoice, buriedChoice;
+	public VBox pokemonWhitelist;
+	public CheckBox[] pokemonWhitelistBoxes;
+	
+	//Other tab
+	public CheckBox playerBox, partnerBox, storyBox, bossBox, tmBox, priceBox, movetypeBox;
+	
+	
+	//old
 	public CheckBox player, partner, learnset, pokeType, abilities, moveType;
 	public CheckBox dunName, tilesets, music, layout, weather;
 	public CheckBox dunPoke, ground, shop, house, buried;
 	public Button apply;
+	
 
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		biasChoice.getItems().addAll("None", "STAB", " STAB or Normal");
+		biasChoice.getSelectionModel().select(0);
+		
+		String[] options = { "Vanilla", "Shuffle", "Random", "Both" };
+		enemyChoice.getItems().addAll(options);
+		enemyChoice.getSelectionModel().select(0);
+		trapChoice.getItems().addAll(options);
+		trapChoice.getSelectionModel().select(0);
+		floorChoice.getItems().addAll(options);
+		floorChoice.getSelectionModel().select(0);
+		houseChoice.getItems().addAll(options);
+		houseChoice.getSelectionModel().select(0);
+		shopChoice.getItems().addAll(options);
+		shopChoice.getSelectionModel().select(0);
+		buriedChoice.getItems().addAll(options);
+		buriedChoice.getSelectionModel().select(0);
+	
+		
+		int num = Text.getTextList("Moves").length;
+		moveWhitelistBoxes = new CheckBox[num];
+		int end=9999;
+		for(int i=1; i<num; i++) {
+			String name = Text.getText("Moves", i);
+			moveWhitelistBoxes[i] = new CheckBox(name);
+			if(name.equals("attack"))
+				end=i;
+			if(i<end && !(name.equals("Struggle") || name.equals("Bide") || name.equals("Avalanche") || name.equals("Revenge") || name.equals("Teeter Dance")))
+				moveWhitelistBoxes[i].selectedProperty().set(true);
+			moveWhitelist.getChildren().add(moveWhitelistBoxes[i]);
+		}
+		
+		
+		num = Text.getTextList("Abilities").length;
+		abilityWhitelistBoxes = new CheckBox[num];
+		for(int i=1; i<num; i++) {
+			String name = Text.getText("Abilities", i);
+			abilityWhitelistBoxes[i] = new CheckBox(name);
+			if(!name.equals("Wonder Guard"))
+				abilityWhitelistBoxes[i].selectedProperty().set(true);
+			abilityWhitelist.getChildren().add(abilityWhitelistBoxes[i]);
+		}
+		
+		num = Text.getTextList("Pokemon").length;
+		pokemonWhitelistBoxes = new CheckBox[num];
+		for(int i=1; i<num; i++) {
+			String name = Text.getText("Pokemon", i);
+			pokemonWhitelistBoxes[i] = new CheckBox(name);
+			if(!(name.equals("Shedinja") || name.equals("Munchlax") || name.equals("Decoy") || name.equals("Statue")))
+				pokemonWhitelistBoxes[i].selectedProperty().set(true);
+			pokemonWhitelist.getChildren().add(pokemonWhitelistBoxes[i]);
+		}
+	}
 	public void randomize() {
 		if(Rom.getInstance()==null){
 			System.out.println("No Rom to randomize!");

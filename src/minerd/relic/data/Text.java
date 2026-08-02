@@ -108,7 +108,7 @@ public class Text extends GameData {
 			textLists.put("Categories", categories);
 
 			int moveNum = ((SiroFile) rom.getSystemSbin().getSubfile("wazapara")).getSegment("moves").getChildren().keySet().size();
-			String[] moves = new String[pokeNum];
+			String[] moves = new String[moveNum];
 			for(int i = 0; i<moveNum; i++){				
 				Move moveData = Move.getMove(i);
 				moves[i] = moveData.getName();

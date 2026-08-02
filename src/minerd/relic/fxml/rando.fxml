@@ -1,219 +1,234 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-  <tabs>
-    <Tab text="Pokemon">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <GridPane layoutX="14.0" layoutY="14.0" prefHeight="90.0" prefWidth="450.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+<GridPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minerd.relic.RandomizerController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Pokemon">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <CheckBox fx:id="typeBox" mnemonicParsing="false" text="Types" />
-                        <CheckBox fx:id="abilityBox" mnemonicParsing="false" text="Abilities" GridPane.columnIndex="1" />
-                        <CheckBox fx:id="levelupBox" mnemonicParsing="false" text="Levelup Moves" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="tmsetBox" mnemonicParsing="false" text="TM Moves" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="damageBox" mnemonicParsing="false" text="Prefer Damaging Moves" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="scaleBox" mnemonicParsing="false" text="Power Scales with Level" GridPane.rowIndex="2" />
-                        <ChoiceBox fx:id="biasChoice" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="mobilityBox" mnemonicParsing="false" text="Mobility" GridPane.columnIndex="2" />
-                        <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="141.0" text="Type Bias" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                           <padding>
-                              <Insets left="5.0" />
-                           </padding>
-                        </Label>
+                        <GridPane layoutX="14.0" layoutY="14.0" prefHeight="90.0" prefWidth="450.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <CheckBox fx:id="typeBox" mnemonicParsing="false" text="Types" />
+                              <CheckBox fx:id="abilityBox" mnemonicParsing="false" text="Abilities" GridPane.columnIndex="1" />
+                              <CheckBox fx:id="levelupBox" mnemonicParsing="false" text="Levelup Moves" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="tmsetBox" mnemonicParsing="false" text="TM Moves" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="damageBox" mnemonicParsing="false" text="Prefer Damaging Moves" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="scaleBox" mnemonicParsing="false" text="Power Scales with Level" GridPane.rowIndex="2" />
+                              <ChoiceBox fx:id="biasChoice" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="mobilityBox" mnemonicParsing="false" text="Mobility" GridPane.columnIndex="2" />
+                              <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="141.0" text="Type Bias" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </GridPane>
+                        <GridPane layoutX="14.0" layoutY="104.0" prefWidth="450.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="220.0" minWidth="10.0" prefWidth="220.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="220.0" minWidth="10.0" prefWidth="220.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Allowed Moves" />
+                              <Label text="Allowed Abilities" GridPane.columnIndex="2" />
+                              <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                 <content>
+                                    <VBox fx:id="moveWhitelist" prefHeight="200.0" prefWidth="200.0" />
+                                 </content>
+                              </ScrollPane>
+                              <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <content>
+                                    <VBox fx:id="abilityWhitelist" prefHeight="200.0" prefWidth="200.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </GridPane>
                      </children>
-                  </GridPane>
-                  <GridPane layoutX="14.0" layoutY="104.0" prefWidth="450.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="220.0" minWidth="10.0" prefWidth="220.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="220.0" minWidth="10.0" prefWidth="220.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Dungeons">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label text="Allowed Moves" />
-                        <Label text="Allowed Abilities" GridPane.columnIndex="2" />
-                        <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-                          <content>
-                            <AnchorPane fx:id="moveWhitelist" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-                          </content>
-                        </ScrollPane>
-                        <ScrollPane fx:id="moveWhitelist" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                          <content>
-                            <AnchorPane fx:id="abilityWhitelist" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-                          </content>
-                        </ScrollPane>
+                        <GridPane layoutX="14.0" layoutY="14.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <CheckBox fx:id="layoutBox" mnemonicParsing="false" text="Layout Type" />
+                              <CheckBox fx:id="enemiesBox" mnemonicParsing="false" text="Starting Enemies" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="shopBox" mnemonicParsing="false" text="Shop Frequency" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="weatherBox" mnemonicParsing="false" text="Weather" GridPane.rowIndex="3" />
+                              <CheckBox fx:id="roomBox" mnemonicParsing="false" text="Room Density" GridPane.columnIndex="1" />
+                              <CheckBox fx:id="trapBox" mnemonicParsing="false" text="Trap Density" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="houseBox" mnemonicParsing="false" text="House Frequency" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="tileBox" mnemonicParsing="false" text="Tlleset" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <CheckBox fx:id="pathBox" mnemonicParsing="false" text="Path Density" GridPane.columnIndex="2" />
+                              <CheckBox fx:id="itemBox" mnemonicParsing="false" text="Item Density" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="stickyBox" mnemonicParsing="false" text="Sticky Frequency" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="musicBox" mnemonicParsing="false" text="Music" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <CheckBox fx:id="deadendBox" mnemonicParsing="false" text="Dead End Density" GridPane.columnIndex="3" />
+                              <CheckBox fx:id="pondBox" mnemonicParsing="false" text="Pond Density" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="moneyBox" mnemonicParsing="false" text="Money Amount" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                           </children>
+                        </GridPane>
+                        <GridPane layoutX="14.0" layoutY="151.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="30.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <ChoiceBox fx:id="enemyChoice" prefWidth="150.0" />
+                              <Label text="Enemies" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ChoiceBox fx:id="trapChoice" prefWidth="150.0" GridPane.columnIndex="2" />
+                              <Label text="Traps" GridPane.columnIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ChoiceBox fx:id="floorChoice" prefWidth="150.0" GridPane.rowIndex="1" />
+                              <Label text="Floor Items" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ChoiceBox fx:id="houseChoice" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Label text="House Items" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ChoiceBox fx:id="shopChoice" prefWidth="150.0" GridPane.rowIndex="2" />
+                              <Label text="Shop Items" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ChoiceBox fx:id="buriedChoice" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <Label text="Buried Items" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </Label>
+                           </children>
+                        </GridPane>
+                        <GridPane layoutX="364.0" layoutY="126.0" prefWidth="150.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label text="Allowed Pokemon" />
+                              <ScrollPane prefHeight="200.0" prefWidth="150.0" GridPane.rowIndex="1">
+                                 <content>
+                                    <VBox fx:id="pokemonWhitelist" prefHeight="200.0" prefWidth="135.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </GridPane>
+                        <Label layoutX="14.0" layoutY="134.0" text="Spawn Tables" />
+                        <Label layoutX="14.0" layoutY="241.0" prefHeight="76.0" prefWidth="346.0" text="Vanilla- Leave the spawns unchanged                                  Shuffle- Keep the same tables, but change the floor they're on Random- Generate new spawn tables                                              Both- Combine both effects" wrapText="true" />
                      </children>
-                  </GridPane>
-               </children></AnchorPane>
-      </content>
-    </Tab>
-    <Tab text="Dungeons">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <GridPane layoutX="14.0" layoutY="14.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Other">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <CheckBox fx:id="llayoutBox" mnemonicParsing="false" text="Layout Type" />
-                        <CheckBox fx:id="enemiesBox" mnemonicParsing="false" text="Starting Enemies" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="shopBox" mnemonicParsing="false" text="Shop Frequency" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="weatherbox" mnemonicParsing="false" text="Weather" GridPane.rowIndex="3" />
-                        <CheckBox fx:id="roomBox" mnemonicParsing="false" text="Room Density" GridPane.columnIndex="1" />
-                        <CheckBox fx:id="trapBox" mnemonicParsing="false" text="Trap Density" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="houseBox" mnemonicParsing="false" text="House Frequency" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="tilebox" mnemonicParsing="false" text="Tlleset" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <CheckBox fx:id="pathBox" mnemonicParsing="false" text="Path Density" GridPane.columnIndex="2" />
-                        <CheckBox fx:id="itemBox" mnemonicParsing="false" text="Item Density" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="stickyBox" mnemonicParsing="false" text="Sticky Frequency" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="musicBox" mnemonicParsing="false" text="Music" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <CheckBox fx:id="deadendBox" mnemonicParsing="false" text="Dead End Density" GridPane.columnIndex="3" />
-                        <CheckBox fx:id="pondbox" mnemonicParsing="false" text="Pond Density" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="moneyBox" mnemonicParsing="false" text="Money Amount" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <GridPane layoutX="14.0" layoutY="14.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <CheckBox fx:id="playerBox" mnemonicParsing="false" text="Player Pokemon" />
+                              <CheckBox fx:id="tmBox" mnemonicParsing="false" text="TMs Available" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="partnerBox" mnemonicParsing="false" text="Partner Pokemon" GridPane.columnIndex="1" />
+                              <CheckBox fx:id="priceBox" mnemonicParsing="false" text="Item Price" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="storyBox" mnemonicParsing="false" text="Story Pokemon" GridPane.columnIndex="2" />
+                              <CheckBox fx:id="movetypeBox" mnemonicParsing="false" text="Move Type" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="bossBox" mnemonicParsing="false" text="Boss Pokemon" GridPane.columnIndex="3" />
+                           </children>
+                        </GridPane>
                      </children>
-                  </GridPane>
-                  <GridPane layoutX="14.0" layoutY="151.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="30.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <ChoiceBox fx:id="enemyChoice" prefWidth="150.0" />
-                        <Label text="Enemies" GridPane.columnIndex="1">
-                           <GridPane.margin>
-                              <Insets left="5.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <ChoiceBox fx:id="trapChoice" prefWidth="150.0" GridPane.columnIndex="2" />
-                        <Label text="Traps" GridPane.columnIndex="3">
-                           <GridPane.margin>
-                              <Insets left="5.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <ChoiceBox fx:id="floorChoice" prefWidth="150.0" GridPane.rowIndex="1" />
-                        <Label text="Floor Items" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets left="5.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <ChoiceBox fx:id="houseChoice" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label text="House Items" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets left="5.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <ChoiceBox fx:id="shopChoice" prefWidth="150.0" GridPane.rowIndex="2" />
-                        <Label text="Shop Items" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <GridPane.margin>
-                              <Insets left="5.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <ChoiceBox fx:id="buriedChoice" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <Label text="Buried Items" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                           <GridPane.margin>
-                              <Insets left="5.0" />
-                           </GridPane.margin>
-                        </Label>
-                     </children>
-                  </GridPane>
-                  <GridPane layoutX="364.0" layoutY="126.0" prefWidth="150.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label text="Allowed Pokemon" />
-                        <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-                           <content>
-                              <AnchorPane fx:id="pokemonWhitelist" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="150.0" />
-                           </content>
-                        </ScrollPane>
-                     </children>
-                  </GridPane>
-                  <Label layoutX="14.0" layoutY="134.0" text="Spawn Tables" />
-                  <Label layoutX="102.0" layoutY="134.0" text="   ?   ">
-                     <tooltip>
-                        <Tooltip text="Vanilla- Leave the spawns unchanged\nShuffle- Keep the same spawn tables, but change what floor they're on\nRandom- Generate new spawn tables\nBoth- Combine both effects" />
-                     </tooltip>
-                  </Label>
-                  <Label layoutX="14.0" layoutY="241.0" prefHeight="76.0" prefWidth="346.0" text="Vanilla- Leave the spawns unchanged                                  Shuffle- Keep the same tables, but change the floor they're on Random- Generate new spawn tables                                              Both- Combine both effects" wrapText="true" />
-               </children></AnchorPane>
-      </content>
-    </Tab>
-      <Tab text="Other">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <GridPane layoutX="14.0" layoutY="14.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="120.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <CheckBox fx:id="playerBox" mnemonicParsing="false" text="Player Pokemon" />
-                        <CheckBox fx:id="tmBox" mnemonicParsing="false" text="TMs Available" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="partnerBox" mnemonicParsing="false" text="Partner Pokemon" GridPane.columnIndex="1" />
-                        <CheckBox fx:id="priceBox" mnemonicParsing="false" text="Item Price" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="storyBox" mnemonicParsing="false" text="Story Pokemon" GridPane.columnIndex="2" />
-                        <CheckBox fx:id="movetypeBox" mnemonicParsing="false" text="Move Type" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="bossBox" mnemonicParsing="false" text="Boss Pokemon" GridPane.columnIndex="3" />
-                     </children>
-                  </GridPane>
-               </children></AnchorPane>
-         </content>
-      </Tab>
-  </tabs>
-</TabPane>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Button fx:id="apply" mnemonicParsing="false" text="Randomize" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" />
+         </GridPane.margin>
+      </Button>
+   </children>
+</GridPane>
