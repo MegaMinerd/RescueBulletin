@@ -71,17 +71,7 @@ public class Pokemon extends GameData {
 			//I don't know why
 			if(entityID>226)
 				entityID -= 2;
-
-			//learnset = (Learnset) Cache.get("Learnset", index);
-			//if(learnset==null){
-			//	learnset = new Learnset(index);
-			//	Cache.add("Learnset", index, learnset);
-			//}
-
-			//String name = String.format("lvmp%03d", index);
-			//System.out.println(name);
-			//BufferedDataHandler lvmpdata = ((SiroFile) Rom.getInstance().getSystemSbin().getSubfile(name)).getSegment("data").getData();
-			//lvmp = new Levelmap(CompressionHandler.decompress(lvmpdata, false), this);
+			
 		} catch(IOException | InvalidPointerException e){
 			e.printStackTrace();
 		}
@@ -447,6 +437,23 @@ public class Pokemon extends GameData {
 	}
 
 	public Learnset getLearnset() {
+		try {
+			if(learnset==null) {
+				learnset = (Learnset) Cache.get("Learnset", pokemonId);
+				if(learnset==null){
+					learnset = new Learnset(pokemonId);
+					Cache.add("Learnset", pokemonId, learnset);
+				}
+
+				String name = String.format("lvmp%03d", pokemonId);
+				System.out.println(name);
+				BufferedDataHandler lvmpdata = ((SiroFile) Rom.getInstance().getSystemSbin().getSubfile(name)).getSegment("data").getData();
+				lvmp = new Levelmap(CompressionHandler.decompress(lvmpdata, false), this);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		return learnset;
 	}
 
