@@ -49,7 +49,7 @@ public class RandomizerController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		biasChoice.getItems().addAll("None", "STAB", " STAB or Normal");
+		biasChoice.getItems().addAll("None", "STAB", "STAB or Normal");
 		biasChoice.getSelectionModel().select(0);
 		
 		String[] options = { "Vanilla", "Shuffle", "Random", "Both" };
@@ -101,121 +101,141 @@ public class RandomizerController implements Initializable {
 			pokemonWhitelist.getChildren().add(pokemonWhitelistBoxes[i]);
 		}
 	}
-	public void randomize() {
-		if(Rom.getInstance()==null){
-			System.out.println("No Rom to randomize!");
-			return;
-		}
 
+	public void randomize() {
 		try{
 			long time = System.currentTimeMillis();
 			Rom rom = Rom.getInstance();
-
-			apply.setDisable(true);
-
-			int[] legendaries = {144, 145, 146, 150, 151, 270, 271, 272, 276, 277,
-								 278, 407, 408, 409, 410, 411, 412, 413, 414, 415,
-								 416};
-
-			if(player.isSelected() || partner.isSelected()){
-				Cache.alloc("Starters", 1);
-				int[] off = { 0x00F278E, 0x000F4264 };
-				Starters starters = new Starters(0);
-				if(player.isSelected()){
-					int[] players = new int[26];
-					for(int i = 0; i<26; i++){
-						players[i] = (int) (Math.random()*415.0+1);
-						if(Arrays.binarySearch(legendaries, players[i])>=0 && Math.random()>0.5f)
-							players[i] = (int) (Math.random()*415.0+1);
-					}
-					starters.setPlayers(players);
-				}
-				if(partner.isSelected()){
-					int[] partners = new int[10];
-					for(int i = 0; i<10; i++){
-						partners[i] = (int) (Math.random()*415.0+1);
-						if(Arrays.binarySearch(legendaries, partners[i])>=0 && Math.random()>0.5f)
-							partners[i] = (int) (Math.random()*415.0+1);
-					}
-					starters.setPartners(partners);
-				}
-				starters.save();
-			}
-
-			if(pokeType.isSelected() || abilities.isSelected() || learnset.isSelected()){
-				Cache.alloc("Pokemon", 416);
-				for(int i = 1; i<416; i++){
-					Pokemon pokemon = new Pokemon(i);
-					Cache.add("Pokemon", i, pokemon);
-					if(pokeType.isSelected()){
+			
+			//Data in system.sbin
+			boolean shouldSave = false;
+			
+			//Pokemon data
+			if(typeBox.isSelected() || abilityBox.isSelected() || mobilityBox.isSelected()){
+				shouldSave = true;
+				//Grab pokemon count
+				float pokemonNum = (float)Text.getTextList("Pokemon").length;
+				for(int i = 1; i<pokemonNum; i++){
+					Pokemon pokemon = Pokemon.getPokemon(i);
+					if(typeBox.isSelected()){
+						//Roll first type
 						pokemon.setType1((int) (Math.random()*17.0 + 1));
+						
+						//Roll second type until it doesn't match first type
+						//Monotype is weighted by being selected upon rolling 0, -1, or -2
 						do{
-							pokemon.setType2((int) (Math.random()*18.0));
+							pokemon.setType2((int) Math.max((Math.random()*20.0 -2), 0));
 						} while(pokemon.getType1()==pokemon.getType2());
 					}
-					if(abilities.isSelected()){
-						pokemon.setAbility1((int) (Math.random()*76.0 + 1));
-						//Reroll Wonder Guard once
-						if(pokemon.getAbility1()==0x35)
-							pokemon.setAbility1((int) (Math.random()*76.0 + 1));
-						pokemon.setAbility2((int) (Math.random()*77.0));
-						//Reroll Wonder Guard once
-						//Duplicate abilities are rare enough to ignore for now
-						if(pokemon.getAbility2()==0x35)
-							pokemon.setAbility2((int) (Math.random()*77.0));
+					if(abilityBox.isSelected()){
+						//Grab ability count
+						float abilityNum = (float)Text.getTextList("Abilities").length;
+						int ability;
+						
+						//Roll first ability until a permitted one is selected
+						do {
+							ability = (int) (Math.random()*(abilityNum-1));
+						} while (!abilityWhitelistBoxes[ability].isSelected());
+						pokemon.setAbility1(ability);
+						
+						//Only generate a second ability 3/4 of the time
+						if((Math.random()*4.0) > 1) {
+							//Roll second ability until a non-duplicate permitted one is selected
+							do {
+								ability = (int) (Math.random()*(abilityNum-1));
+							} while (!abilityWhitelistBoxes[ability].isSelected() || pokemon.getAbility1()==ability);
+							pokemon.setAbility2(ability);
+						}
 					}
-					//No need to reach the save step if we only wanted to populate the cache
-					//Done this way to reduce number of conditional checks
-					else if(!pokeType.isSelected())
-						continue;
+					if(mobilityBox.isSelected()){
+						pokemon.setMovement((int)(Math.random()*4.0));
+					}
 					pokemon.save();
 				}
 			}
-
-			ArrayList[] types = new ArrayList[18];
+			
+			//Move data
+			ArrayList<Integer>[] types = new ArrayList[18];
 			for(int i = 0; i<18; i++)
 				types[i] = new ArrayList();
 			if(moveType.isSelected() || learnset.isSelected()){
-				Cache.alloc("Move", 413);
-				//Note: there are 413 moves in the data
-				//But 355 and later are orbs/special/unused
-				for(int i = 1; i<355; i++){
-					Move move = new Move(i);
-					Cache.add("Move", i, move);
-					if(moveType.isSelected()){
-						// Skip Struggle
-						if(i==352)
-							continue;
+				shouldSave = true;
+				//Grab move count
+				float moveNum = (float)Text.getTextList("Moves").length;
+
+				for(int i = 1; i<moveNum; i++){
+					Move move = Move.getMove(i);
+					//Randomize move type unless it is typeless
+					if(moveType.isSelected() && move.getType()>0){
 						move.setType((int) (Math.random()*17.0 + 1));
 						move.save();
 					}
+					//Sort the move into a list by type
 					if(learnset.isSelected()){
 						types[0].add(i);
 						types[move.getType()].add(i);
 					}
 				}
 			}
-
+			
+			//Learnset data
 			if(learnset.isSelected()){
-				//TODO: temporary quick and dirty implementation until the SIR0 util is done
-				//TODO: is this the correct number?
-				Learnset[] learnsets = new Learnset[416];
-				for(int i = 1; i<416; i++){
-					learnsets[i] = new Learnset(i);
-					ArrayList<LevelMove> lvMoves = learnsets[i].getLvMoves();
+				//Grab pokemon count
+				float pokemonNum = (float)Text.getTextList("Pokemon").length;
+				for(int i = 1; i<pokemonNum; i++){
+					Learnset learnset = Pokemon.getPokemon(i).getLearnset();
+					
+					//Randomize levelup moves
+					ArrayList<LevelMove> lvMoves = learnset.getLvMoves();
 					for(LevelMove move : lvMoves){
+						//A value of 0 means use any move
 						int list = 0;
-						switch((int) (Math.random()*5)){
-							case 0:
-								list = 1;
-								break;
-							case 1:
-								list = ((Pokemon) Cache.get("Pokemon", i)).getType1();
-								break;
-							case 2:
-								list = ((Pokemon) Cache.get("Pokemon", i)).getType2();
-								break;
+						//Bias the type
+						if(biasChoice.getSelectionModel().getSelectedIndex()==1) {
+							switch((int) (Math.random()*3.0)){
+								case 0:
+									list = Pokemon.getPokemon(i).getType1();
+									break;
+								case 1:
+									list = Pokemon.getPokemon(i).getType2();
+									if(list==0)
+										//Pokemon is monotype
+										list = Pokemon.getPokemon(i).getType1();
+									break;
+							}
+						} else if (biasChoice.getSelectionModel().getSelectedIndex()==2) {
+							switch((int) (Math.random()*4.0)){
+								case 0:
+									list = 1;
+									break;
+								case 1:
+									list = Pokemon.getPokemon(i).getType1();
+									break;
+								case 2:
+									list = Pokemon.getPokemon(i).getType2();
+									if(list==0)
+										//Pokemon is monotype
+										list = Pokemon.getPokemon(i).getType1();
+									break;
+							}
 						}
+						
+						//Roll moves until one that suits the settings is selected
+						do {
+							if(list==0) {
+								//TODO: Roll a number from all move IDs
+							} else {
+								//TODO: Roll a number from a type list
+							}
+							
+							//TODO: Run checks on the settings and use continue
+							
+							break;
+						} while(true);
+						//TODO: Use selected ID and update learnset
+						
+						
+						//TODO: Rework or redo this into above checks
 						int id = (int) types[list].get((int) (Math.random()*types[list].size()));
 						int power = ((Move) Cache.get("Move", id)).getPower();
 						if(move.getLevel()==0 && (power<15 || power>60))
@@ -230,7 +250,7 @@ public class RandomizerController implements Initializable {
 					//for(TmMove move : tmMoves){
 					//TODO: pick a random element from a list of valid tms
 					//}
-					learnsets[i].setLvMoves(lvMoves);
+					//learnsets[i].setLvMoves(lvMoves);
 					//learnsets[i].setTmMoves(tmMoves);
 				}
 //				Pointer[] pointers = new Pointer[830];
@@ -256,6 +276,45 @@ public class RandomizerController implements Initializable {
 //				for(int i = 0; i<830; i++)
 //					rom.writePointer(pointers[i]);
 			}
+
+			
+			
+			//Begin old code (will gradually convert to new version
+			
+			
+			int[] legendaries = {144, 145, 146, 150, 151, 270, 271, 272, 276, 277,
+								 278, 407, 408, 409, 410, 411, 412, 413, 414, 415,
+								 416};
+
+			if(playerBox.isSelected() || partnerBox.isSelected()){
+				Cache.alloc("Starters", 1);
+				Starters starters = new Starters(0);
+				if(playerBox.isSelected()){
+					int[] players = new int[26];
+					for(int i = 0; i<26; i++){
+						players[i] = (int) (Math.random()*415.0+1);
+						//If a legendary was rolled, reroll once
+						if(Arrays.binarySearch(legendaries, players[i])>=0 && Math.random()>0.5f)
+							players[i] = (int) (Math.random()*415.0+1);
+					}
+					starters.setPlayers(players);
+				}
+				if(partnerBox.isSelected()){
+					int[] partners = new int[10];
+					for(int i = 0; i<10; i++){
+						partners[i] = (int) (Math.random()*415.0+1);
+						//If a legendary was rolled, reroll once
+						if(Arrays.binarySearch(legendaries, partners[i])>=0 && Math.random()>0.5f)
+							partners[i] = (int) (Math.random()*415.0+1);
+					}
+					starters.setPartners(partners);
+				}
+				starters.save();
+			}
+			
+
+
+
 
 			if(tilesets.isSelected() || music.isSelected() || layout.isSelected() || weather.isSelected()
 					|| dunPoke.isSelected() || ground.isSelected() || shop.isSelected() || house.isSelected()
