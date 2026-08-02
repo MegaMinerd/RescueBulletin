@@ -1,6 +1,7 @@
 package minerd.relic.data;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import javafx.scene.layout.Region;
@@ -12,8 +13,10 @@ import minerd.relic.file.SiroFile;
 public class Learnset extends GameData {
 	private ArrayList<LevelMove> lvMoves;
 	private ArrayList<TmMove> tmMoves;
+	private int index;
 
 	public Learnset(int index) throws IOException, InvalidPointerException {
+		this.index = index;
 		SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("wazapara");
 		BufferedDataHandler lv = data.getSegment("learnsets/" + index + "/lv").getData();
 		lvMoves = new ArrayList<LevelMove>();
@@ -49,6 +52,13 @@ public class Learnset extends GameData {
 	}
 
 	public void save() {
+		try{
+			SiroFile data = (SiroFile) Rom.getInstance().getSystemSbin().getSubfile("wazapara");
+			data.getSegment("learnsets/" + index + "/lv").setData(new BufferedDataHandler(ByteBuffer.wrap(saveLvMoves())));
+			data.getSegment("learnsets/" + index + "/tm").setData(new BufferedDataHandler(ByteBuffer.wrap(saveTmMoves())));
+		} catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 
 	public byte[] saveLvMoves() {
@@ -60,6 +70,7 @@ public class Learnset extends GameData {
 				data.add(id[1]);
 			data.add((byte) move.getLevel());
 		}
+		data.add((byte) 0);
 		return toPrimitive(data);
 	}
 
@@ -71,6 +82,7 @@ public class Learnset extends GameData {
 			if(id.length>1)
 				data.add(id[1]);
 		}
+		data.add((byte) 0);
 		return toPrimitive(data);
 	}
 
