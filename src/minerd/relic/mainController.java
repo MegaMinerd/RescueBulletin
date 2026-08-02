@@ -13,6 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -132,6 +134,16 @@ public class mainController implements Initializable {
 	}
 
 	public void randomize() {
+		if(Rom.getInstance()==null){
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("No Rom");
+			alert.setContentText("No Rom to randomize!");
+			alert.showAndWait();
+			
+			System.out.println("No Rom to randomize!");
+			return;
+		}
+		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/minerd/relic/fxml/rando.fxml"));
 		Parent rando;
 		try{
