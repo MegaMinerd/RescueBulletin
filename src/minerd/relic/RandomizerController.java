@@ -13,8 +13,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import minerd.relic.data.Cache;
+import minerd.relic.data.Item;
 import minerd.relic.data.Learnset;
 import minerd.relic.data.Learnset.LevelMove;
+import minerd.relic.data.Learnset.TmMove;
 import minerd.relic.data.Move;
 import minerd.relic.data.Pokemon;
 import minerd.relic.data.Starters;
@@ -41,7 +43,7 @@ public class RandomizerController implements Initializable {
 	
 	
 	//old
-	public CheckBox player, partner, learnset, pokeType, abilities, moveType;
+	public CheckBox player, partner;
 	public CheckBox dunName, tilesets, music, layout, weather;
 	public CheckBox dunPoke, ground, shop, house, buried;
 	public Button apply;
@@ -158,7 +160,7 @@ public class RandomizerController implements Initializable {
 			ArrayList<Integer>[] types = new ArrayList[18];
 			for(int i = 0; i<18; i++)
 				types[i] = new ArrayList();
-			if(moveType.isSelected() || learnset.isSelected()){
+			if(movetypeBox.isSelected() || levelupBox.isSelected()){
 				shouldSave = true;
 				//Grab move count
 				float moveNum = (float)Text.getTextList("Moves").length;
@@ -166,22 +168,65 @@ public class RandomizerController implements Initializable {
 				for(int i = 1; i<moveNum; i++){
 					Move move = Move.getMove(i);
 					//Randomize move type unless it is typeless
-					if(moveType.isSelected() && move.getType()>0){
+					if(movetypeBox.isSelected() && move.getType()>0){
 						move.setType((int) (Math.random()*17.0 + 1));
 						move.save();
 					}
 					//Sort the move into a list by type
-					if(learnset.isSelected()){
+					if(levelupBox.isSelected()){
 						types[0].add(i);
 						types[move.getType()].add(i);
 					}
 				}
 			}
 			
-			//Learnset data
-			if(learnset.isSelected()){
+			//TM list
+			ArrayList<Integer> tmMovesList = new ArrayList<Integer>();
+			if(tmBox.isSelected() || tmsetBox.isSelected()){
+				//Grab item count
+				int itemNum = Text.getTextList("Items").length;
+				//Grab move count
+				float moveNum = (float)Text.getTextList("Moves").length;
+				
+				//Mark down the available TMs to randomize tmsets and prevent repeats
+				for(int i=0; i<itemNum; i++) {
+					Item item = Item.getItem(i);
+					if(item.getItemType()==5) {
+						if(tmBox.isSelected()){
+							shouldSave = true;
+							int moveId = 0;
+							do {
+								moveId = (int) (Math.random()*(moveNum-1))+1;
+							} while (!moveWhitelistBoxes[moveId].isSelected() || tmMovesList.contains(moveId));
+							Item tmItem = Item.getItem(i);
+							tmItem.setMoveId(moveId);
+							tmItem.setName(String.format("%c%c%s", 0x87, 0x4E, Move.getMove(moveId).getName()));
+							tmItem.setDescription(String.format("Teaches the move #c4%s#r.%c%s", Move.getMove(moveId).getName(), 0x0D, Move.getMove(moveId).getDescription()));
+						}
+						tmMovesList.add(item.getMoveId());
+					}
+				}
+			}
+			
+			//TMset data
+			if(tmsetBox.isSelected()){
+				shouldSave = true;
 				//Grab pokemon count
 				float pokemonNum = (float)Text.getTextList("Pokemon").length;
+				for(int i = 1; i<pokemonNum; i++){
+					Learnset learnset = Pokemon.getPokemon(i).getLearnset();
+					ArrayList<TmMove> tmMoves = learnset.getTmMoves();
+					for(TmMove move : tmMoves){
+						move.setMoveId(tmMovesList.get((int)(Math.random()*tmMovesList.size())));
+					}
+				}
+			}
+			
+			//Learnset data
+			if(levelupBox.isSelected()){
+				//Grab pokemon count
+				float pokemonNum = (float)Text.getTextList("Pokemon").length;
+				float moveNum = (float)Text.getTextList("Moves").length;
 				for(int i = 1; i<pokemonNum; i++){
 					Learnset learnset = Pokemon.getPokemon(i).getLearnset();
 					
@@ -221,61 +266,50 @@ public class RandomizerController implements Initializable {
 						}
 						
 						//Roll moves until one that suits the settings is selected
+						int moveID = 0;
+						//For performance, only roll 5 times, unless a banned move is rolled
+						int rollNum = 0;
 						do {
+							rollNum++;
 							if(list==0) {
-								//TODO: Roll a number from all move IDs
+								moveID = (int) (Math.random()*(moveNum-1))+1;
 							} else {
-								//TODO: Roll a number from a type list
+								moveID = (int) types[list].get((int) (Math.random()*types[list].size()));
 							}
 							
-							//TODO: Run checks on the settings and use continue
+							//Reject deselected moves
+							if(!moveWhitelistBoxes[moveID-1].isSelected())
+								continue;
 							
+							//This move is permitted and the roll cap is reached
+							if(rollNum>=5)
+								break;
+							
+							//Reject non-damaging moves with 62.5% probability, if preference is on
+							//After all rerolls, assuming 60% of moves do damage, about 20% of learned moves will be status
+							if(damageBox.isSelected() && Math.random() > 0.625 && Move.getMove(moveID).getPower()==0)
+								continue;
+							
+							//Reject moves of the wrong power, if scaling is on
+							if(scaleBox.isSelected()) {
+								int power = Move.getMove(moveID).getPower();
+								if(move.getLevel()==0 && (power<15 || power>60))
+									continue;
+								if(move.getLevel()!=0 && move.getLevel()<16 && (power<30 || power>90))
+									continue;
+							}
+								
 							break;
 						} while(true);
-						//TODO: Use selected ID and update learnset
 						
-						
-						//TODO: Rework or redo this into above checks
-						int id = (int) types[list].get((int) (Math.random()*types[list].size()));
-						int power = ((Move) Cache.get("Move", id)).getPower();
-						if(move.getLevel()==0 && (power<15 || power>60))
-							id = (int) types[list].get((int) (Math.random()*types[list].size()));
-						if(move.getLevel()==0 && (power<15 || power>60))
-							id = (int) types[list].get((int) (Math.random()*types[list].size()));
-						if(move.getLevel()!=0 && move.getLevel()<16 && (power<30 || power>90))
-							id = (int) types[list].get((int) (Math.random()*types[list].size()));
-						move.setMoveId(id);
+						move.setMoveId(moveID);
 					}
-					//ArrayList<TmMove> tmMoves = learnsets[i].getTmMoves();
-					//for(TmMove move : tmMoves){
-					//TODO: pick a random element from a list of valid tms
-					//}
-					//learnsets[i].setLvMoves(lvMoves);
-					//learnsets[i].setTmMoves(tmMoves);
 				}
-//				Pointer[] pointers = new Pointer[830];
-//				rom.seek(0x360C06);
-//				for(int i = 1; i<416; i++){
-//					byte[]  lvMoves = learnsets[i].saveLvMoves();
-//					byte[] tmMoves = learnsets[i].saveTmMoves();
-//					if((rom.getFilePointer()<0x003679A0)
-//							&& ((rom.getFilePointer() + lvMoves.length + tmMoves.length)>RrtOffsetList.moveOffset)){
-//						while(rom.getFilePointer()<RrtOffsetList.moveOffset)
-//							rom.writeByte((byte) 0);
-//						rom.seek(0x0373340);
-//					}
-//					pointers[2*i - 2] = Pointer.fromInt(rom.getFilePointer() + 0x08000000);
-//					rom.write(lvMoves);
-//					rom.writeByte((byte) 0);
-//					pointers[2*i - 1] = Pointer.fromInt(rom.getFilePointer() + 0x08000000);
-//					rom.write(tmMoves);
-//					rom.writeByte((byte) 0);
-//				}
-//				rom.seek(0x0372600);
-//				//TODO: There are actually 848 learnsets in data. I have decided to not care for the beta
-//				for(int i = 0; i<830; i++)
-//					rom.writePointer(pointers[i]);
 			}
+			
+			//if(shouldSave)
+			//TODO: Save system.sbin to the ROM
+			shouldSave = false;
 
 			
 			
